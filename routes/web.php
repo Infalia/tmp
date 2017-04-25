@@ -21,6 +21,7 @@ Route::get('profile/basic-info', 'ProfileController@index');
 Route::get('profile/work', 'ProfileController@work');
 Route::get('profile/interests', 'ProfileController@interests');
 Route::get('profile/social-accounts', 'ProfileController@socialAccounts');
+Route::get('profile/social-data', 'ProfileController@socialData');
 
 /*** Timeline ***/
 Route::get('timeline', 'TimelineController@index');
@@ -34,3 +35,14 @@ Route::get('notifications', 'NotificationController@index');
 /*** Accessibility ***/
 Route::get('accessibility/wizard', 'AccessibilityController@index');
 Route::post('accessibility/save-options', 'AccessibilityController@storeUserAccessibilityOptions');
+
+
+/*** Socialite ***/
+Route::get('login/facebook', 'Auth\SocialLoginController@redirectToFacebookProvider');
+Route::get('login/facebook/callback', 'Auth\SocialLoginController@handleFacebookProviderCallback');
+
+Route::get('login/google', 'Auth\SocialLoginController@redirectToGoogleProvider');
+Route::get('login/google/callback', 'Auth\SocialLoginController@handleGoogleProviderCallback');
+
+Route::get('login/linkedin', 'Auth\SocialLoginController@redirectToLinkedinProvider');
+Route::get('login/linkedin/callback', 'Auth\SocialLoginController@handleLinkedinProviderCallback');

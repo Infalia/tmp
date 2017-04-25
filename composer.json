@@ -9,9 +9,11 @@
         "cviebrock/eloquent-sluggable": "^4.2",
         "dimsav/laravel-translatable": "^7.0",
         "laravel/framework": "5.4.*",
+        "laravel/socialite": "^3.0",
         "laravel/tinker": "~1.0",
         "laravelcollective/html": "^5.4",
-        "skydiver/laravel-materialize-css": "dev-master"
+        "skydiver/laravel-materialize-css": "dev-master",
+        "socialiteproviders/pinterest": "^3.0"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

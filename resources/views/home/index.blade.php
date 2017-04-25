@@ -21,10 +21,11 @@
                     <div class="social-linking">
                         <h2 class="h5">{{ $heading2 }}</h2>
 
-                        <a class="waves-effect waves-light btn light-blue darken-4">{{ $socialBtnFb }}</a>
-                        <a class="waves-effect waves-light btn red">{{ $socialBtnGgl }}</a>
+                        {{--<a id="facebook-btn" class="waves-effect waves-light btn light-blue darken-4" onclick="centerWindow(600, 400, 50, '{{ url('login/facebook') }}', 'facebook');">{{ $socialBtnFb }}</a>--}}
+                        <a class="waves-effect waves-light btn light-blue darken-4" href="{{ url('login/facebook') }}">{{ $socialBtnFb }}</a>
+                        <a class="waves-effect waves-light btn red" href="{{ url('login/google') }}">{{ $socialBtnGgl }}</a>
                         <a class="waves-effect waves-light btn red darken-4">{{ $socialBtnPint }}</a>
-                        <a class="waves-effect waves-light btn light-blue darken-3">{{ $socialBtnLin }}</a>
+                        <a class="waves-effect waves-light btn light-blue darken-3" href="{{ url('login/linkedin') }}">{{ $socialBtnLin }}</a>
                     </div>
                 </div>
             </div>
@@ -32,4 +33,27 @@
             <div class="bottom-msg center-align">{{ $alert2 }}</div>
         </div>
     </div>
+@endsection
+
+@section('jslibs')
+    <script>
+        function centerWindow(windowWidth, windowHeight, windowOuterHeight, url, wname, features) {
+            var centerLeft = parseInt((window.screen.availWidth - windowWidth) / 2);
+            var centerTop = parseInt(((window.screen.availHeight - windowHeight) / 2) - windowOuterHeight);
+
+            var misc_features;
+            if (features) {
+                misc_features = ', ' + features;
+            }
+            else {
+                misc_features = ', status=no, location=no, scrollbars=yes, resizable=yes';
+            }
+
+            var windowFeatures = 'width=' + windowWidth + ',height=' + windowHeight + ',left=' + centerLeft + ',top=' + centerTop + misc_features;
+            var win = window.open(url, wname, windowFeatures);
+            win.focus();
+
+            return win;
+        }
+    </script>
 @endsection

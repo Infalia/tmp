@@ -198,6 +198,11 @@ return [
          */
         Dimsav\Translatable\TranslatableServiceProvider::class,
 
+        /*
+         * Socialite...
+         */
+        Laravel\Socialite\SocialiteServiceProvider::class,
+
     ],
 
     /*
@@ -249,6 +254,7 @@ return [
         'HTML' => Collective\Html\HtmlFacade::class,
         'Form' => Collective\Html\FormFacade::class,
         'MaterializeCSS' => Skydiver\LaravelMaterializeCSS\MaterializeCSS::class,
+        'Socialite' => Laravel\Socialite\Facades\Socialite::class,
 
     ],
 
