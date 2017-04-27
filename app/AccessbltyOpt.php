@@ -18,6 +18,8 @@ class AccessbltyOpt extends Model
 
     /**
      * Get the translations for the option.
+     *
+     * @return App\AccessbltyOptTranslation|null
      */
     public function optionTranslations()
     {

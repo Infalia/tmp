@@ -84,8 +84,7 @@ class AccessibilityController extends Controller
             $options = $request->input('options');
             $user->find(1)->accessibilityOptions()->sync($options);
 
-            //session('user.accessibility_opts', $options);
-            session(['user' => ['accessibility_opts' => $options]]);
+            $request->session()->put('user.accessibility_opts', $options);
 
             return response()->json([
                 'success' => __('messages.accessibility_radio_success.stored'),

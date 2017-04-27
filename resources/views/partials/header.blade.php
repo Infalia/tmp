@@ -7,43 +7,31 @@
     </div>
 
     <nav id="nav-menu" class="nav-menu">
-        <ul>
-            <li>
-                <a href="#">
-                    <span class="anchor-name">FirstLife</span>
-                    <span class="anchor-slogan">map & plan</span>
-                </a>
-            </li>
-            <li>
-                <a href="#">
-                    <span class="anchor-name">Improve My City</span>
-                    <span class="anchor-slogan">report local issues</span>
-                </a>
-            </li>
-            <li>
-                <a href="#">
-                    <span class="anchor-name">LiquidFeedback</span>
-                    <span class="anchor-slogan">debate & decide</span>
-                </a>
-            </li>
-            <li>
-                <a href="#">
-                    <span class="anchor-name">Community Maps</span>
-                    <span class="anchor-slogan">collect & share</span>
-                </a>
-            </li>
-            <li>
-                <a class="active" href="#">
-                    <span class="anchor-name">Trusted Marketplace</span>
-                    <span class="anchor-slogan">match making</span>
-                </a>
-            </li>
-        </ul>
+        @foreach($uwumNavigation as $navigation => $items)
+            @foreach($items as $item)
+                @if($loop->parent->first && $loop->first)
+                <ul>
+                @endif
 
-        <a class="account-btn" href="#">
-            <span class="anchor-name">Login</span>
-            <span class="anchor-slogan">or register</span>
-        </a>
+                @if(!$loop->last)
+                <li>
+                    <a @if(isset($item['active']) && true == $item['active']) class="active" @endif href="{{ $item['url'] }}">
+                        <span class="anchor-name">{{ $item['name'] }}</span>
+                        <span class="anchor-slogan">{{ $item['description'] }}</span>
+                    </a>
+                </li>
+                @endif
+
+                @if($loop->parent->last && $loop->last)
+                </ul>
+
+                <a class="account-btn" href="{{ $item['url'] }}">
+                    <span class="anchor-name">{{ $item['name'] }}</span>
+                    <span class="anchor-slogan">{{ $item['description'] }}</span>
+                </a>
+                @endif
+            @endforeach
+        @endforeach
     </nav>
 
 

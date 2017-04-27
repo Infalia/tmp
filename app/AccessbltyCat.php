@@ -27,6 +27,8 @@ class AccessbltyCat extends Model
 
     /**
      * Get the translations for the category.
+     *
+     * @return App\AccessbltyCatTranslation|null
      */
     public function categoryTranslations()
     {
