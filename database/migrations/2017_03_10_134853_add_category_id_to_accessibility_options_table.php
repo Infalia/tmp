@@ -27,7 +27,7 @@ class AddCategoryIdToAccessibilityOptionsTable extends Migration
     public function down()
     {
         Schema::table('accessblty_opts', function (Blueprint $table) {
-            //
+            $table->dropColumn('accessblty_cat_id');
         });
     }
 }

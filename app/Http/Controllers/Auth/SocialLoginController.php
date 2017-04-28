@@ -46,7 +46,28 @@ class SocialLoginController extends Controller
      */
     public function redirectToFacebookProvider()
     {
-        return Socialite::driver('facebook')->scopes([
+        return Socialite::driver('facebook')->fields([
+            'name',
+            'email',
+            'gender',
+            'verified',
+            'link',
+            'first_name',
+            'middle_name',
+            'last_name',
+            'picture',
+            'about',
+            'age_range',
+            'birthday',
+            'hometown',
+            'location',
+            'timezone',
+            'education',
+            'political',
+            'religion',
+            'work',
+            'events'
+        ])->scopes([
             'public_profile',
             'user_about_me',
             'email',
@@ -83,7 +104,28 @@ class SocialLoginController extends Controller
     public function handleFacebookProviderCallback(Request $request)
     {
         try {
-            $socUser = Socialite::driver('facebook')->user();
+            $socUser = Socialite::driver('facebook')->fields([
+                'name',
+                'email',
+                'gender',
+                'verified',
+                'link',
+                'first_name',
+                'middle_name',
+                'last_name',
+                'picture',
+                'about',
+                'age_range',
+                'birthday',
+                'hometown',
+                'location',
+                'timezone',
+                'education',
+                'political',
+                'religion',
+                'work',
+                'events'
+            ])->user();
             // $user->token;
         } catch (Exception $e) {
             return redirect('login/facebook');

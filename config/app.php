@@ -173,11 +173,12 @@ return [
          */
         App\Providers\AppServiceProvider::class,
         App\Providers\AuthServiceProvider::class,
-        // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
 
-
+        /*
+         * View Creator...
+         */
         App\Providers\CreatorServiceProvider::class,
         
         
@@ -205,11 +206,6 @@ return [
          * Socialite...
          */
         Laravel\Socialite\SocialiteServiceProvider::class,
-        
-        /*
-         * Passport...
-         */
-        Laravel\Passport\PassportServiceProvider::class,
 
     ],
 
