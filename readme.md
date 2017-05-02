@@ -34,8 +34,9 @@ After installing Laravel, you should configure your web server's document/web ro
 Also, you may need to configure some permissions. Directories within the storage and the bootstrap/cache directories should be writable by your web server or Laravel will not run.
 
 <h4>Database</h4>
-After creating the project's database, you should run the command below to create the database tables and then import the demo database file tmp.sql to have some testing data.
+After creating the project's database, you should run the commands below to create the database tables and generate some dummy data.
 
 ```
 $ php artisan migrate
+$ php artisan db:seed
 ```
