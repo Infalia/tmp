@@ -46,3 +46,9 @@ Route::get('login/google/callback', 'Auth\SocialLoginController@handleGoogleProv
 
 Route::get('login/linkedin', 'Auth\SocialLoginController@redirectToLinkedinProvider');
 Route::get('login/linkedin/callback', 'Auth\SocialLoginController@handleLinkedinProviderCallback');
+
+Route::get('login/twitter', 'Auth\SocialLoginController@redirectToTwitterProvider');
+Route::get('login/twitter/callback', 'Auth\SocialLoginController@handleTwitterProviderCallback');
+
+Route::get('login/pinterest', 'Auth\SocialLoginController@redirectToPinterestProvider');
+Route::get('login/pinterest/callback', 'Auth\SocialLoginController@handlePinterestProviderCallback');

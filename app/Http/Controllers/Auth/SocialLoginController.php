@@ -126,7 +126,7 @@ class SocialLoginController extends Controller
                 'work',
                 'events'
             ])->user();
-            // $user->token;
+            // $socUser->token;
         } catch (Exception $e) {
             return redirect('login/facebook');
         }
@@ -158,7 +158,7 @@ class SocialLoginController extends Controller
     {
         try {
             $socUser = Socialite::driver('google')->user();
-            // $user->token;
+            // $socUser->token;
         } catch (Exception $e) {
             return redirect('login/google');
         }
@@ -187,12 +187,75 @@ class SocialLoginController extends Controller
     {
         try {
             $socUser = Socialite::driver('linkedin')->user();
-            // $user->token;
+            // $socUser->token;
         } catch (Exception $e) {
             return redirect('login/linkedin');
         }
 
         $request->session()->put('user.social_data.linkedin', $socUser);
+
+        return redirect('profile/social-data');
+    }
+
+    /**
+     * Redirect the user to the Twitter authentication page.
+     *
+     * @return Response
+     */
+    public function redirectToTwitterProvider()
+    {
+        return Socialite::driver('twitter')->redirect();
+    }
+
+    /**
+     * Obtain the user information from Twitter.
+     *
+     * @return Response
+     */
+    public function handleTwitterProviderCallback(Request $request)
+    {
+        try {
+            $socUser = Socialite::driver('twitter')->user();
+            // $socUser->token;
+        } catch (Exception $e) {
+            return redirect('login/twitter');
+        }
+
+        $request->session()->put('user.social_data.twitter', $socUser);
+
+        return redirect('profile/social-data');
+    }
+
+    /**
+     * Redirect the user to the Pinterest authentication page.
+     *
+     * @return Response
+     */
+    public function redirectToPinterestProvider()
+    {
+        return Socialite::with('pinterest')->scopes([
+            'read_public',
+            'write_public',
+            'read_relationships',
+            'write_relationships'
+        ])->redirect();
+    }
+
+    /**
+     * Obtain the user information from Pinterest.
+     *
+     * @return Response
+     */
+    public function handlePinterestProviderCallback(Request $request)
+    {
+        try {
+            $socUser = Socialite::driver('pinterest')->user();
+            // $token = $socUser->accessTokenResponseBody;
+        } catch (Exception $e) {
+            return redirect('login/pinterest');
+        }
+
+        $request->session()->put('user.social_data.pinterest', $socUser);
 
         return redirect('profile/social-data');
     }

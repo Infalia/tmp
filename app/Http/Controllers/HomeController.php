@@ -22,6 +22,7 @@ class HomeController extends Controller
         $socialBtnGgl = __('messages.home_social_btn', ['socialNetwork' => 'Google']);
         $socialBtnPint = __('messages.home_social_btn', ['socialNetwork' => 'Pinterest']);
         $socialBtnLin = __('messages.home_social_btn', ['socialNetwork' => 'LinkedIn']);
+        $socialBtnTw = __('messages.home_social_btn', ['socialNetwork' => 'Twitter']);
 
 	    return view('home.index')
             ->with('pageTitle', $pageTitle)
@@ -37,6 +38,7 @@ class HomeController extends Controller
             ->with('socialBtnFb', $socialBtnFb)
             ->with('socialBtnGgl', $socialBtnGgl)
             ->with('socialBtnPint', $socialBtnPint)
-            ->with('socialBtnLin', $socialBtnLin);
+            ->with('socialBtnLin', $socialBtnLin)
+            ->with('socialBtnTw', $socialBtnTw);
     }
 }
