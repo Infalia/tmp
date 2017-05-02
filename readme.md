@@ -40,3 +40,6 @@ After creating the project's database, you should run the command below to creat
 $ php artisan migrate
 ```
 
+```
+$ php test
+```
