@@ -19,7 +19,7 @@ $ composer update
 
 ## Configuration
 
-####Configuration variables
+#### Configuration variables
 Rename the .env.example to .env and edit the application’s configuration variables. You should also check if the APP_KEY variable has been generated. If not, you should run the command below, or your user sessions and other encrypted data will not be secure.
 
 ```
