@@ -18,10 +18,10 @@ class AccessibilityController extends Controller
         $route = Route::current();
 
 
-        // To use this package, first we need an instance of our model
-//        $greek = $accessibilityCategory->where('id', 1)->first();
-//        $greek->setDefaultLocale('el');
-//        $translation = $greek->translate();
+        // // To use this package, first we need an instance of our model
+        // $greek = $accessibilityCategory->where('id', 1)->first();
+        // $greek->setDefaultLocale('el');
+        // $translation = $greek->translate();
 
         $accessibilityCats = $accessibilityCategory->all();
         //$user = $user->find(1);
@@ -57,9 +57,8 @@ class AccessibilityController extends Controller
         $radioGroups = $request->input('radio_groups');
 
         /*
-         * At the moment, this validation message is useless,
-         * because it's not possible to know the name attribute
-         * of each radio button group (because name are given dynamically)
+         * At the moment, this validation message is useless, because it's not possible to know
+         * the name attribute of each radio button group (because names are given dynamically)
          *
          */
         $messages = [
@@ -72,14 +71,12 @@ class AccessibilityController extends Controller
 
         $validator = Validator::make($request->all(), $rules, $messages);
 
-        if ($validator->fails()) {
-            return response()->json(array(
-                'errors' => $validator->getMessageBag()->toArray()
-            ));
+        if($validator->fails()) {
+            return response()->json([
+                'errors' => $messages
+            ]);
         }
         else {
-            //$data = $request->all();
-
             $user = new User();
             $options = $request->input('options');
             $user->find(1)->accessibilityOptions()->sync($options);
@@ -87,9 +84,8 @@ class AccessibilityController extends Controller
             $request->session()->put('user.accessibility_opts', $options);
 
             return response()->json([
-                'success' => __('messages.accessibility_radio_success.stored'),
+                'message' => __('messages.accessibility_radio_success.stored'),
             ]);
         }
-
     }
 }

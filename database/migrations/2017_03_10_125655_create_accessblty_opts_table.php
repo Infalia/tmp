@@ -15,7 +15,8 @@ class CreateAccessbltyOptsTable extends Migration
     {
         Schema::create('accessblty_opts', function (Blueprint $table) {
             $table->increments('id');
-            $table->timestamps();
+            $table->timestamp('updated_at')->useCurrent();
+            $table->timestamp('created_at')->nullable();
         });
     }
 

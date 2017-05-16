@@ -55,7 +55,12 @@
 
                         <div class="input-field col s12">
                             {!! Form::label('languages', $languagesLbl, ['class' => 'active']) !!}
-                            {!! Form::select('languages', ['En_UK' => 'English UK', 'En_US' => 'English US', 'El_GR' => 'Greek'], null, ['id' => 'languages', 'multiple' => true]) !!}
+                            <select id="languages" multiple>
+                                <option value="" disabled selected>{{ $languagesPldr }}</option>
+                                <option value="En_UK">English UK</option>
+                                <option value="En_US">English US</option>
+                                <option value="El_GR">Greek</option>
+                            </select>
                         </div>
 
                         <div class="input-field col s12">

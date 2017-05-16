@@ -12,7 +12,14 @@
     "cross-env": "^3.2.3",
     "jquery": "^3.1.1",
     "laravel-mix": "0.*",
-    "lodash": "^4.17.4",
-    "vue": "^2.1.10"
+    "lodash": "^4.17.4"
+  },
+  "dependencies": {
+    "@mapbox/tilebelt": "^1.0.1",
+    "express": "^4.15.2",
+    "leaflet": "^1.0.3",
+    "leaflet.vectorgrid": "^1.2.0",
+    "path": "^0.12.7",
+    "serve": "^5.0.3"
   }
 }

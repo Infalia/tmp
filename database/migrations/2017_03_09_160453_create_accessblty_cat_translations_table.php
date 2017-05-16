@@ -17,10 +17,11 @@ class CreateAccessbltyCatTranslationsTable extends Migration
             $table->increments('id');
             $table->integer('accessblty_cat_id')->unsigned();
             $table->string('name');
-            $table->string('locale')->index();
+            $table->string('locale', 10)->index();
             $table->unique(['accessblty_cat_id', 'locale']);
             $table->foreign('accessblty_cat_id')->references('id')->on('accessblty_cats')->onDelete('cascade');
-            $table->timestamps();
+            $table->timestamp('updated_at')->useCurrent();
+            $table->timestamp('created_at')->nullable();
         });
     }
 

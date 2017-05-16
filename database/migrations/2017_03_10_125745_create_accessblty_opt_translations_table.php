@@ -17,10 +17,11 @@ class CreateAccessbltyOptTranslationsTable extends Migration
             $table->increments('id');
             $table->integer('accessblty_opt_id')->unsigned();
             $table->string('name');
-            $table->string('locale')->index();
+            $table->string('locale', 10)->index();
             $table->unique(['accessblty_opt_id', 'locale']);
             $table->foreign('accessblty_opt_id')->references('id')->on('accessblty_opts')->onDelete('cascade');
-            $table->timestamps();
+            $table->timestamp('updated_at')->useCurrent();
+            $table->timestamp('created_at')->nullable();
         });
     }
 

@@ -19,7 +19,8 @@ class CreateUserAccessbltyOptsTable extends Migration
             $table->integer('accessblty_opt_id')->unsigned();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('accessblty_opt_id')->references('id')->on('accessblty_opts')->onDelete('cascade');
-            $table->timestamps();
+            $table->timestamp('updated_at')->useCurrent();
+            $table->timestamp('created_at')->nullable();
         });
     }
 

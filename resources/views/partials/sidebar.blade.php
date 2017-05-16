@@ -11,7 +11,7 @@
 
     <div class="sidebar-nav-options">
         <ul>
-            <li><a href="#!" class="waves-effect"><i class="material-icons">toll</i>{{ $sidebarOption1 }}</a></li>
+            <li><a href="{{ url('offer/new') }}" class="waves-effect"><i class="material-icons">toll</i>{{ $sidebarOption1 }}</a></li>
             <li><a href="#!" class="waves-effect"><i class="material-icons">dashboard</i>{{ $sidebarOption2 }}</a></li>
             <li><a href="{{ url('offers') }}" class="waves-effect @if ($routeUri == 'offers') active @endif"><i class="material-icons">list</i>{{ $sidebarOption3 }}</a></li>
             <li><a href="{{ url('timeline') }}" class="waves-effect @if ($routeUri == 'timeline') active @endif"><i class="material-icons">perm_identity</i>{{ $sidebarOption4 }}</a></li>

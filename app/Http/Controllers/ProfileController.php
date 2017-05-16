@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Route;
 
 class ProfileController extends Controller
 {
-    function index()
+    function basicInfo()
     {
         $route = Route::current();
         $user = null;
@@ -51,7 +51,7 @@ class ProfileController extends Controller
         $saveBtn = __('messages.form_save_btn');
         $cancelBtn = __('messages.form_cancel_btn');
 
-        return view('profile.index')
+        return view('profile.basic-info')
             ->with('sidebarOption1', $sidebarOption1)
             ->with('sidebarOption2', $sidebarOption2)
             ->with('sidebarOption3', $sidebarOption3)

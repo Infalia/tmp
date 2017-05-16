@@ -93,18 +93,30 @@
                     </ul>
 
                     {!! Form::button($saveBtn, array('id' => 'save-btn', 'class' => 'waves-effect waves-light btn')) !!}
-                    {{ csrf_field() }}
                 </form>
             </div>
             @endif
 
+        </div>
+
+
+        <div class="loader-overlay">
+            <div class="loader">
+                <div class="loader-inner line-scale-pulse-out-rapid">
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                </div>
+            </div>
         </div>
     </div>
 @endsection
 
 @section('jslibs')
     <script>
-        $(document).on( "click", "#save-btn", function(e) {
+        $(document).on("click", "#save-btn", function(e) {
             data = new Object();
             var radioGroups = [];
             var radioGroupValues = [];
@@ -125,9 +137,6 @@
 
             data['radio_groups'] = radioGroups;
             data['options'] = radioGroupValues;
-            data['_token'] = $('input[name=_token]').val();
-
-            //console.log(data);
 
 
             var url = "{{ url('accessibility/save-options') }}";
@@ -139,11 +148,14 @@
                 dataType: 'json',
                 success: function(data) {
                     if((data.errors)) {
-                        //console.log('{{ $radioBtnValidationMsg }}');
-                        Materialize.toast('{{ $radioBtnValidationMsg }}', 5000, 'red darken-1')
+                        Materialize.toast(data.errors.required, 5000, 'red darken-1')
                     }
                     else {
-                        window.location.reload();
+                        $('.loader-overlay').fadeIn(0);
+
+                        setTimeout(function() {
+                            window.location.reload();
+                        }, 2500);
                     }
                 },
                 error : function(XMLHttpRequest, textStatus, errorThrown) {}

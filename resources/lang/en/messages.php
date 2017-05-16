@@ -26,6 +26,16 @@
         'form_languages_pldr' => 'Choose your languages',
         'form_bio_lbl' => 'About you',
         'form_bio_pldr' => 'Tell us about you...',
+        'form_init_type_lbl' => 'What is this about',
+        'form_init_type_pldr' => 'Choose type',
+        'form_init_title_lbl' => 'Title',
+        'form_init_title_pldr' => 'What is the offer/demand title...',
+        'form_start_date_lbl' => 'Start date',
+        'form_start_date_pldr' => 'When your offer starts...',
+        'form_end_date_lbl' => 'End date',
+        'form_end_date_pldr' => 'When your offer ends...',
+        'form_init_descr_lbl' => 'Description',
+        'form_init_descr_pldr' => 'Tell us about your offer/demand...',
         'form_save_btn' => 'Save',
         'form_cancel_btn' => 'Cancel',
 
@@ -44,11 +54,17 @@
         'accessibility_radio_error' => [
             'required' => 'You have to pick an option for each category!',
         ],
+        'initiative_form_error' => [
+            'required' => 'One or more fields are not valid!',
+        ],
 
 
         /*** GENERIC VALIDATION SUCCESS MESSAGES ***/
         'accessibility_radio_success' => [
             'stored' => 'Settings have been saved successfully!',
+        ],
+        'initiative_form_success' => [
+            'stored' => 'Your initiative has been saved successfully!',
         ],
 
 
@@ -116,10 +132,20 @@
         'timeline_comment_lbl' => 'comment',
         'timeline_supporter_lbl' => 'supporter',
 
-        /* Offers */
-        'offers_page_title' => 'Offers/Demands - '.config('app.name'),
-        'offers_page_meta_description' => '',
-        'offers_btn_1' => 'show on map',
+        /* Initiatives */
+        'initiatives_page_title' => 'Offers/Demands - '.config('app.name'),
+        'initiatives_page_meta_description' => '',
+        'initiatives_btn_1' => 'show on map',
+
+        /* Initiative form */
+        'initiative_form_page_title' => 'New offer - '.config('app.name'),
+        'initiative_form_page_meta_description' => '',
+        'initiative_form_heading_1' => 'Post a new offer',
+        'initiative_form_image_msg_1' => 'Image is bigger than '.(env('MAX_FILE_SIZE')/1024).'Mb',
+        'initiative_form_image_msg_2' => 'Error occured',
+        'initiative_form_image_msg_3' => 'This file type is not allowed',
+        'initiative_form_image_msg_4' => 'Maximum file number exceeded',
+        'initiative_form_image_btn_1' => 'Remove',
 
         /* Notifications */
         'notifications_page_title' => 'Notifications - '.config('app.name'),

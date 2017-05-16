@@ -17,7 +17,7 @@ Route::get('/', 'HomeController@index');
 //});
 
 /*** User profile ***/
-Route::get('profile/basic-info', 'ProfileController@index');
+Route::get('profile/basic-info', 'ProfileController@basicInfo');
 Route::get('profile/work', 'ProfileController@work');
 Route::get('profile/interests', 'ProfileController@interests');
 Route::get('profile/social-accounts', 'ProfileController@socialAccounts');
@@ -26,8 +26,11 @@ Route::get('profile/social-data', 'ProfileController@socialData');
 /*** Timeline ***/
 Route::get('timeline', 'TimelineController@index');
 
-/*** Offers ***/
-Route::get('offers', 'OfferController@index');
+/*** Initiatives ***/
+Route::get('offers', 'InitiativeController@initiatives');
+Route::get('offer/new', 'InitiativeController@initiativeForm');
+Route::post('offer/save', 'InitiativeController@storeInitiative');
+Route::post('offer/image/upload', 'InitiativeController@imageUpload');
 
 /*** Notifications ***/
 Route::get('notifications', 'NotificationController@index');
@@ -36,6 +39,12 @@ Route::get('notifications', 'NotificationController@index');
 Route::get('accessibility/wizard', 'AccessibilityController@index');
 Route::post('accessibility/save-options', 'AccessibilityController@storeUserAccessibilityOptions');
 
+/*** UWUM ***/
+Route::post('uwum/check-user', 'UwumController@checkUser');
+
+/*** UWUM authentication ***/
+Route::get('login/uwum', 'Auth\UwumLoginController@redirectToUwumProvider');
+Route::get('login/uwum/callback', 'Auth\UwumLoginController@handleUwumCallback');
 
 /*** Socialite ***/
 Route::get('login/facebook', 'Auth\SocialLoginController@redirectToFacebookProvider');

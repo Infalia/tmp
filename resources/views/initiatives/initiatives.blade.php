@@ -5,14 +5,14 @@
         @include('partials.sidebar')
 
         <div class="profile-container">
-            <div class="offers">
+            <div class="initiatives">
 
                 <div class="row">
                     <div class="col s12 m4 l6 xl3">
                         <div class="card">
                             <div class="card-image">
                                 <a href="#!">
-                                    {!! HTML::image('images/offers/image-1.jpg', 'offer title', array('class' => '')) !!}
+                                    {!! HTML::image('images/initiatives/image-1.jpg', 'offer title', array('class' => '')) !!}
                                     <a class="waves-effect waves-light btn">{{ $showBtn }}</a>
                                 </a>
                             </div>
@@ -41,7 +41,7 @@
                         <div class="card">
                             <div class="card-image">
                                 <a href="#!">
-                                    {!! HTML::image('images/offers/image-2.jpg', 'offer title', array('class' => '')) !!}
+                                    {!! HTML::image('images/initiatives/image-2.jpg', 'offer title', array('class' => '')) !!}
                                     <a class="waves-effect waves-light btn">{{ $showBtn }}</a>
                                 </a>
                             </div>
@@ -70,7 +70,7 @@
                         <div class="card">
                             <div class="card-image">
                                 <a href="#!">
-                                    {!! HTML::image('images/offers/image-3.jpg', 'offer title', array('class' => '')) !!}
+                                    {!! HTML::image('images/initiatives/image-3.jpg', 'offer title', array('class' => '')) !!}
                                     <a class="waves-effect waves-light btn">{{ $showBtn }}</a>
                                 </a>
                             </div>
@@ -99,7 +99,7 @@
                         <div class="card">
                             <div class="card-image">
                                 <a href="#!">
-                                    {!! HTML::image('images/offers/image-1.jpg', 'offer title', array('class' => '')) !!}
+                                    {!! HTML::image('images/initiatives/image-1.jpg', 'offer title', array('class' => '')) !!}
                                     <a class="waves-effect waves-light btn">{{ $showBtn }}</a>
                                 </a>
                             </div>

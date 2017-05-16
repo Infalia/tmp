@@ -15,7 +15,10 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'id',
+        'name',
+        'email',
+        'password',
     ];
 
     /**
@@ -35,5 +38,15 @@ class User extends Authenticatable
     public function accessibilityOptions()
     {
         return $this->belongsToMany('App\AccessbltyOpt');
+    }
+
+    /**
+     * The initiatives that belong to the user.
+     *
+     * @return App\Initiative|null
+     */
+    public function initiatives()
+    {
+        return $this->hasMany('App\Initiative');
     }
 }

@@ -12,6 +12,7 @@
         "laravel/socialite": "^3.0",
         "laravel/tinker": "~1.0",
         "laravelcollective/html": "^5.4",
+        "league/oauth2-client": "^2.2",
         "skydiver/laravel-materialize-css": "dev-master",
         "socialiteproviders/pinterest": "^3.0"
     },
