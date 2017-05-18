@@ -123,8 +123,7 @@ class InitiativeController extends Controller
         $rules = array();
         $initiativeType = $request->input('initiative_type');
         $title = $request->input('title');
-        $startDate = $request->input('start_date');
-        $endDate = $request->input('end_date');
+        $date = $request->input('date');
         $description = $request->input('description');
         $latitude = $request->input('latitude');
         $longitude = $request->input('longitude');
@@ -139,8 +138,7 @@ class InitiativeController extends Controller
         
         $rules['initiative_type'] = 'required|integer';
         $rules['title'] = 'required|max:255';
-        $rules['start_date'] = 'required|date_format:d/m/Y H:i';
-        $rules['end_date'] = 'required|date_format:d/m/Y H:i|after:start_date';
+        $rules['date'] = 'required';
         $rules['description'] = 'required';
         $rules['latitude'] = 'required|numeric';
         $rules['longitude'] = 'required|numeric';
@@ -152,11 +150,6 @@ class InitiativeController extends Controller
         if($validator->fails()) {
             // $err = $validator->messages();
 
-            // echo $err[0];
-            // echo '<pre>';
-            // print_r($err);
-            // echo '</pre>';
-
             return response()->json([
                 'errors' => $validator->messages()
             ]);
@@ -165,6 +158,10 @@ class InitiativeController extends Controller
             $user = new User();
 
             // Date formatting
+            $dateArr = explode(' to ', $date);
+            $startDate = $dateArr[0];
+            $endDate = $dateArr[1];
+
             $sDate = DateTime::createFromFormat('d/m/Y H:i:s', $startDate.':00');
             $startDate = $sDate->format('Y-m-d H:i:s');
 

@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('csslibs')
-    {!! HTML::style('bootstrap-material-datetimepicker/css/bootstrap-material-datetimepicker.css') !!}
+    {!! HTML::style('flatpickr/themes/airbnb.css') !!}
     {!! HTML::style('dropzone/dropzone.css') !!}
 @endsection
 
@@ -33,18 +33,13 @@
                                 </div>
 
                                 <div class="input-field col s12">
-                                    {!! Form::text('title', '', ['id' => 'title', 'class' => 'validate', 'placeholder' => $titlePldr, 'maxlength' => '255']) !!}
+                                    {!! Form::text('title', '', ['id' => 'title', 'class' => '', 'placeholder' => $titlePldr, 'maxlength' => '255']) !!}
                                     {!! Form::label('title', $titleLbl, ['class' => 'active']) !!}
                                 </div>
 
-                                <div class="input-field col m6">
-                                    {!! Form::text('start_date', '', ['id' => 'start_date', 'class' => 'datepicker', 'placeholder' => $startDatePldr]) !!}
-                                    {!! Form::label('start_date', $startDateLbl, ['class' => 'active']) !!}
-                                </div>
-
-                                <div class="input-field col m6">
-                                    {!! Form::text('end_date', '', ['id' => 'end_date', 'class' => 'datepicker', 'placeholder' => $endDatePldr]) !!}
-                                    {!! Form::label('end_date', $endDateLbl, ['class' => 'active']) !!}
+                                <div class="input-field col s12">
+                                    {!! Form::text('date', '', ['id' => 'date', 'class' => 'datepicker', 'placeholder' => $startDatePldr]) !!}
+                                    {!! Form::label('date', $startDateLbl, ['class' => 'active']) !!}
                                 </div>
 
                                 <div class="input-field col s12">
@@ -178,8 +173,7 @@
 @endsection
 
 @section('jslibs')
-    {!! HTML::script('js/moment-with-locales.min.js') !!}
-    {!! HTML::script('bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.js') !!}
+    {!! HTML::script('flatpickr/flatpickr.min.js') !!}
     {!! HTML::script('dropzone/dropzone.min.js') !!}
 
     <script>
@@ -207,22 +201,6 @@
             dictMaxFilesExceeded: '{{ $imageUploadFileNumberMsg }}',
             autoProcessQueue: false,
             
-            {{-- init: function() {
-                var startUpload = document.getElementById("save-btn");
-                imgZone = this;
-                
-                startUpload.addEventListener("click", function () {
-                    imgZone.processQueue();
-                });
-                
-                this.on("success", function() {
-                    imgZone.options.autoProcessQueue = true;
-                });
-
-                this.on("queuecomplete", function() {
-                    imgZone.options.autoProcessQueue = false;
-                });
-            }, --}}
             error: function(file, response) {
                 if($.type(response) === "string")
                     var message = response; //dropzone sends it's own error messages in string
@@ -249,16 +227,13 @@
 
 
         // Datetime pickers
-        $('#end_date').bootstrapMaterialDatePicker({
-            format : 'DD/MM/YYYY HH:mm',
-            weekStart: 0
-        });
-        $('#start_date').bootstrapMaterialDatePicker({
-            format : 'DD/MM/YYYY HH:mm',
-            weekStart: 0,
-            minDate: moment()
-        }).on('change', function(e, date) {
-            $('#end_date').bootstrapMaterialDatePicker('setMinDate', date);
+        $("#date").flatpickr({
+            minDate: "today",
+            maxDate: new Date().fp_incr(180),
+            dateFormat: 'd/m/Y H:i',
+            enableTime: true,
+            time_24hr: true,
+            mode: 'range'
         });
 
         $(document).ready(function() {
@@ -298,13 +273,21 @@
         }
 
 
+
+        // PC search keypress
+        $(document).on("keypress", "#title", function(e) {
+            if(e.which == 13) {
+                $('#save-btn').click();
+                e.preventDefault();
+            }
+        });
+
         $(document).on("click", "#save-btn", function(e) {
             data = new Object();
 
             data['initiative_type'] = $('#initiative_type').val();
             data['title'] = $('#title').val();
-            data['start_date'] = $('#start_date').val();
-            data['end_date'] = $('#end_date').val();
+            data['date'] = $('#date').val();
             data['description'] = $('#description').val();
             data['latitude'] = $('#lat').text();
             data['longitude'] = $('#lon').text();

@@ -598,7 +598,7 @@ i.material-icons.inline-icon {
 
 /****** NEW OFFER ******/
 /* Override plugin colours */
-.dtp .dtp-content div.dtp-date,
+/*.dtp .dtp-content div.dtp-date,
 .dtp .dtp-content div.dtp-time {
     background: #26a69a;
 }
@@ -610,6 +610,20 @@ body .dtp > .dtp-content > .dtp-date-view > header.dtp-header {
 }
 .dtp .dtp-picker table.dtp-picker-days tr > td > a.selected {
     background: #1f897f;
+}*/
+.initiative-form #date {
+    color: rgba(0,0,0,0.87);
+    border-bottom: 1px solid #9e9e9e;
+}
+.initiative-form #date:focus {
+    border-bottom: 1px solid #26a69a;
+    box-shadow: 0 1px 0 0 #26a69a;
+}
+.initiative-form #date + label {
+    color: #9e9e9e;
+}
+.initiative-form #date:focus + label {
+    color: #26a69a;
 }
 
 .init-form-map {

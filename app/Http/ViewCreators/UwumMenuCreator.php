@@ -30,7 +30,7 @@ class UwumMenuCreator
             $client = new Client();
 
             try {
-                $result = $client->request('GET', 'https://wegovnow.liquidfeedback.com/api/1/navigation?client_id=wegovnow.infalia.com');
+                $result = $client->request('GET', env('UWUM_NAV_URL').'?client_id='.env('UWUM_CLIENT_ID'));
                 $this->navigationMenu = (string) $result->getBody();
                 $request->session()->put('uwumNavMenu', $this->navigationMenu);
             } catch (RequestException $e) {

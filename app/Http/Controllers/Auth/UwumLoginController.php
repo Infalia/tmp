@@ -47,12 +47,12 @@ class UwumLoginController extends Controller
     public function redirectToUwumProvider()
     {
         $provider = new UwumOAuth2Provider([
-            'clientId' => 'tmp.infalia.com', // The client ID assigned to you by UWUM Certificate Authority (actually your CN)
+            'clientId' => env('UWUM_CLIENT_ID'), // The client ID assigned to you by UWUM Certificate Authority (actually your CN)
             'clientSecret' => '', // We need no clientSecret since we are using certificates for client authentication
-            'redirectUri' => 'https://tmp.infalia.com/login/uwum/callback', // Currently should be the same as declared in UWUM Certificate Authority
-            'urlAuthorize' => 'https://wegovnow.liquidfeedback.com/api/1/authorization', // UWUM API endpoints
-            'urlAccessToken' => 'https://wegovnow-cert.liquidfeedback.com/api/1/token',
-            'cert' => '/opt/wgn_cert/tm_uwum/tmp.infalia.com-uwum.pem', // Path to your pem (outside web directory)
+            'redirectUri' => env('UWUM_CALLBACK_URL'), // Currently should be the same as declared in UWUM Certificate Authority
+            'urlAuthorize' => env('UWUM_AUTH_URL'), // UWUM API endpoints
+            'urlAccessToken' => env('UWUM_TOKEN_URL'),
+            'cert' => env('CERT_PATH'), // Path to your pem (outside web directory)
             'urlResourceOwnerDetails' => '' // N/A
         ]);
 

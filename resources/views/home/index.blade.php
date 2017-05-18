@@ -3,6 +3,17 @@
 @section('content')
     <div class="content">
         <div class="container home-container">
+
+
+            @php
+                $ontomapResponse = json_decode($ontomapResponse);
+                echo '<pre>';
+                print_r($ontomapResponse);
+                echo '</pre>';
+            @endphp
+
+
+
             <div class="card-panel yellow lighten-3">{{ $alert1 }}</div>
 
             <div class="row">
