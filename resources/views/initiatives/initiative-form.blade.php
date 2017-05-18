@@ -274,7 +274,7 @@
 
 
 
-        // PC search keypress
+        // PC form fields keypress
         $(document).on("keypress", "#title", function(e) {
             if(e.which == 13) {
                 $('#save-btn').click();
