@@ -3,6 +3,9 @@
 @section('csslibs')
     {!! HTML::style('flatpickr/themes/airbnb.css') !!}
     {!! HTML::style('dropzone/dropzone.css') !!}
+    <!--[if IE 9]>
+    {!! HTML::style('flatpickr/ie.css') !!}
+    <![endif]-->
 @endsection
 
 @section('content')
