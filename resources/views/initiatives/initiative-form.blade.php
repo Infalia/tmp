@@ -221,12 +221,8 @@
 
                 return _results;
             },
-            success: function(file, done) {
-                
-            }
+            successmultiple: function(file, response) {}
         });
-
-
 
 
         // Datetime pickers
@@ -287,6 +283,8 @@
 
         $(document).on("click", "#save-btn", function(e) {
             data = new Object();
+            var imagesArray = new Array();
+            var hasFiles = false;
 
             data['initiative_type'] = $('#initiative_type').val();
             data['title'] = $('#title').val();
@@ -322,17 +320,37 @@
 
                         setTimeout(function() {
                             $('#initiative-form').fadeOut(0);
-                            
-                            imgDropzone.options.params = {'initId': data.initId};
+
+                            imgDropzone.options.params = { 'initId': data.initId };
                             imgDropzone.processQueue();
+
+                            // Check if there are images
+                            if(imgDropzone.getUploadingFiles().length > 0) {
+                                hasFiles = true;
+                            }
 
                             imgDropzone.on("success", function() {
                                 imgDropzone.options.autoProcessQueue = true;
                             });
 
+                            imgDropzone.on("successmultiple", function(file, response) {
+                                $.each(response.files, function(key, value) {
+                                    imagesArray.push(value);
+                                });
+                            });
+
                             imgDropzone.on("queuecomplete", function() {
                                 imgDropzone.options.autoProcessQueue = false;
+
+                                // If there are images, post to OTM after dropzone uploading is completed
+                                $.post("{{ url('offer/post-to-ontomap') }}", { 'initId': data.initId, 'images': imagesArray }, function(response){});
                             });
+
+
+                            // If there are no images, post to OTM directly
+                            if(!hasFiles) {
+                                $.post("{{ url('offer/post-to-ontomap') }}", { 'initId': data.initId, 'images': imagesArray }, function(response){});
+                            }
 
                             $('#response').text(data.message).removeClass('hide');
                             $('.loader-overlay').fadeOut(0);

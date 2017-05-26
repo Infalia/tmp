@@ -8,26 +8,36 @@
             <div class="initiatives">
 
                 <div class="row">
+
+                    @forelse($initiatives->event_list as $initiative)
                     <div class="col s12 m4 l6 xl3">
                         <div class="card">
+                            @if(!empty($initiative->activity_objects[0]->properties->additionalProperties->images))
                             <div class="card-image">
-                                <a href="#!">
-                                    {!! HTML::image('images/initiatives/image-1.jpg', 'offer title', array('class' => '')) !!}
+                                <a href="{{ $initiative->activity_objects[0]->properties->external_url }}">
+                                    {!! HTML::image('storage/initiatives/'.$initiative->activity_objects[0]->properties->additionalProperties->images[0], $initiative->activity_objects[0]->properties->hasName, array('class' => '')) !!}
                                     <a class="waves-effect waves-light btn">{{ $showBtn }}</a>
                                 </a>
                             </div>
+                            @endif
 
                             <div class="card-content">
-                                <a href="#!"><span class="card-title">Make a party for over aged people</span></a>
+                                <a href="{{ $initiative->activity_objects[0]->properties->external_url }}"><span class="card-title">{{ $initiative->activity_objects[0]->properties->hasName }}</span></a>
 
 
                                 <div class="card-post-action">
-                                    <span>Offers</span>
-                                    <span class="card-post-action-time grey-text text-darken-1">23m</span>
+                                    @isset($initiative->activity_objects[0]->properties->additionalProperties->initiative_type)
+                                    <span>{{ $initiative->activity_objects[0]->properties->additionalProperties->initiative_type }}</span>
+                                    @endisset
+
+                                    <span class="card-post-action-time grey-text text-darken-1">{{ \Carbon\Carbon::createFromTimestamp($initiative->timestamp)->diffForHumans() }}</span>
                                 </div>
 
-                                <span class="card-post-calendar">Friday, 13 March 2017 18.00</span>
-                                <span class="card-post-address">Via Casamassima, 46, 70010 Valenzano BA, Italy</span>
+                                @isset($initiative->activity_objects[0]->properties->additionalProperties->start_date)
+                                <span class="card-post-calendar">{{ \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $initiative->activity_objects[0]->properties->additionalProperties->start_date)->format('l, j M Y H:i') }}</span>
+                                @endisset
+
+                                <span class="card-post-address">Not available</span>
                             </div>
 
                             <div class="card-action card-action-footer">
@@ -36,96 +46,11 @@
                             </div>
                         </div>
                     </div>
-
-                    <div class="col s12 m4 l6 xl3">
-                        <div class="card">
-                            <div class="card-image">
-                                <a href="#!">
-                                    {!! HTML::image('images/initiatives/image-2.jpg', 'offer title', array('class' => '')) !!}
-                                    <a class="waves-effect waves-light btn">{{ $showBtn }}</a>
-                                </a>
-                            </div>
-
-                            <div class="card-content">
-                                <a href="#!"><span class="card-title">Help older people go for swimming</span></a>
-
-
-                                <div class="card-post-action">
-                                    <span>Demands</span>
-                                    <span class="card-post-action-time grey-text text-darken-1">4h</span>
-                                </div>
-
-                                <span class="card-post-calendar">Thursday, 27 February 2017 10.00</span>
-                                <span class="card-post-address">Via Casamassima, 46, 70010 Valenzano BA, Italy</span>
-                            </div>
-
-                            <div class="card-action card-action-footer">
-                                <span><i class="material-icons inline-icon grey-text text-darken-3">comment</i> {{ $comments = 13 }} {{ str_plural($commentLbl, $comments) }}</span>
-                                <span><i class="material-icons inline-icon grey-text text-darken-3">people</i> {{ $supporters = 2 }} {{ str_plural($supportLbl, $supporters) }}</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col s12 m4 l6 xl3">
-                        <div class="card">
-                            <div class="card-image">
-                                <a href="#!">
-                                    {!! HTML::image('images/initiatives/image-3.jpg', 'offer title', array('class' => '')) !!}
-                                    <a class="waves-effect waves-light btn">{{ $showBtn }}</a>
-                                </a>
-                            </div>
-
-                            <div class="card-content">
-                                <a href="#!"><span class="card-title">Make a party for over aged people</span></a>
-
-
-                                <div class="card-post-action">
-                                    <span>Offers</span>
-                                    <span class="card-post-action-time grey-text text-darken-1">23m</span>
-                                </div>
-
-                                <span class="card-post-calendar">Friday, 13 January 2017 18.00</span>
-                                <span class="card-post-address">Via Casamassima, 46, 70010 Valenzano BA, Italy</span>
-                            </div>
-
-                            <div class="card-action card-action-footer">
-                                <span><i class="material-icons inline-icon grey-text text-darken-3">comment</i> {{ $comments = 2 }} {{ str_plural($commentLbl, $comments) }}</span>
-                                <span><i class="material-icons inline-icon grey-text text-darken-3">people</i> {{ $supporters = 5 }} {{ str_plural($supportLbl, $supporters) }}</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col s12 m4 l6 xl3">
-                        <div class="card">
-                            <div class="card-image">
-                                <a href="#!">
-                                    {!! HTML::image('images/initiatives/image-1.jpg', 'offer title', array('class' => '')) !!}
-                                    <a class="waves-effect waves-light btn">{{ $showBtn }}</a>
-                                </a>
-                            </div>
-
-                            <div class="card-content">
-                                <a href="#!"><span class="card-title">Make a party for over aged people</span></a>
-
-
-                                <div class="card-post-action">
-                                    <span>Offers</span>
-                                    <span class="card-post-action-time grey-text text-darken-1">23m</span>
-                                </div>
-
-                                <span class="card-post-calendar">Friday, 13 March 2017 18.00</span>
-                                <span class="card-post-address">Via Casamassima, 46, 70010 Valenzano BA, Italy</span>
-                            </div>
-
-                            <div class="card-action card-action-footer">
-                                <span><i class="material-icons inline-icon grey-text text-darken-3">comment</i> {{ $comments = 2 }} {{ str_plural($commentLbl, $comments) }}</span>
-                                <span><i class="material-icons inline-icon grey-text text-darken-3">people</i> {{ $supporters = 5 }} {{ str_plural($supportLbl, $supporters) }}</span>
-                            </div>
-                        </div>
-                    </div>
+                    @empty
+                        <p>{{ $noRecordsMsg }}</p>
+                    @endforelse
 
                 </div>
-
             </div>
         </div>
 

@@ -19,8 +19,8 @@ class CreateInitiativesTable extends Migration
             $table->integer('user_id')->unsigned();
             $table->string('title', 255);
             $table->text('description');
-            $table->decimal('latitude', 10, 8);
-            $table->decimal('longitude', 11, 8);
+            $table->decimal('latitude', 20, 18);
+            $table->decimal('longitude', 21, 18);
             $table->string('input_map_data', 255);
             $table->dateTime('start_date');
             $table->dateTime('end_date');

@@ -27,8 +27,8 @@ class HomeController extends Controller
         $socialBtnTw = __('messages.home_social_btn', ['socialNetwork' => 'Twitter']);
 
         /******  For testing purposes  ******/
-        $onToMap = new OnToMap();
-        $ontomapResponse = $onToMap->getOnToMapEvents();
+        // $onToMap = new OnToMap();
+        // $ontomapResponse = $onToMap->getOnToMapEvents();
 
 
 	    return view('home.index')
@@ -46,7 +46,6 @@ class HomeController extends Controller
             ->with('socialBtnGgl', $socialBtnGgl)
             ->with('socialBtnPint', $socialBtnPint)
             ->with('socialBtnLin', $socialBtnLin)
-            ->with('socialBtnTw', $socialBtnTw)
-            ->with('ontomapResponse', $ontomapResponse);
+            ->with('socialBtnTw', $socialBtnTw);
     }
 }

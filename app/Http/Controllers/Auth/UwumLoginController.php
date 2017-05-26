@@ -3,48 +3,14 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use App\Overriders\UwumOAuth2Provider;
+use App\User;
 
 class UwumLoginController extends Controller
 {
-    /*
-    |--------------------------------------------------------------------------
-    | Login Controller
-    |--------------------------------------------------------------------------
-    |
-    | This controller handles authenticating users for the application and
-    | redirecting them to your home screen. The controller uses a trait
-    | to conveniently provide its functionality to your applications.
-    |
-    */
-
-    use AuthenticatesUsers;
-
-    /**
-     * Where to redirect users after login.
-     *
-     * @var string
-     */
-    protected $redirectTo = '/home';
-
-    /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        $this->middleware('guest', ['except' => 'logout']);
-    }
-
-    /**
-     * Redirect the user to the UWUM authentication page.
-     *
-     * @return Response
-     */
-    public function redirectToUwumProvider()
+    public function redirectToUwumProvider(Request $requestHttp)
     {
         $provider = new UwumOAuth2Provider([
             'clientId' => env('UWUM_CLIENT_ID'), // The client ID assigned to you by UWUM Certificate Authority (actually your CN)
@@ -62,22 +28,21 @@ class UwumLoginController extends Controller
             // Fetch the authorization URL from the provider; this returns the urlAuthorize option and generates and applies
             // any necessary parameters. (e.g. state). At this point you set scopes (multiple scopes are space separated).
             $options = [
-                'scope' => ['read_contents read_authors']
+                'scope' => ['identification notify_email_detached']
             ];
 
             $authorizationUrl = $provider->getAuthorizationUrl($options);
 
             // Get the state generated for you and store it to the session.
-            $_SESSION['oauth2state'] = $provider->getState();
+            $requestHttp->session()->put('oauth2state', $provider->getState());
 
             // Redirect the user to the authorization URL.
-            header('Location: ' . $authorizationUrl);
+            return redirect($authorizationUrl);
 
             exit;
             // Check given state against previously stored one to mitigate CSRF attack
-        } elseif (empty($_GET['state']) || ($_GET['state'] !== $_SESSION['oauth2state'])) {
-            unset($_SESSION['oauth2state']);
-
+        } elseif (empty($_GET['state']) || ($_GET['state'] !== $requestHttp->session()->get('oauth2state'))) {
+            $requestHttp->session()->forget('oauth2state');
             exit('Invalid state');
         } else {
             try {
@@ -87,27 +52,75 @@ class UwumLoginController extends Controller
                     ]
                 );
 
-                echo '<h1>--- RAW DATA received from UWUM ---</h1>';
-                echo 'token='.$accessToken->getToken() . "\n<br />";
-                echo 'refresh token='.$accessToken->getRefreshToken() . "\n<br />";
-                echo 'expires='.$accessToken->getExpires() . "\n<br />";
-                echo ($accessToken->hasExpired() ? 'expired' : 'not expired') . "\n<br />";
-                echo 'values='; print_r($accessToken->getValues()) . "\n<br />";
+                // echo '<h1>--- RAW DATA received from UWUM ---</h1>';
+                // echo 'token='.$accessToken->getToken() . "\n<br />";
+                // echo 'refresh token='.$accessToken->getRefreshToken() . "\n<br />";
+                // echo 'expires='.$accessToken->getExpires() . "\n<br />";
+                // echo ($accessToken->hasExpired() ? 'expired' : 'not expired') . "\n<br />";
+                // echo 'values='; print_r($accessToken->getValues()) . "\n<br />";
+                $values = $accessToken->getValues();
 
-                // We have an access token, which we may use in authenticated
-                // requests against the service provider's API.
-                $request = $provider->getAuthenticatedRequest('POST', 'https://wegovnow.liquidfeedback.com/api/1/validate',$accessToken);
-                
+
+                // // We have an access token, which we may use in authenticated requests against the service provider's API.
+                $request = $provider->getAuthenticatedRequest('POST', env('UWUM_VALIDATE_URL'), $accessToken);
                 $httpResponse = $provider->getResponse($request);
-                
-                echo '<h1>--- VALIDATE access token ---</h1>';
-                echo 'response: '; print_r($httpResponse) . "\n<br />";
-                // Call any UWUM API (e.g. info)
-                $request = $provider->getAuthenticatedRequest('GET', 'https://wegovnow.liquidfeedback.com/api/1/info', $accessToken);
+                // //echo '<h1>--- VALIDATE access token ---</h1>';
+                // //echo (string) $httpResponse->getBody();
+                $accessTokenResponse = json_decode((string) $httpResponse->getBody(), true);
+                // echo '<pre>';
+                // print_r($accessTokenResponse);
+                // echo '</pre>';
+
+
+                // // Call any UWUM API (e.g. info)
+                $request = $provider->getAuthenticatedRequest('GET', env('UWUM_INFO_URL').'?include_member=1', $accessToken);
                 $httpResponse = $provider->getResponse($request);
+                // //echo '<h1>--- CALLING GET/info ---</h1>';
+                // //echo (string) $httpResponse->getBody();
+                $userInfoResponse = json_decode((string) $httpResponse->getBody(), true);
+                // echo '<pre>';
+                // print_r($userInfoResponse);
+                // echo '</pre>';
+
+
+                // // Call any UWUM API (e.g. notify_email)
+                $request = $provider->getAuthenticatedRequest('GET', env('UWUM_NOTIFY_EMAIL_URL'), $accessToken);
+                $httpResponse = $provider->getResponse($request);
+                // //echo '<h1>--- CALLING GET/notify_email ---</h1>';
+                // //echo (string) $httpResponse->getBody();
+                $userEmailResponse = json_decode((string) $httpResponse->getBody(), true);
+                // echo '<pre>';
+                // print_r($userEmailResponse);
+                // echo '</pre>';
+
                 
-                echo '<h1>--- CALLING GET/info ---</h1>';
-                echo 'response: '; print_r($httpResponse) . "\n<br />";
+
+                if(1 == $accessTokenResponse['logged_in']) {
+                    $user = User::find($accessTokenResponse['member_id']);
+
+                    if(!empty($user)) {
+                        if($user->name != $userInfoResponse['member']['name'] || $user->email != $userEmailResponse['result']['notify_email']) {
+                            $user->name = $userInfoResponse['member']['name'];
+                            $user->email = $userEmailResponse['result']['notify_email'];
+
+                            $user->save();
+                        }
+
+                        Auth::loginUsingId($accessTokenResponse['member_id']);
+                    }
+                    else {
+                        $user = new User;
+                        $user->id = $accessTokenResponse['member_id'];
+                        $user->name = $userInfoResponse['member']['name'];
+                        $user->email = $userEmailResponse['result']['notify_email'];
+
+                        $user->save();
+                    }
+                }
+
+
+                return redirect(url('profile/basic-info'));
+
             } catch (\League\OAuth2\Client\Provider\Exception\IdentityProviderException $e) {
                 // Failed to get the access token or user details.
                 print_r($e->getResponseBody());
@@ -124,18 +137,12 @@ class UwumLoginController extends Controller
      */
     public function handleUwumCallback(Request $request)
     {
-        // if(!isset($_REQUEST['state'], $_REQUEST['code'])) {
-        //     die('Callback failed (state and code do not received correctly)<br />');
-        // }
+        if(!isset($_REQUEST['state'], $_REQUEST['code'])) {
+            die('Callback failed (state and code do not received correctly)');
+        }
 
-        //$request->session()->put('user.social_data.google', $socUser);
+        $url = url('login/uwum').'?state='.$_REQUEST['state'].'&code='.$_REQUEST['code'];
 
-        $input = $request->all();
-
-        echo '<pre>';
-        print_r($input);
-        echo '</pre>';
-
-        return redirect('profile/social-data');
+        return redirect($url);
     }
 }

@@ -25,6 +25,26 @@ class Initiative extends Model
     ];
 
     /**
+     * The initiative type.
+     *
+     * @return App\InitiativeType|null
+     */
+    public function initiativeType()
+    {
+        return $this->belongsTo('App\InitiativeType');
+    }
+
+    /**
+     * The user.
+     *
+     * @return App\User|null
+     */
+    public function user()
+    {
+        return $this->belongsTo('App\User');
+    }
+
+    /**
      * The initiative images.
      *
      * @return App\InitiativeImage|null

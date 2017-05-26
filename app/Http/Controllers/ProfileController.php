@@ -29,6 +29,7 @@ class ProfileController extends Controller
         $profileOption2 = __('messages.profile_option_2');
         $profileOption3 = __('messages.profile_option_3');
         $profileOption4 = __('messages.profile_option_4');
+        $profileOption5 = __('messages.profile_option_5');
 
         $pageTitle = __('messages.profile_basic_page_title');
         $metaDescription = __('messages.profile_basic_page_meta_description');
@@ -64,6 +65,7 @@ class ProfileController extends Controller
             ->with('profileOption2', $profileOption2)
             ->with('profileOption3', $profileOption3)
             ->with('profileOption4', $profileOption4)
+            ->with('profileOption5', $profileOption5)
             ->with('pageTitle', $pageTitle)
             ->with('metaDescription', $metaDescription)
             ->with('profileBasicHeading1', $profileBasicHeading1)
@@ -104,6 +106,7 @@ class ProfileController extends Controller
         $profileOption2 = __('messages.profile_option_2');
         $profileOption3 = __('messages.profile_option_3');
         $profileOption4 = __('messages.profile_option_4');
+        $profileOption5 = __('messages.profile_option_5');
 
         $pageTitle = __('messages.profile_work_page_title');
         $metaDescription = __('messages.profile_work_page_meta_description');
@@ -143,6 +146,7 @@ class ProfileController extends Controller
             ->with('profileOption2', $profileOption2)
             ->with('profileOption3', $profileOption3)
             ->with('profileOption4', $profileOption4)
+            ->with('profileOption5', $profileOption5)
             ->with('pageTitle', $pageTitle)
             ->with('metaDescription', $metaDescription)
             ->with('profileBasicHeading1', $profileBasicHeading1)
@@ -187,6 +191,7 @@ class ProfileController extends Controller
         $profileOption2 = __('messages.profile_option_2');
         $profileOption3 = __('messages.profile_option_3');
         $profileOption4 = __('messages.profile_option_4');
+        $profileOption5 = __('messages.profile_option_5');
 
         $pageTitle = __('messages.profile_interests_page_title');
         $metaDescription = __('messages.profile_interests_page_meta_description');
@@ -216,6 +221,7 @@ class ProfileController extends Controller
             ->with('profileOption2', $profileOption2)
             ->with('profileOption3', $profileOption3)
             ->with('profileOption4', $profileOption4)
+            ->with('profileOption5', $profileOption5)
             ->with('pageTitle', $pageTitle)
             ->with('metaDescription', $metaDescription)
             ->with('profileBasicHeading1', $profileBasicHeading1)
@@ -249,6 +255,7 @@ class ProfileController extends Controller
         $profileOption2 = __('messages.profile_option_2');
         $profileOption3 = __('messages.profile_option_3');
         $profileOption4 = __('messages.profile_option_4');
+        $profileOption5 = __('messages.profile_option_5');
 
         $pageTitle = __('messages.profile_social_accounts_page_title');
         $metaDescription = __('messages.profile_social_accounts_page_meta_description');
@@ -274,6 +281,7 @@ class ProfileController extends Controller
             ->with('profileOption2', $profileOption2)
             ->with('profileOption3', $profileOption3)
             ->with('profileOption4', $profileOption4)
+            ->with('profileOption5', $profileOption5)
             ->with('pageTitle', $pageTitle)
             ->with('metaDescription', $metaDescription)
             ->with('profileBasicHeading1', $profileBasicHeading1)
@@ -284,6 +292,61 @@ class ProfileController extends Controller
             ->with('socialBtnPint', $socialBtnPint)
             ->with('socialBtnLin', $socialBtnLin)
 
+            ->with('routeUri', $route->uri);
+    }
+
+
+    function resetData()
+    {
+        $route = Route::current();
+        $user = null;
+
+        if(session()->has('user')) {
+            $user = session('user');
+        }
+
+        $sidebarOption1 = __('messages.sidebar_option_1');
+        $sidebarOption2 = __('messages.sidebar_option_2');
+        $sidebarOption3 = __('messages.sidebar_option_3');
+        $sidebarOption4 = __('messages.sidebar_option_4');
+        $sidebarOption5 = __('messages.sidebar_option_5');
+        $sidebarOption6 = __('messages.sidebar_option_6');
+        $sidebarOption7 = __('messages.sidebar_option_7');
+        $sidebarOption8 = __('messages.sidebar_option_8');
+
+        $profileOption1 = __('messages.profile_option_1');
+        $profileOption2 = __('messages.profile_option_2');
+        $profileOption3 = __('messages.profile_option_3');
+        $profileOption4 = __('messages.profile_option_4');
+        $profileOption5 = __('messages.profile_option_5');
+
+        $pageTitle = __('messages.profile_reset_page_title');
+        $metaDescription = __('messages.profile_reset_page_meta_description');
+        $profileBasicHeading1 = __('messages.profile_basic_heading_1');
+
+        $profileHeading1 = __('messages.profile_reset_heading_1');
+        $resetBtn1 = __('messages.profile_reset_btn_1');
+
+        return view('profile.reset')
+            ->with('sidebarOption1', $sidebarOption1)
+            ->with('sidebarOption2', $sidebarOption2)
+            ->with('sidebarOption3', $sidebarOption3)
+            ->with('sidebarOption4', $sidebarOption4)
+            ->with('sidebarOption5', $sidebarOption5)
+            ->with('sidebarOption6', $sidebarOption6)
+            ->with('sidebarOption7', $sidebarOption7)
+            ->with('sidebarOption8', $sidebarOption8)
+            ->with('profileOption1', $profileOption1)
+            ->with('profileOption2', $profileOption2)
+            ->with('profileOption3', $profileOption3)
+            ->with('profileOption4', $profileOption4)
+            ->with('profileOption5', $profileOption5)
+            ->with('pageTitle', $pageTitle)
+            ->with('metaDescription', $metaDescription)
+            ->with('profileBasicHeading1', $profileBasicHeading1)
+            ->with('profileHeading1', $profileHeading1)
+            ->with('resetBtn1', $resetBtn1)
+            ->with('user', $user)
             ->with('routeUri', $route->uri);
     }
 
@@ -311,6 +374,7 @@ class ProfileController extends Controller
         $profileOption2 = __('messages.profile_option_2');
         $profileOption3 = __('messages.profile_option_3');
         $profileOption4 = __('messages.profile_option_4');
+        $profileOption5 = __('messages.profile_option_5');
 
         $pageTitle = __('messages.profile_basic_page_title');
         $metaDescription = __('messages.profile_basic_page_meta_description');
@@ -329,6 +393,7 @@ class ProfileController extends Controller
             ->with('profileOption2', $profileOption2)
             ->with('profileOption3', $profileOption3)
             ->with('profileOption4', $profileOption4)
+            ->with('profileOption5', $profileOption5)
             ->with('pageTitle', $pageTitle)
             ->with('metaDescription', $metaDescription)
             ->with('profileBasicHeading1', $profileBasicHeading1)

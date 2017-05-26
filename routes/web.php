@@ -21,6 +21,7 @@ Route::get('profile/basic-info', 'ProfileController@basicInfo');
 Route::get('profile/work', 'ProfileController@work');
 Route::get('profile/interests', 'ProfileController@interests');
 Route::get('profile/social-accounts', 'ProfileController@socialAccounts');
+Route::get('profile/reset', 'ProfileController@resetData');
 Route::get('profile/social-data', 'ProfileController@socialData');
 
 /*** Timeline ***/
@@ -31,6 +32,7 @@ Route::get('offers', 'InitiativeController@initiatives');
 Route::get('offer/new', 'InitiativeController@initiativeForm');
 Route::post('offer/save', 'InitiativeController@storeInitiative');
 Route::post('offer/image/upload', 'InitiativeController@imageUpload');
+Route::post('offer/post-to-ontomap', 'InitiativeController@postToOnToMap');
 
 /*** Notifications ***/
 Route::get('notifications', 'NotificationController@index');
