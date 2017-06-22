@@ -227,7 +227,7 @@ class ProfileController extends Controller
             ->with('profileOption3', $profileOption3)
             ->with('profileOption4', $profileOption4)
             ->with('profileOption5', $profileOption5)
-            ->with('profileOption6', $profileOption6)
+	    ->with('profileOption6', $profileOption6)	
             ->with('pageTitle', $pageTitle)
             ->with('metaDescription', $metaDescription)
             ->with('profileBasicHeading1', $profileBasicHeading1)

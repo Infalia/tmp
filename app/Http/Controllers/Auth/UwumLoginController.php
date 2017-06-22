@@ -119,7 +119,8 @@ class UwumLoginController extends Controller
                 }
 
 
-                return redirect(url('/'));
+                //return redirect(url('/'));
+                return redirect(url('profile/basic-info'));
 
             } catch (\League\OAuth2\Client\Provider\Exception\IdentityProviderException $e) {
                 // Failed to get the access token or user details.

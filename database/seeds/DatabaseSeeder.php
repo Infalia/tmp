@@ -75,7 +75,7 @@ class DatabaseSeeder extends Seeder
         
         
         // Initiative types
-        for($i=0; $i<4; $i++) {
+        for($i=0; $i<2; $i++) {
             DB::table('initiative_types')->insert([
                 'id' => ($i+1),
                 'created_at' => date('Y-m-d H:i:s'),
