@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
+use App\Helpers\OnToMap;
+
 class HomeController extends Controller
 {
     function index()
@@ -23,6 +25,11 @@ class HomeController extends Controller
         $socialBtnPint = __('messages.home_social_btn', ['socialNetwork' => 'Pinterest']);
         $socialBtnLin = __('messages.home_social_btn', ['socialNetwork' => 'LinkedIn']);
         $socialBtnTw = __('messages.home_social_btn', ['socialNetwork' => 'Twitter']);
+
+        /******  For testing purposes  ******/
+        // $onToMap = new OnToMap();
+        // $ontomapResponse = $onToMap->getOnToMapEvents();
+
 
 	    return view('home.index')
             ->with('pageTitle', $pageTitle)

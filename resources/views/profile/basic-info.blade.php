@@ -12,7 +12,7 @@
             </div>
 
             <div class="row">
-                <div class="col m4 l3">
+                <div class="col s12 m4 l3">
                     @include('partials.profile-menu')
                 </div>
 

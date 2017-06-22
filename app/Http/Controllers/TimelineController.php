@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
+use App\Helpers\OnToMap;
 
 class TimelineController extends Controller
 {
@@ -29,6 +31,13 @@ class TimelineController extends Controller
         $postedInitiativeLbl = __('messages.timeline_initiative_posted_lbl');
         $commentLbl = __('messages.timeline_comment_lbl');
         $supportLbl = __('messages.timeline_supporter_lbl');
+        $noRecordsMsg = __('messages.timeline_msg_1');
+
+        $ontomap = new OnToMap();
+        $userEvents = null;
+        $params = array('actor' => Auth::id());
+        $userEvents = json_decode($ontomap->getEvents($params));
+
 
         return view('timeline.index')
             ->with('sidebarOption1', $sidebarOption1)
@@ -48,6 +57,8 @@ class TimelineController extends Controller
             ->with('postedInitiativeLbl', $postedInitiativeLbl)
             ->with('commentLbl', $commentLbl)
             ->with('supportLbl', $supportLbl)
+            ->with('noRecordsMsg', $noRecordsMsg)
+            ->with('userEvents', $userEvents)
             ->with('routeUri', $route->uri);
     }
 }

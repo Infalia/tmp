@@ -87,6 +87,8 @@
         'profile_option_2' => 'Work & Education',
         'profile_option_3' => 'Interests',
         'profile_option_4' => 'Social networks',
+        'profile_option_5' => 'Reset Data',
+        'profile_option_6' => 'Accessibility preferences',
 
         /* Basic info */
         'profile_basic_page_title' => 'Basic settings - '.config('app.name'),
@@ -121,6 +123,12 @@
         'profile_social_accounts_heading_1' => 'LINK YOUR SOCIAL PROFILES',
         'profile_social_accounts_btn' => 'Your :socialNetwork is :isLinked linked',
 
+        /* Reset data */
+        'profile_reset_page_title' => 'Reset data - '.config('app.name'),
+        'profile_reset_page_meta_description' => '',
+        'profile_reset_heading_1' => 'RESET YOUR DATA',
+        'profile_reset_add_btn_1' => 'Reset data',
+
         /* Timeline */
         'timeline_page_title' => 'Timeline - '.config('app.name'),
         'timeline_page_meta_description' => '',
@@ -131,11 +139,13 @@
         'timeline_initiative_posted_lbl' => 'You started an initiative on',
         'timeline_comment_lbl' => 'comment',
         'timeline_supporter_lbl' => 'supporter',
+        'timeline_msg_1' => 'There are no events for your timeline yet.',
 
         /* Initiatives */
         'initiatives_page_title' => 'Offers/Demands - '.config('app.name'),
         'initiatives_page_meta_description' => '',
         'initiatives_btn_1' => 'show on map',
+        'initiatives_msg_1' => 'There are no initiatives yet',
 
         /* Initiative form */
         'initiative_form_page_title' => 'New offer - '.config('app.name'),

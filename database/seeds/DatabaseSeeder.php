@@ -72,5 +72,25 @@ class DatabaseSeeder extends Seeder
                 'locale' => 'el',
             ]);
         }
+        
+        
+        // Initiative types
+        for($i=0; $i<4; $i++) {
+            DB::table('initiative_types')->insert([
+                'id' => ($i+1),
+                'created_at' => date('Y-m-d H:i:s'),
+            ]);
+        }
+
+	$typesArr = ['Offer', 'Demand'];
+	
+        // Initiative types translations
+        for($i=0; $i<2; $i++) {
+            DB::table('initiative_type_translations')->insert([
+                'initiative_type_id' => ($i+1),
+                'name' => $typesArr[$i],
+                'locale' => 'en',
+            ]);
+        }
     }
 }

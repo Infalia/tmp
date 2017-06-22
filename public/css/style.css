@@ -433,6 +433,9 @@ i.material-icons.inline-icon {
         padding: 0 20px;
     }
 }
+.profile-container.no-margin {
+    margin-left: 0;
+}
 
 .profile-menu {
     margin-bottom: 40px;
@@ -549,13 +552,15 @@ i.material-icons.inline-icon {
     font-size: 14px;
 }
 .card-post-action-time,
-.collection-item-time {
+.collection-item-time,
+.initiative-created {
     position: relative;
     padding-left: 8px;
-    margin-left: 5px;
+    margin-left: 3px;
 }
 .card-post-action-time::before,
-.collection-item-time::before {
+.collection-item-time::before,
+.initiative-created::before {
     position: absolute;
     top: 7px;
     left: 0;
@@ -566,24 +571,30 @@ i.material-icons.inline-icon {
     content: "";
 }
 .card-post-address,
-.card-post-calendar {
+.card-post-calendar,
+.initiative-start-date,
+.initiative-address {
     position: relative;
     display: block;
     margin: 1px 0;
     padding-left: 20px;
 }
 .card-post-address::before,
-.card-post-calendar::before {
+.card-post-calendar::before,
+.initiative-start-date::before,
+.initiative-address::before {
     position: absolute;
     top: -3px;
     left: 0;
     font-family: 'Material Icons';
     font-size: 1.2em;
 }
-.card-post-calendar::before {
+.card-post-calendar::before,
+.initiative-start-date::before {
     content: '\e8b5';
 }
-.card-post-address::before {
+.card-post-address::before,
+.initiative-address::before {
     content: '\e55f';
 }
 .card-action-footer > span {
@@ -598,18 +609,19 @@ i.material-icons.inline-icon {
 
 /****** NEW OFFER ******/
 /* Override plugin colours */
-.dtp .dtp-content div.dtp-date,
-.dtp .dtp-content div.dtp-time {
-    background: #26a69a;
+.initiative-form #date {
+    color: rgba(0,0,0,0.87);
+    border-bottom: 1px solid #9e9e9e;
 }
-body .dtp > .dtp-content > .dtp-date-view > header.dtp-header {
-    background: #1f897f;
+.initiative-form #date:focus {
+    border-bottom: 1px solid #26a69a;
+    box-shadow: 0 1px 0 0 #26a69a;
 }
-.dtp .dtp-date .p10 > a {
-    color: #ffffff;
+.initiative-form #date + label {
+    color: #9e9e9e;
 }
-.dtp .dtp-picker table.dtp-picker-days tr > td > a.selected {
-    background: #1f897f;
+.initiative-form #date:focus + label {
+    color: #26a69a;
 }
 
 .init-form-map {
@@ -637,6 +649,22 @@ body .dtp > .dtp-content > .dtp-date-view > header.dtp-header {
     bottom: 10px;
     right: 10px;
 }
+
+
+
+/****** OFFER ******/
+.owl-carousel .carousel-item {
+    height: 250px;
+    overflow: hidden;
+}
+.owl-carousel .owl-item .carousel-item img {
+    width: auto;
+    height: 100%;
+}
+.initiative-info {
+    margin-bottom: 15px;
+}
+
 
 
 

@@ -22,6 +22,7 @@ class UwumController extends Controller
         
         return response()->json([
             'action' => $action,
+            'check' => (Auth::check() ? 'yes' : 'no')
         ]);
     }
 }

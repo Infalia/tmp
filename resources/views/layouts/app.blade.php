@@ -164,7 +164,7 @@
              */
             function checkWeGovNowSession(callback) {
                 var xhr = new XMLHttpRequest();
-                var url = "https://wegovnow.liquidfeedback.com/api/1/session";
+                var url = "{{ env('UWUM_SESSION_URL') }}";
                 xhr.open("POST", url, true);
                 xhr.withCredentials = true; // sends UWUM cookies to UWUM (important)
                 xhr.onreadystatechange = function() {

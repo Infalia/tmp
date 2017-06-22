@@ -11,32 +11,36 @@
 |
 */
 
-Route::get('/', 'HomeController@index');
+// Route::get('/', 'HomeController@index');
+Route::get('/', 'InitiativeController@initiatives');
 //Route::get('/{locale}', 'HomeController@index', function ($locale) {
 //    App::setLocale($locale);
 //});
 
 /*** User profile ***/
-Route::get('profile/basic-info', 'ProfileController@basicInfo');
-Route::get('profile/work', 'ProfileController@work');
-Route::get('profile/interests', 'ProfileController@interests');
-Route::get('profile/social-accounts', 'ProfileController@socialAccounts');
+Route::get('profile/basic-info', 'ProfileController@basicInfo')->middleware('uwumAuth');
+Route::get('profile/work', 'ProfileController@work')->middleware('uwumAuth');
+Route::get('profile/interests', 'ProfileController@interests')->middleware('uwumAuth');
+Route::get('profile/social-accounts', 'ProfileController@socialAccounts')->middleware('uwumAuth');
+Route::get('profile/reset', 'ProfileController@resetData')->middleware('uwumAuth');
 Route::get('profile/social-data', 'ProfileController@socialData');
 
 /*** Timeline ***/
-Route::get('timeline', 'TimelineController@index');
+Route::get('timeline', 'TimelineController@index')->middleware('uwumAuth');
 
 /*** Initiatives ***/
 Route::get('offers', 'InitiativeController@initiatives');
-Route::get('offer/new', 'InitiativeController@initiativeForm');
+Route::get('offer/{id}/{title}', 'InitiativeController@initiative');
+Route::get('offer/new', 'InitiativeController@initiativeForm')->middleware('uwumAuth');
 Route::post('offer/save', 'InitiativeController@storeInitiative');
 Route::post('offer/image/upload', 'InitiativeController@imageUpload');
+Route::post('offer/post-to-ontomap', 'InitiativeController@postToOnToMap');
 
 /*** Notifications ***/
-Route::get('notifications', 'NotificationController@index');
+Route::get('notifications', 'NotificationController@index')->middleware('uwumAuth');
 
 /*** Accessibility ***/
-Route::get('accessibility/wizard', 'AccessibilityController@index');
+Route::get('accessibility/wizard', 'AccessibilityController@index')->middleware('uwumAuth');
 Route::post('accessibility/save-options', 'AccessibilityController@storeUserAccessibilityOptions');
 
 /*** UWUM ***/
