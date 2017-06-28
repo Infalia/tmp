@@ -277,7 +277,7 @@ class InitiativeController extends Controller
                             ),
                             'properties' => array(
                                 'hasType' => 'ChildCare',
-                                'external_url' => env('APP_URL').'/'.$initiativeId.'/'.str_slug($currentInitiative->title),
+                                'external_url' => env('APP_URL').'/offer/'.$initiativeId.'/'.str_slug($currentInitiative->title),
                                 'name' => $currentInitiative->title,
                                 'additionalProperties' => array(
                                     'initiative_type' => $currentInitiative->initiativeType->name,
