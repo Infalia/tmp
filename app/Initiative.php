@@ -53,4 +53,12 @@ class Initiative extends Model
     {
         return $this->hasMany('App\InitiativeImage');
     }
+
+    /**
+     * The users that belong to the initiative.
+     */
+    public function users()
+    {
+        return $this->belongsToMany('App\User');
+    }
 }
