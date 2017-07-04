@@ -38,6 +38,7 @@ class InitiativeController extends Controller
 
 
         $initiatives = Initiative::all();
+        
 
         return view('initiatives.initiatives')
             ->with('sidebarOption1', $sidebarOption1)
