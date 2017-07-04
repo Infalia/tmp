@@ -59,12 +59,11 @@ class InitiativeController extends Controller
             ->with('routeUri', $route->uri);
     }
 
-
-
     function initiative($id)
     {
         $route = Route::current();
         $initiative = Initiative::find($id);
+
         $sidebarOption1 = __('messages.sidebar_option_1');
         $sidebarOption2 = __('messages.sidebar_option_2');
         $sidebarOption3 = __('messages.sidebar_option_3');
@@ -101,6 +100,7 @@ class InitiativeController extends Controller
             ->with('supportBtn', $supportBtn)
             ->with('noRecordsMsg', $noRecordsMsg)
             ->with('initiative', $initiative)
+            ->with('initiativeId', $id)
             ->with('routeUri', $route->uri);
     }
 
@@ -246,6 +246,31 @@ class InitiativeController extends Controller
 
         return response()->json([
             'initId' => $lastInsertedId,
+            'message' => __('messages.initiative_form_success.stored')
+        ]);
+    }
+
+    function storeInitiativeSupporter(Request $request)
+    {
+        $initiativeId = $request->input('initiative_id');
+        $initiative = Initiative::find($initiativeId);
+        $totalSupporters = 0;
+
+        $isUserSupporting = $initiative->users->contains('id', Auth::id());
+
+        if($isUserSupporting) {
+            $initiative->users()->detach(Auth::id(), ['created_at' => date('Y-m-d H:i:s')]);
+        }
+        else {
+            $initiative->users()->attach(Auth::id(), ['created_at' => date('Y-m-d H:i:s')]);
+        }
+
+        $initiative = Initiative::find($initiativeId);
+        $totalSupporters = $initiative->users->count();
+
+
+        return response()->json([
+            'totalSupporters' => $totalSupporters,
             'message' => __('messages.initiative_form_success.stored')
         ]);
     }

@@ -35,6 +35,7 @@ Route::get('offer/new', 'InitiativeController@initiativeForm')->middleware('uwum
 Route::post('offer/save', 'InitiativeController@storeInitiative');
 Route::post('offer/image/upload', 'InitiativeController@imageUpload');
 Route::post('offer/post-to-ontomap', 'InitiativeController@postToOnToMap');
+Route::post('offer/save/supporter', 'InitiativeController@storeInitiativeSupporter');
 
 /*** Notifications ***/
 Route::get('notifications', 'NotificationController@index')->middleware('uwumAuth');

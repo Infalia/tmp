@@ -45,14 +45,14 @@
 
                         <div class="initiative-engagements">
                             <span class="initiative-engagement"><i class="material-icons inline-icon grey-text text-darken-3">comment</i> {{ $comments = 2 }} {{ str_plural($commentLbl, $comments) }}</span>
-                            <span class="initiative-engagement"><i class="material-icons inline-icon grey-text text-darken-3">people</i> {{ $supporters = 5 }} {{ str_plural($supportLbl, $supporters) }}</span>
+                            <span class="initiative-engagement"><i class="material-icons inline-icon grey-text text-darken-3">people</i> <b id="init-supporters">{{ $supporters = $initiative->users->count() }}</b> {{ str_plural($supportLbl, $supporters) }}</span>
                         </div>
 
                         <div class="divider"></div>
 
                         <div class="initiative-engagement-buttons">
-                            <button class="waves-effect waves-teal btn-flat initiative-engagement">{{ $commentBtn }}</button>
-                            <button class="waves-effect waves-teal btn-flat initiative-engagement">{{ $supportBtn }}</button>
+                            <button id="comment-btn" class="waves-effect waves-teal btn-flat initiative-engagement">{{ $commentBtn }}</button>
+                            <button id="support-btn" class="waves-effect waves-teal btn-flat initiative-engagement">{{ $supportBtn }}</button>
                         </div>
                     </div>
                     @else
@@ -107,6 +107,27 @@
 
         baguetteBox.run('.owl-carousel', {
 
+        });
+
+
+        $(document).on("click", "#support-btn", function(e) {
+            data = new Object();
+
+            data['initiative_id'] = {{ $initiativeId }};
+            
+
+            var url = "{{ url('offer/save/supporter') }}";
+
+            $.ajax({
+                type: 'POST',
+                url: url,
+                data: data,
+                dataType: 'json',
+                success: function(data) {
+                    $('#init-supporters').html(data.totalSupporters);
+                },
+                error : function(XMLHttpRequest, textStatus, errorThrown) {}
+            });
         });
     </script>
 @endsection
