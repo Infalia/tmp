@@ -63,7 +63,45 @@ class InitiativeController extends Controller
 
     function initiative($id)
     {
-	$route = Route::current();        $initiative = Initiative::find($id);        $sidebarOption1 = __('messages.sidebar_option_1');        $sidebarOption2 = __('messages.sidebar_option_2');        $sidebarOption3 = __('messages.sidebar_option_3');        $sidebarOption4 = __('messages.sidebar_option_4');        $sidebarOption5 = __('messages.sidebar_option_5');        $sidebarOption6 = __('messages.sidebar_option_6');        $sidebarOption7 = __('messages.sidebar_option_7');        $sidebarOption8 = __('messages.sidebar_option_8');        $pageTitle = $initiative->title;        $metaDescription = '';        $commentLbl = __('messages.timeline_comment_lbl');        $supportLbl = __('messages.timeline_supporter_lbl');        $showBtn = __('messages.initiatives_btn_1');        $noRecordsMsg = __('messages.initiatives_msg_1');               return view('initiatives.initiative')            ->with('sidebarOption1', $sidebarOption1)            ->with('sidebarOption2', $sidebarOption2)            ->with('sidebarOption3', $sidebarOption3)            ->with('sidebarOption4', $sidebarOption4)            ->with('sidebarOption5', $sidebarOption5)            ->with('sidebarOption6', $sidebarOption6)            ->with('sidebarOption7', $sidebarOption7)            ->with('sidebarOption8', $sidebarOption8)            ->with('pageTitle', $pageTitle)            ->with('metaDescription', $metaDescription)            ->with('commentLbl', $commentLbl)            ->with('supportLbl', $supportLbl)            ->with('showBtn', $showBtn)            ->with('noRecordsMsg', $noRecordsMsg)            ->with('initiative', $initiative)            ->with('routeUri', $route->uri);
+        $route = Route::current();
+        $initiative = Initiative::find($id);
+        $sidebarOption1 = __('messages.sidebar_option_1');
+        $sidebarOption2 = __('messages.sidebar_option_2');
+        $sidebarOption3 = __('messages.sidebar_option_3');
+        $sidebarOption4 = __('messages.sidebar_option_4');
+        $sidebarOption5 = __('messages.sidebar_option_5');
+        $sidebarOption6 = __('messages.sidebar_option_6');
+        $sidebarOption7 = __('messages.sidebar_option_7');
+        $sidebarOption8 = __('messages.sidebar_option_8');
+        
+        $pageTitle = $initiative->title;
+        $metaDescription = '';
+        $commentLbl = __('messages.timeline_comment_lbl');
+        $supportLbl = __('messages.timeline_supporter_lbl');
+        $showBtn = __('messages.initiatives_btn_1');
+        $commentBtn = __('messages.initiatives_btn_2');
+        $supportBtn = __('messages.initiatives_btn_3');
+        $noRecordsMsg = __('messages.initiatives_msg_1');
+
+        return view('initiatives.initiative')
+            ->with('sidebarOption1', $sidebarOption1)
+            ->with('sidebarOption2', $sidebarOption2)
+            ->with('sidebarOption3', $sidebarOption3)
+            ->with('sidebarOption4', $sidebarOption4)
+            ->with('sidebarOption5', $sidebarOption5)
+            ->with('sidebarOption6', $sidebarOption6)
+            ->with('sidebarOption7', $sidebarOption7)
+            ->with('sidebarOption8', $sidebarOption8)
+            ->with('pageTitle', $pageTitle)
+            ->with('metaDescription', $metaDescription)
+            ->with('commentLbl', $commentLbl)
+            ->with('supportLbl', $supportLbl)
+            ->with('showBtn', $showBtn)
+            ->with('commentBtn', $commentBtn)
+            ->with('supportBtn', $supportBtn)
+            ->with('noRecordsMsg', $noRecordsMsg)
+            ->with('initiative', $initiative)
+            ->with('routeUri', $route->uri);
     }
 
     function initiativeForm()

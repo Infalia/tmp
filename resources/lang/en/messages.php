@@ -145,6 +145,8 @@
         'initiatives_page_title' => 'Offers/Demands - '.config('app.name'),
         'initiatives_page_meta_description' => '',
         'initiatives_btn_1' => 'show on map',
+        'initiatives_btn_2' => 'Comment',
+        'initiatives_btn_3' => 'Support it',
         'initiatives_msg_1' => 'There are no initiatives yet',
 
         /* Initiative form */
