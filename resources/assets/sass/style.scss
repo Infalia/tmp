@@ -597,15 +597,14 @@ i.material-icons.inline-icon {
 .initiative-address::before {
     content: '\e55f';
 }
-.card-action-footer > span {
+.initiative-engagement {
     display: inline-block;
-}
-.card-action-footer > span:first-child {
     margin-right: 20px;
 }
-/*.card .divider {*/
-    /*margin: 2px 0 10px 0;*/
-/*}*/
+.initiative-engagement:last-child {
+    margin-right: 0;
+}
+
 
 
 
