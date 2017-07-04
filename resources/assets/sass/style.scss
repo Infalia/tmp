@@ -587,7 +587,7 @@ i.material-icons.inline-icon {
     top: -3px;
     left: 0;
     font-family: 'Material Icons';
-    font-size: 1.2em;
+    font-size: 1em;
 }
 .card-post-calendar::before,
 .initiative-start-date::before {
@@ -599,7 +599,9 @@ i.material-icons.inline-icon {
 }
 .card-action-footer > span {
     display: inline-block;
-    margin-right: 30px;
+}
+.card-action-footer > span:first-child {
+    margin-right: 20px;
 }
 /*.card .divider {*/
     /*margin: 2px 0 10px 0;*/
