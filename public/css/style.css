@@ -597,6 +597,9 @@ i.material-icons.inline-icon {
 .initiative-address::before {
     content: '\e55f';
 }
+.initiative-descr {
+    margin-bottom: 25px;
+}
 .initiative-engagements {
     margin-bottom: 10px;
 }
