@@ -36,12 +36,15 @@
                         <div class="initiative-info">
                             <span class="initiative-type">{{ $initiative->initiativeType->name }}</span>
                             <span class="initiative-created grey-text text-darken-1">{{ \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $initiative->created_at)->diffForHumans() }}</span>
+                            <span>- by {{ $initiative->user->name }}</span>
                         </div>
 
                         <div class="initiative-info">
                             <span class="initiative-start-date">{{ \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $initiative->start_date)->format('l, j M Y H:i') }}</span>
                             <span class="initiative-address">Not available</span>
                         </div>
+
+                        <div class="initiative-descr">{{ $initiative->description }}</div>
 
                         <div class="initiative-engagements">
                             <span class="initiative-engagement"><i class="material-icons inline-icon grey-text text-darken-3">comment</i> {{ $comments = 2 }} {{ str_plural($commentLbl, $comments) }}</span>
@@ -51,8 +54,8 @@
                         <div class="divider"></div>
 
                         <div class="initiative-engagement-buttons">
-                            <button id="comment-btn" class="waves-effect waves-teal btn-flat initiative-engagement">{{ $commentBtn }}</button>
-                            <button id="support-btn" class="waves-effect waves-teal btn-flat initiative-engagement">{{ $supportBtn }}</button>
+                            {!! Form::button($commentBtn, array('id' => 'comment-btn', 'class' => 'waves-effect waves-teal btn-flat initiative-engagement')) !!}
+                            {!! Form::button($supportBtn, array('id' => 'support-btn', 'class' => 'waves-effect waves-teal btn-flat initiative-engagement')) !!}
                         </div>
                     </div>
                     @else

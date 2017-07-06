@@ -28,6 +28,7 @@
                                 <div class="card-post-action">
                                     <span>{{ $initiative->initiativeType->name }}</span>
                                     <span class="card-post-action-time grey-text text-darken-1">{{ \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $initiative->created_at)->diffForHumans() }}</span>
+                                    <span>- by {{ $initiative->user->name }}</span>
                                 </div>
 
                                 @isset($initiative->start_date)
