@@ -32,10 +32,12 @@ Route::get('timeline', 'TimelineController@index')->middleware('uwumAuth');
 Route::get('offers', 'InitiativeController@initiatives');
 Route::get('offer/{id}/{title}', 'InitiativeController@initiative');
 Route::get('offer/new', 'InitiativeController@initiativeForm')->middleware('uwumAuth');
-Route::post('offer/save', 'InitiativeController@storeInitiative');
-Route::post('offer/image/upload', 'InitiativeController@imageUpload');
+Route::get('offer/comments', 'InitiativeController@initiativeComments');
+Route::post('offer/save', 'InitiativeController@storeInitiative')->middleware('uwumAuth');
+Route::post('offer/image/upload', 'InitiativeController@imageUpload')->middleware('uwumAuth');
 Route::post('offer/post-to-ontomap', 'InitiativeController@postToOnToMap');
-Route::post('offer/save/supporter', 'InitiativeController@storeInitiativeSupporter');
+Route::post('offer/save/supporter', 'InitiativeController@storeInitiativeSupporter')->middleware('uwumAuth');
+Route::post('offer/save/comment', 'InitiativeController@storeInitiativeComment')->middleware('uwumAuth');
 
 /*** Notifications ***/
 Route::get('notifications', 'NotificationController@index')->middleware('uwumAuth');

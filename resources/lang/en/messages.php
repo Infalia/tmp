@@ -36,6 +36,12 @@
         'form_end_date_pldr' => 'When your offer ends...',
         'form_init_descr_lbl' => 'Description',
         'form_init_descr_pldr' => 'Tell us about your offer/demand...',
+        'form_comments_add_pldr' => 'Add a comment',
+        'form_comments_reply_btn' => 'Reply',
+        'form_comments_view_replies_btn' => 'View all replies',
+        'form_comments_hide_replies_btn' => 'Hide replies',
+        'form_no_comments_msg' => 'No comments yet',
+        'form_comments_post_btn' => 'Post',
         'form_save_btn' => 'Save',
         'form_cancel_btn' => 'Cancel',
 

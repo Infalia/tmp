@@ -45,6 +45,14 @@ class Initiative extends Model
     }
 
     /**
+     * The users that belong to the initiative.
+     */
+    public function users()
+    {
+        return $this->belongsToMany('App\User');
+    }
+
+    /**
      * The initiative images.
      *
      * @return App\InitiativeImage|null
@@ -55,10 +63,10 @@ class Initiative extends Model
     }
 
     /**
-     * The users that belong to the initiative.
+     * Get initiative comments.
      */
-    public function users()
+    public function comments()
     {
-        return $this->belongsToMany('App\User');
+        return $this->hasMany('App\Comment');
     }
 }

@@ -10,9 +10,9 @@ use App\User;
 use App\InitiativeType;
 use App\Initiative;
 use App\InitiativeImage;
+use App\Comment;
 use App\Helpers\OnToMap;
 use Carbon\Carbon;
-//use DateTime;
 
 class InitiativeController extends Controller
 {
@@ -73,13 +73,19 @@ class InitiativeController extends Controller
         $sidebarOption7 = __('messages.sidebar_option_7');
         $sidebarOption8 = __('messages.sidebar_option_8');
         
+        
         $pageTitle = $initiative->title;
         $metaDescription = '';
         $commentLbl = __('messages.timeline_comment_lbl');
         $supportLbl = __('messages.timeline_supporter_lbl');
         $showBtn = __('messages.initiatives_btn_1');
-        $commentBtn = __('messages.initiatives_btn_2');
         $supportBtn = __('messages.initiatives_btn_3');
+        $commentAddPldr = __('messages.form_comments_add_pldr');
+        $commentReplyBtn = __('messages.form_comments_reply_btn');
+        $commentViewRepliesBtn = __('messages.form_comments_view_replies_btn');
+        $commentHideRepliesBtn = __('messages.form_comments_hide_replies_btn');
+        $noCommentsMsg = __('messages.form_no_comments_msg');
+        $commentAddBtn = __('messages.form_comments_post_btn');
         $noRecordsMsg = __('messages.initiatives_msg_1');
 
         return view('initiatives.initiative')
@@ -96,8 +102,13 @@ class InitiativeController extends Controller
             ->with('commentLbl', $commentLbl)
             ->with('supportLbl', $supportLbl)
             ->with('showBtn', $showBtn)
-            ->with('commentBtn', $commentBtn)
             ->with('supportBtn', $supportBtn)
+            ->with('commentAddPldr', $commentAddPldr)
+            ->with('commentReplyBtn', $commentReplyBtn)
+            ->with('commentViewRepliesBtn', $commentViewRepliesBtn)
+            ->with('commentHideRepliesBtn', $commentHideRepliesBtn)
+            ->with('noCommentsMsg', $noCommentsMsg)
+            ->with('commentAddBtn', $commentAddBtn)
             ->with('noRecordsMsg', $noRecordsMsg)
             ->with('initiative', $initiative)
             ->with('initiativeId', $id)
@@ -173,6 +184,14 @@ class InitiativeController extends Controller
             ->with('saveBtn', $saveBtn)
             ->with('cancelBtn', $cancelBtn)
             ->with('routeUri', $route->uri);
+    }
+
+    function initiativeComments(Request $request)
+    {
+        $initiativeId = $request->input('init_id');
+        $comments = Initiative::find($initiativeId)->comments;
+
+        return response()->json($comments);
     }
 
     function storeInitiative(Request $request)
@@ -272,6 +291,52 @@ class InitiativeController extends Controller
         return response()->json([
             'totalSupporters' => $totalSupporters,
             'message' => __('messages.initiative_form_success.stored')
+        ]);
+    }
+
+    function storeInitiativeComment(Request $request)
+    {
+        $rules = array();
+        $commentId = $request->input('parent_id');
+        $initiativeId = $request->input('init_id');
+        $userId = Auth::id();
+        $userFullname = User::find(Auth::id())->name;
+        $body = $request->input('body');
+
+        $initiative = new Initiative();
+        $totalComments = $initiative->find($initiativeId)->comments->count();
+
+
+        $messages = [
+            'required' => __('messages.initiative_form_error.required')
+        ];
+        
+        $rules['init_id'] = 'required|integer';
+        $rules['body'] = 'required';
+        
+        $validator = Validator::make($request->all(), $rules);
+
+        if($validator->fails()) {
+            return response()->json([
+                'errors' => $validator->messages()
+            ]);
+        }
+        else {
+            $comment = new Comment([
+                'parent_id' => $commentId,
+                'user_id' => $userId,
+                'user_fullname' => $userFullname,
+                'body' => $body,
+                'created_at' => date('Y-m-d H:i:s')
+            ]);
+
+            $initiative->find($initiativeId)->comments()->save($comment);
+            $totalComments = $initiative->find($initiativeId)->comments->count();
+        }
+
+
+        return response()->json([
+            'total_comments' => $totalComments
         ]);
     }
 
