@@ -58,8 +58,7 @@
     <script>
         $('.social-chk').change(function() {
             if($(this).is(":checked")) {
-                //window.location.href = this.value;
-                console.log(this.value);
+                window.location.href = this.value;
             }
         });
     </script>
