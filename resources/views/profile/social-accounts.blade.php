@@ -37,49 +37,13 @@
                                 <div class="switch">
                                     <label>
                                         <i>{{ $switchOff }}</i>
-                                        {!! Form::checkbox('facebook-chk', $socialNetwork->id, $exists, ['id' => 'facebook-chk']) !!}
+                                        {!! Form::checkbox(mb_convert_case($socialNetwork->title.'-chk', MB_CASE_LOWER, "UTF-8"), url('login/'.mb_convert_case($socialNetwork->title, MB_CASE_LOWER, "UTF-8")), $exists, ['id' => mb_convert_case($socialNetwork->title.'-chk', MB_CASE_LOWER, "UTF-8"), 'class' => 'social-chk']) !!}
                                         <span class="lever"></span>
                                         <i>{{ $switchOn }}</i>
                                     </label>
                                 </div>
                             </li>
                             @endforeach
-
-                            {{-- <li class="social-account-item google-item">
-                                <span>{{ $socialBtnGgl }}</span>
-                                <div class="switch">
-                                    <label>
-                                        <i>Off</i>
-                                        {!! Form::checkbox('google-chk', 1, false, ['id' => 'google-chk']) !!}
-                                        <span class="lever"></span>
-                                        <i>On</i>
-                                    </label>
-                                </div>
-                            </li>
-
-                            <li class="social-account-item pinterest-item">
-                                <span>{{ $socialBtnPint }}</span>
-                                <div class="switch">
-                                    <label>
-                                        <i>Off</i>
-                                        {!! Form::checkbox('pinterest-chk', 1, false, ['id' => 'pinterest-chk']) !!}
-                                        <span class="lever"></span>
-                                        <i>On</i>
-                                    </label>
-                                </div>
-                            </li>
-
-                            <li class="social-account-item linkedin-item">
-                                <span>{{ $socialBtnLin }}</span>
-                                <div class="switch">
-                                    <label>
-                                        <i>Off</i>
-                                        {!! Form::checkbox('linkedin-chk', 1, false, ['id' => 'linkedin-chk']) !!}
-                                        <span class="lever"></span>
-                                        <i>On</i>
-                                    </label>
-                                </div>
-                            </li> --}}
                         </ul>
                     </div>
                 </div>
@@ -92,6 +56,11 @@
 
 @section('jslibs')
     <script>
-
+        $('.social-chk').change(function() {
+            if($(this).is(":checked")) {
+                //window.location.href = this.value;
+                console.log(this.value);
+            }
+        });
     </script>
 @endsection
