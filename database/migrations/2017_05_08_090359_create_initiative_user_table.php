@@ -19,8 +19,6 @@ class CreateInitiativeUserTable extends Migration
             $table->integer('user_id')->unsigned();
             $table->foreign('initiative_id')->references('id')->on('initiatives');
             $table->foreign('user_id')->references('id')->on('users');
-            $table->foreign('initiative_id')->references('id')->on('initiatives');
-            $table->foreign('user_id')->references('id')->on('users');
             $table->timestamp('updated_at')->useCurrent();
             $table->timestamp('created_at')->nullable();
         });

@@ -57,4 +57,12 @@ class User extends Authenticatable
     {
         return $this->hasMany('App\Comment');
     }
+
+    /**
+     * The roles that belong to the user.
+     */
+    public function socialNetworks()
+    {
+        return $this->belongsToMany('App\SocialNetwork');
+    }
 }

@@ -82,14 +82,24 @@ class DatabaseSeeder extends Seeder
             ]);
         }
 
-	$typesArr = ['Offer', 'Demand'];
+	    $typesArr = ['Offer', 'Demand'];
 	
         // Initiative types translations
-        for($i=0; $i<2; $i++) {
+        for($i=0; $i<count(typesArr); $i++) {
             DB::table('initiative_type_translations')->insert([
                 'initiative_type_id' => ($i+1),
                 'name' => $typesArr[$i],
                 'locale' => 'en',
+            ]);
+        }
+
+        $socialNetworksArr = ['Facebook', 'Twitter', 'Google+', 'LinkedIn'];
+	
+        // Initiative types translations
+        for($i=0; $i<count(socialNetworksArr); $i++) {
+            DB::table('social_networks')->insert([
+                'title' => $socialNetworksArr[$i],
+                'priority' => ($i+1),
             ]);
         }
     }

@@ -74,6 +74,11 @@
         ],
 
 
+        /*** GLOBAL TEXTS ***/
+        'switch_on' => 'On',
+        'switch_off' => 'Off',
+
+
         /*** HOME ***/
         'home_page_title' => 'Welcome to Trusted Marketplace',
         'home_page_meta_description' => 'You can create user groups to do manual labour for community organisations.',
@@ -127,7 +132,7 @@
         'profile_social_accounts_page_title' => 'My social profiles - '.config('app.name'),
         'profile_social_accounts_page_meta_description' => '',
         'profile_social_accounts_heading_1' => 'LINK YOUR SOCIAL PROFILES',
-        'profile_social_accounts_btn' => 'Your :socialNetwork is :isLinked linked',
+        'profile_social_accounts_btn' => 'Your :socialNetwork account is :isLinked linked',
 
         /* Reset data */
         'profile_reset_page_title' => 'Reset data - '.config('app.name'),

@@ -16,24 +16,36 @@
                     @include('partials.profile-menu')
                 </div>
 
+                @if(!empty($socialNetworks))
                 <div class="col s12 m8 l9 xl6">
                     <div class="profile-section social-accounts-section">
                         <h4 class="h6">{{ $profileHeading1 }}</h4>
 
                         <ul>
-                            <li class="social-account-item facebook-item">
-                                <span>{{ $socialBtnFb }}</span>
+                            @foreach($socialNetworks as $socialNetwork)
+                            @php
+                                $exists = false;
+
+                                foreach($userSocialNetworks as $userSocialNetwork) {
+                                    if($socialNetwork->id == $userSocialNetwork->id) {
+                                        $exists = true;
+                                    }
+                                }
+                            @endphp
+                            <li class="social-account-item {{ $socialNetwork->class_name }}">
+                                <span>{{ __('messages.profile_social_accounts_btn', ['socialNetwork' => $socialNetwork->title, 'isLinked' => ($exists ? '' : 'not')]) }}</span>
                                 <div class="switch">
                                     <label>
-                                        <i>Off</i>
-                                        {!! Form::checkbox('facebook-chk', 1, true, ['id' => 'facebook-chk']) !!}
+                                        <i>{{ $switchOff }}</i>
+                                        {!! Form::checkbox('facebook-chk', $socialNetwork->id, $exists, ['id' => 'facebook-chk']) !!}
                                         <span class="lever"></span>
-                                        <i>On</i>
+                                        <i>{{ $switchOn }}</i>
                                     </label>
                                 </div>
                             </li>
+                            @endforeach
 
-                            <li class="social-account-item google-item">
+                            {{-- <li class="social-account-item google-item">
                                 <span>{{ $socialBtnGgl }}</span>
                                 <div class="switch">
                                     <label>
@@ -67,10 +79,11 @@
                                         <i>On</i>
                                     </label>
                                 </div>
-                            </li>
+                            </li> --}}
                         </ul>
                     </div>
                 </div>
+                @endif
             </div>
         </div>
 
