@@ -507,6 +507,10 @@ i.material-icons.inline-icon {
     color: #01579B;
     content: '\f342';
 }
+.social-accounts-section ul > li.twitter-item::before {
+    color: #64b5f6;
+    content: '\f35f';
+}
 .social-accounts-section ul > li.google-item::before {
     color: #F44336;
     content: '\f34c';
