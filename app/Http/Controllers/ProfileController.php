@@ -275,18 +275,9 @@ class ProfileController extends Controller
         $switchOn = __('messages.switch_on');
         $switchOff = __('messages.switch_off');
 
-
         $socialNetworks = SocialNetwork::all();
         $userSocialNetworks = User::find(Auth::id())->socialNetworks;
 
-        // foreach($userSocialNetworks as $userSocialNetwork) {
-        //     echo $userSocialNetwork->title;
-        // }
-
-        // $socialBtnFb = __('messages.profile_social_accounts_btn', ['socialNetwork' => 'Facebook', 'isLinked' => (1==1 ? '' : 'not')]);
-        // $socialBtnGgl = __('messages.profile_social_accounts_btn', ['socialNetwork' => 'Google', 'isLinked' => (1==2 ? '' : 'not')]);
-        // $socialBtnPint = __('messages.profile_social_accounts_btn', ['socialNetwork' => 'Pinterest', 'isLinked' => (1==2 ? '' : 'not')]);
-        // $socialBtnLin = __('messages.profile_social_accounts_btn', ['socialNetwork' => 'LinkedIn', 'isLinked' => (1==2 ? '' : 'not')]);
 
         return view('profile.social-accounts')
             ->with('sidebarOption1', $sidebarOption1)
@@ -311,11 +302,6 @@ class ProfileController extends Controller
             ->with('switchOff', $switchOff)
             ->with('socialNetworks', $socialNetworks)
             ->with('userSocialNetworks', $userSocialNetworks)
-            // ->with('socialBtnFb', $socialBtnFb)
-            // ->with('socialBtnGgl', $socialBtnGgl)
-            // ->with('socialBtnPint', $socialBtnPint)
-            // ->with('socialBtnLin', $socialBtnLin)
-
             ->with('routeUri', $route->uri);
     }
 
@@ -380,9 +366,9 @@ class ProfileController extends Controller
         $route = Route::current();
         $user = null;
 
-        if(session()->has('user')) {
-            $user = session('user');
-        }
+        // if(session()->has('user')) {
+        //     $user = session('user');
+        // }
 
         $sidebarOption1 = __('messages.sidebar_option_1');
         $sidebarOption2 = __('messages.sidebar_option_2');

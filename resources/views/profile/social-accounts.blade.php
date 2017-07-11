@@ -37,7 +37,7 @@
                                 <div class="switch">
                                     <label>
                                         <i>{{ $switchOff }}</i>
-                                        {!! Form::checkbox(mb_convert_case($socialNetwork->title.'-chk', MB_CASE_LOWER, "UTF-8"), url('login/'.mb_convert_case($socialNetwork->title, MB_CASE_LOWER, "UTF-8")), $exists, ['id' => mb_convert_case($socialNetwork->title.'-chk', MB_CASE_LOWER, "UTF-8"), 'class' => 'social-chk']) !!}
+                                        {!! Form::checkbox(mb_convert_case($socialNetwork->title.'-chk', MB_CASE_LOWER, "UTF-8"), url('login/'.mb_convert_case($socialNetwork->title, MB_CASE_LOWER, "UTF-8")), $exists, ['id' => $socialNetwork->id, 'class' => 'social-chk']) !!}
                                         <span class="lever"></span>
                                         <i>{{ $switchOn }}</i>
                                     </label>
@@ -59,6 +59,21 @@
         $('.social-chk').change(function() {
             if($(this).is(":checked")) {
                 window.location.href = this.value;
+            }
+            else {
+                data = new Object();
+                data['id'] = $(this).attr('id');
+                
+                var url = "{{ url('account/remove') }}";
+
+                $.ajax({
+                    type: 'POST',
+                    url: url,
+                    data: data,
+                    dataType: 'json',
+                    success: function(data) {},
+                    error : function(XMLHttpRequest, textStatus, errorThrown) {}
+                });
             }
         });
     </script>

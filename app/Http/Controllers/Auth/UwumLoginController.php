@@ -67,9 +67,7 @@ class UwumLoginController extends Controller
                 // //echo '<h1>--- VALIDATE access token ---</h1>';
                 // //echo (string) $httpResponse->getBody();
                 $accessTokenResponse = json_decode((string) $httpResponse->getBody(), true);
-                // echo '<pre>';
-                // print_r($accessTokenResponse);
-                // echo '</pre>';
+
 
 
                 // // Call any UWUM API (e.g. info)
@@ -78,9 +76,7 @@ class UwumLoginController extends Controller
                 // //echo '<h1>--- CALLING GET/info ---</h1>';
                 // //echo (string) $httpResponse->getBody();
                 $userInfoResponse = json_decode((string) $httpResponse->getBody(), true);
-                // echo '<pre>';
-                // print_r($userInfoResponse);
-                // echo '</pre>';
+
 
 
                 // // Call any UWUM API (e.g. notify_email)
@@ -89,9 +85,6 @@ class UwumLoginController extends Controller
                 // //echo '<h1>--- CALLING GET/notify_email ---</h1>';
                 // //echo (string) $httpResponse->getBody();
                 $userEmailResponse = json_decode((string) $httpResponse->getBody(), true);
-                // echo '<pre>';
-                // print_r($userEmailResponse);
-                // echo '</pre>';
 
                 
 
@@ -99,27 +92,44 @@ class UwumLoginController extends Controller
                     $user = User::find($accessTokenResponse['member_id']);
 
                     if(!empty($user)) {
-                        if($user->name != $userInfoResponse['member']['name'] || $user->email != $userEmailResponse['result']['notify_email']) {
-                            $user->name = $userInfoResponse['member']['name'];
-                            $user->email = $userEmailResponse['result']['notify_email'];
+                        $toBeUpdated = false;
 
-                            $user->save();
+                        // TMP user name is different from UWUM user name
+                        if($user->name != $userInfoResponse['member']['name']) {
+                            $user->name = $userInfoResponse['member']['name'];
+                            $toBeUpdated = true;
                         }
 
+                        if(isset($userEmailResponse['result']['notify_email'])) {
+                            // TMP user email is different from UWUM user email
+                            if($user->email != $userEmailResponse['result']['notify_email']) {
+                                $user->email = $userEmailResponse['result']['notify_email'];
+                                $toBeUpdated = true;
+                            }
+
+                            $isEmailConfirmed = true;
+                        }
+
+                        if($toBeUpdated) {
+                            $user->save();
+                        }
+                        
                         Auth::loginUsingId($accessTokenResponse['member_id']);
                     }
                     else {
                         $user = new User;
                         $user->id = $accessTokenResponse['member_id'];
                         $user->name = $userInfoResponse['member']['name'];
-                        $user->email = $userEmailResponse['result']['notify_email'];
+
+                        if(isset($userEmailResponse['result']['notify_email'])) {
+                            $user->email = $userEmailResponse['result']['notify_email'];
+                        }
 
                         $user->save();
                     }
                 }
 
 
-                //return redirect(url('/'));
                 return redirect(url('profile/basic-info'));
 
             } catch (\League\OAuth2\Client\Provider\Exception\IdentityProviderException $e) {

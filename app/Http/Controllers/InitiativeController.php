@@ -278,7 +278,7 @@ class InitiativeController extends Controller
         $isUserSupporting = $initiative->users->contains('id', Auth::id());
 
         if($isUserSupporting) {
-            $initiative->users()->detach(Auth::id(), ['created_at' => date('Y-m-d H:i:s')]);
+            $initiative->users()->detach(Auth::id());
         }
         else {
             $initiative->users()->attach(Auth::id(), ['created_at' => date('Y-m-d H:i:s')]);
@@ -289,8 +289,7 @@ class InitiativeController extends Controller
 
 
         return response()->json([
-            'totalSupporters' => $totalSupporters,
-            'message' => __('messages.initiative_form_success.stored')
+            'totalSupporters' => $totalSupporters
         ]);
     }
 
