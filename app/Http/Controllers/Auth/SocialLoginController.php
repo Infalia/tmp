@@ -109,8 +109,8 @@ class SocialLoginController extends Controller
                 'events'
             ])->user();
             // $socUser->token;
-        } catch (Exception $e) {
-            return redirect('login/facebook');
+        } catch (\Exception $e) {
+            return redirect('profile/social-accounts');
         }
 
         //$request->session()->put('user.social_data.facebook', $socUser);
@@ -151,8 +151,8 @@ class SocialLoginController extends Controller
         try {
             $socUser = Socialite::driver('google')->user();
             // $socUser->token;
-        } catch (Exception $e) {
-            return redirect('login/google');
+        } catch (\Exception $e) {
+            return redirect('profile/social-accounts');
         }
 
         //$request->session()->put('user.social_data.google', $socUser);
@@ -192,8 +192,8 @@ class SocialLoginController extends Controller
         try {
             $socUser = Socialite::driver('linkedin')->user();
             // $socUser->token;
-        } catch (Exception $e) {
-            return redirect('login/linkedin');
+        } catch (\Exception $e) {
+            return redirect('profile/social-accounts');
         }
 
         //$request->session()->put('user.social_data.linkedin', $socUser);
@@ -233,8 +233,8 @@ class SocialLoginController extends Controller
         try {
             $socUser = Socialite::driver('twitter')->user();
             // $socUser->token;
-        } catch (Exception $e) {
-            return redirect('login/twitter');
+        } catch (\Exception $e) {
+            return redirect('profile/social-accounts');
         }
 
         //$request->session()->put('user.social_data.twitter', $socUser);
