@@ -646,8 +646,9 @@ i.material-icons.inline-icon {
 #datepickers-container .datepicker .datepicker--cell.-selected-.-focus- {
     background-color: #26A69A;
 }
-#datepickers-container .datepicker .datepicker--time-row + input[type="range"] + .thumb,
-#datepickers-container .datepicker .datepicker--time-row + input[type="range"] + .thumb.active {
+#datepickers-container .datepicker .datepicker--time-row > .thumb,
+#datepickers-container .datepicker .datepicker--time-row > .thumb.active,
+#datepickers-container .datepicker .datepicker--time-row > .thumb > .value {
     display: none !important;
 }
 #datepickers-container .datepicker .datepicker--nav-action path {
