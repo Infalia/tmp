@@ -640,13 +640,15 @@ i.material-icons.inline-icon {
 #datepickers-container .datepicker .datepicker--nav {
     width: auto;
     color: #ffffff;
+    border: none;
     background-color: #26A69A;
 }
 #datepickers-container .datepicker .datepicker--cell.-selected-.-focus- {
     background-color: #26A69A;
 }
-#datepickers-container .datepicker .datepicker--time-row + input[type=range] + .thumb {
-    display: none;
+#datepickers-container .datepicker .datepicker--time-row + input[type=range] + .thumb,
+#datepickers-container .datepicker .datepicker--time-row + input[type=range]+.thumb.active {
+    display: none !important;
 }
 #datepickers-container .datepicker .datepicker--nav-action path {
     stroke: #ffffff;
