@@ -646,7 +646,9 @@ i.material-icons.inline-icon {
 #datepickers-container .datepicker .datepicker--pointer {
     background: #26A69A;
 }
-#datepickers-container .datepicker .datepicker--cell.-selected-.-focus- {
+#datepickers-container .datepicker .datepicker--cell.-selected-.-focus-,
+#datepickers-container .datepicker .datepicker--cell.-selected-,
+#datepickers-container .datepicker .datepicker--cell.-selected-.-current- {
     background-color: #26A69A;
 }
 #datepickers-container .datepicker .datepicker--time-row > .thumb,
