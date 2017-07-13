@@ -648,9 +648,11 @@ i.material-icons.inline-icon {
 #datepickers-container .datepicker .datepicker--time-row + input[type=range] + .thumb {
     display: none;
 }
-#datepickers-container .datepicker .datepicker--nav-title i,
 #datepickers-container .datepicker .datepicker--nav-action path {
     stroke: #ffffff;
+}
+#datepickers-container .datepicker .datepicker--nav-title i {
+    color: #ffffff;
 }
 
 
