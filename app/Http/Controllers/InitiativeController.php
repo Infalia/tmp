@@ -199,7 +199,9 @@ class InitiativeController extends Controller
         $rules = array();
         $initiativeType = $request->input('initiative_type');
         $title = $request->input('title');
-        $date = $request->input('date');
+        //$date = $request->input('date');
+        $startDate = $request->input('start_date');
+        $endDate = $request->input('end_date');
         $description = $request->input('description');
         $latitude = $request->input('latitude');
         $longitude = $request->input('longitude');
@@ -214,7 +216,8 @@ class InitiativeController extends Controller
         
         $rules['initiative_type'] = 'required|integer';
         $rules['title'] = 'required|max:255';
-        $rules['date'] = 'required';
+        $rules['start_date'] = 'required|date|before:end_date';
+        $rules['end_date'] = 'required|date|after:start_date';
         $rules['description'] = 'required';
         $rules['latitude'] = 'required|numeric';
         $rules['longitude'] = 'required|numeric';
@@ -233,13 +236,13 @@ class InitiativeController extends Controller
         else {
             $user = new User();
 
-            // Date formatting
-            $dateArr = explode(' to ', $date);
-            $startDate = $dateArr[0];
-            $endDate = $dateArr[1];
+            // // Date formatting
+            // $dateArr = explode(' to ', $date);
+            // $startDate = $dateArr[0];
+            // $endDate = $dateArr[1];
 
-            $startDate = Carbon::createFromFormat('d/m/Y H:i:s', $startDate.':00')->format('Y-m-d H:i:s');
-            $endDate = Carbon::createFromFormat('d/m/Y H:i:s', $endDate.':00')->format('Y-m-d H:i:s');
+            $startDate = Carbon::createFromFormat('d-m-Y H:i:s', $startDate.':00')->format('Y-m-d H:i:s');
+            $endDate = Carbon::createFromFormat('d-m-Y H:i:s', $endDate.':00')->format('Y-m-d H:i:s');
 
 
             $initiative = new Initiative(
