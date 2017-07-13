@@ -642,11 +642,15 @@ i.material-icons.inline-icon {
     color: #ffffff;
     background-color: #26A69A;
 }
-#datepickers-container .datepicker .datepicker--cell .-selected- .-focus- {
+#datepickers-container .datepicker .datepicker--cell.-selected-.-focus- {
     background-color: #26A69A;
 }
 #datepickers-container .datepicker .datepicker--time-row + input[type=range] + .thumb {
     display: none;
+}
+#datepickers-container .datepicker .datepicker--nav-title i,
+#datepickers-container .datepicker .datepicker--nav-action path {
+    stroke: #ffffff;
 }
 
 
