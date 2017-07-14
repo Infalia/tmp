@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
+use App\User;
+use App\SocialNetwork;
 
 class ProfileController extends Controller
 {
@@ -269,11 +272,12 @@ class ProfileController extends Controller
         $profileBasicHeading1 = __('messages.profile_basic_heading_1');
 
         $profileHeading1 = __('messages.profile_social_accounts_heading_1');
+        $switchOn = __('messages.switch_on');
+        $switchOff = __('messages.switch_off');
 
-        $socialBtnFb = __('messages.profile_social_accounts_btn', ['socialNetwork' => 'Facebook', 'isLinked' => (1==1 ? '' : 'not')]);
-        $socialBtnGgl = __('messages.profile_social_accounts_btn', ['socialNetwork' => 'Google', 'isLinked' => (1==2 ? '' : 'not')]);
-        $socialBtnPint = __('messages.profile_social_accounts_btn', ['socialNetwork' => 'Pinterest', 'isLinked' => (1==2 ? '' : 'not')]);
-        $socialBtnLin = __('messages.profile_social_accounts_btn', ['socialNetwork' => 'LinkedIn', 'isLinked' => (1==2 ? '' : 'not')]);
+        $socialNetworks = SocialNetwork::all();
+        $userSocialNetworks = User::find(Auth::id())->socialNetworks;
+
 
         return view('profile.social-accounts')
             ->with('sidebarOption1', $sidebarOption1)
@@ -293,16 +297,13 @@ class ProfileController extends Controller
             ->with('pageTitle', $pageTitle)
             ->with('metaDescription', $metaDescription)
             ->with('profileBasicHeading1', $profileBasicHeading1)
-
             ->with('profileHeading1', $profileHeading1)
-            ->with('socialBtnFb', $socialBtnFb)
-            ->with('socialBtnGgl', $socialBtnGgl)
-            ->with('socialBtnPint', $socialBtnPint)
-            ->with('socialBtnLin', $socialBtnLin)
-
+            ->with('switchOn', $switchOn)
+            ->with('switchOff', $switchOff)
+            ->with('socialNetworks', $socialNetworks)
+            ->with('userSocialNetworks', $userSocialNetworks)
             ->with('routeUri', $route->uri);
     }
-
 
     function resetData()
     {
@@ -360,16 +361,14 @@ class ProfileController extends Controller
             ->with('routeUri', $route->uri);
     }
 
-
-
     function socialData()
     {
         $route = Route::current();
         $user = null;
 
-        if(session()->has('user')) {
-            $user = session('user');
-        }
+        // if(session()->has('user')) {
+        //     $user = session('user');
+        // }
 
         $sidebarOption1 = __('messages.sidebar_option_1');
         $sidebarOption2 = __('messages.sidebar_option_2');

@@ -28,6 +28,7 @@
                                 <div class="card-post-action">
                                     <span>{{ $initiative->initiativeType->name }}</span>
                                     <span class="card-post-action-time grey-text text-darken-1">{{ \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $initiative->created_at)->diffForHumans() }}</span>
+                                    <span>- by {{ $initiative->user->name }}</span>
                                 </div>
 
                                 @isset($initiative->start_date)
@@ -37,9 +38,10 @@
                                 <span class="card-post-address">Not available</span>
                             </div>
 
+
                             <div class="card-action card-action-footer">
-                                <span><i class="material-icons inline-icon grey-text text-darken-3">comment</i> {{ $comments = 2 }} {{ str_plural($commentLbl, $comments) }}</span>
-                                <span><i class="material-icons inline-icon grey-text text-darken-3">people</i> {{ $supporters = 5 }} {{ str_plural($supportLbl, $supporters) }}</span>
+                                <span class="initiative-engagement"><i class="material-icons inline-icon grey-text text-darken-3">comment</i> {{ $comments = $initiative->comments->count() }} {{ str_plural($commentLbl, $comments) }}</span>
+                                <span class="initiative-engagement"><i class="material-icons inline-icon grey-text text-darken-3">people</i> {{ $supporters = $initiative->users->count() }} {{ str_plural($supportLbl, $supporters) }}</span>
                             </div>
                         </div>
                     </div>

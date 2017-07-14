@@ -3,32 +3,14 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use App\User;
+use App\SocialNetwork;
 use Socialite;
 
 class SocialLoginController extends Controller
 {
-    /*
-    |--------------------------------------------------------------------------
-    | Login Controller
-    |--------------------------------------------------------------------------
-    |
-    | This controller handles authenticating users for the application and
-    | redirecting them to your home screen. The controller uses a trait
-    | to conveniently provide its functionality to your applications.
-    |
-    */
-
-    use AuthenticatesUsers;
-
-    /**
-     * Where to redirect users after login.
-     *
-     * @var string
-     */
-    protected $redirectTo = '/home';
-
     /**
      * Create a new controller instance.
      *
@@ -36,7 +18,7 @@ class SocialLoginController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('guest', ['except' => 'logout']);
+        //$this->middleware('guest', ['except' => 'logout']);
     }
 
     /**
@@ -127,16 +109,26 @@ class SocialLoginController extends Controller
                 'events'
             ])->user();
             // $socUser->token;
-        } catch (Exception $e) {
-            return redirect('login/facebook');
+        } catch (\Exception $e) {
+            return redirect('profile/social-accounts');
         }
 
-        $request->session()->put('user.social_data.facebook', $socUser);
-        
-        //$authUser = $this->findOrCreateUser($socUser);
-        //Auth::login($authUser, true);
+        //$request->session()->put('user.social_data.facebook', $socUser);
 
-        return redirect('profile/social-data');
+
+        if(!empty($socUser)) {
+            $socUserData = json_encode($socUser);
+            
+            $user = User::find(Auth::id());
+            $socialNetwork = SocialNetwork::where("title", "ILIKE", "%Facebook%")->first();
+
+            if(!empty($user) && !empty($socialNetwork)) {
+                $user->socialNetworks()->attach($socialNetwork->id, ['data' => $socUserData, 'created_at' => date('Y-m-d H:i:s')]);
+            }
+        }
+
+
+        return redirect('profile/social-accounts');
     }
 
     /**
@@ -159,13 +151,25 @@ class SocialLoginController extends Controller
         try {
             $socUser = Socialite::driver('google')->user();
             // $socUser->token;
-        } catch (Exception $e) {
-            return redirect('login/google');
+        } catch (\Exception $e) {
+            return redirect('profile/social-accounts');
         }
 
-        $request->session()->put('user.social_data.google', $socUser);
+        //$request->session()->put('user.social_data.google', $socUser);
 
-        return redirect('profile/social-data');
+        if(!empty($socUser)) {
+            $socUserData = json_encode($socUser);
+            
+            $user = User::find(Auth::id());
+            $socialNetwork = SocialNetwork::where("title", "ILIKE", "%Google%")->first();
+
+            if(!empty($user) && !empty($socialNetwork)) {
+                $user->socialNetworks()->attach($socialNetwork->id, ['data' => $socUserData, 'created_at' => date('Y-m-d H:i:s')]);
+            }
+        }
+
+
+        return redirect('profile/social-accounts');
     }
 
     /**
@@ -188,13 +192,25 @@ class SocialLoginController extends Controller
         try {
             $socUser = Socialite::driver('linkedin')->user();
             // $socUser->token;
-        } catch (Exception $e) {
-            return redirect('login/linkedin');
+        } catch (\Exception $e) {
+            return redirect('profile/social-accounts');
         }
 
-        $request->session()->put('user.social_data.linkedin', $socUser);
+        //$request->session()->put('user.social_data.linkedin', $socUser);
 
-        return redirect('profile/social-data');
+        if(!empty($socUser)) {
+            $socUserData = json_encode($socUser);
+            
+            $user = User::find(Auth::id());
+            $socialNetwork = SocialNetwork::where("title", "ILIKE", "%LinkedIn%")->first();
+
+            if(!empty($user) && !empty($socialNetwork)) {
+                $user->socialNetworks()->attach($socialNetwork->id, ['data' => $socUserData, 'created_at' => date('Y-m-d H:i:s')]);
+            }
+        }
+
+
+        return redirect('profile/social-accounts');
     }
 
     /**
@@ -217,46 +233,38 @@ class SocialLoginController extends Controller
         try {
             $socUser = Socialite::driver('twitter')->user();
             // $socUser->token;
-        } catch (Exception $e) {
-            return redirect('login/twitter');
+        } catch (\Exception $e) {
+            return redirect('profile/social-accounts');
         }
 
-        $request->session()->put('user.social_data.twitter', $socUser);
+        //$request->session()->put('user.social_data.twitter', $socUser);
 
-        return redirect('profile/social-data');
-    }
+        if(!empty($socUser)) {
+            $socUserData = json_encode($socUser);
+            
+            $user = User::find(Auth::id());
+            $socialNetwork = SocialNetwork::where("title", "ILIKE", "%Twitter%")->first();
 
-    /**
-     * Redirect the user to the Pinterest authentication page.
-     *
-     * @return Response
-     */
-    public function redirectToPinterestProvider()
-    {
-        return Socialite::with('pinterest')->scopes([
-            'read_public',
-            'write_public',
-            'read_relationships',
-            'write_relationships'
-        ])->redirect();
-    }
-
-    /**
-     * Obtain the user information from Pinterest.
-     *
-     * @return Response
-     */
-    public function handlePinterestProviderCallback(Request $request)
-    {
-        try {
-            $socUser = Socialite::driver('pinterest')->user();
-            // $token = $socUser->accessTokenResponseBody;
-        } catch (Exception $e) {
-            return redirect('login/pinterest');
+            if(!empty($user) && !empty($socialNetwork)) {
+                $user->socialNetworks()->attach($socialNetwork->id, ['data' => $socUserData, 'created_at' => date('Y-m-d H:i:s')]);
+            }
         }
 
-        $request->session()->put('user.social_data.pinterest', $socUser);
 
-        return redirect('profile/social-data');
+        return redirect('profile/social-accounts');
+    }
+    
+    function removeAccount(Request $request)
+    {
+        $socialNetworkId = $request->input('id');
+        $socialNetwork = SocialNetwork::find($socialNetworkId);
+        
+        if(!empty($socialNetwork)) {
+            User::find(Auth::id())->socialNetworks()->detach($socialNetworkId);
+        }
+
+        return response()->json([
+            'message' => __('messages.initiative_form_success.stored')
+        ]);
     }
 }

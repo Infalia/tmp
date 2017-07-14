@@ -16,61 +16,38 @@
                     @include('partials.profile-menu')
                 </div>
 
+                @if(!empty($socialNetworks))
                 <div class="col s12 m8 l9 xl6">
                     <div class="profile-section social-accounts-section">
                         <h4 class="h6">{{ $profileHeading1 }}</h4>
 
                         <ul>
-                            <li class="social-account-item facebook-item">
-                                <span>{{ $socialBtnFb }}</span>
-                                <div class="switch">
-                                    <label>
-                                        <i>Off</i>
-                                        {!! Form::checkbox('facebook-chk', 1, true, ['id' => 'facebook-chk']) !!}
-                                        <span class="lever"></span>
-                                        <i>On</i>
-                                    </label>
-                                </div>
-                            </li>
+                            @foreach($socialNetworks as $socialNetwork)
+                            @php
+                                $exists = false;
 
-                            <li class="social-account-item google-item">
-                                <span>{{ $socialBtnGgl }}</span>
+                                foreach($userSocialNetworks as $userSocialNetwork) {
+                                    if($socialNetwork->id == $userSocialNetwork->id) {
+                                        $exists = true;
+                                    }
+                                }
+                            @endphp
+                            <li class="social-account-item {{ $socialNetwork->class_name }}">
+                                <span>{{ __('messages.profile_social_accounts_btn', ['socialNetwork' => $socialNetwork->title, 'isLinked' => ($exists ? '' : 'not')]) }}</span>
                                 <div class="switch">
                                     <label>
-                                        <i>Off</i>
-                                        {!! Form::checkbox('google-chk', 1, false, ['id' => 'google-chk']) !!}
+                                        <i>{{ $switchOff }}</i>
+                                        {!! Form::checkbox(mb_convert_case($socialNetwork->title.'-chk', MB_CASE_LOWER, "UTF-8"), url('login/'.mb_convert_case($socialNetwork->title, MB_CASE_LOWER, "UTF-8")), $exists, ['id' => $socialNetwork->id, 'class' => 'social-chk']) !!}
                                         <span class="lever"></span>
-                                        <i>On</i>
+                                        <i>{{ $switchOn }}</i>
                                     </label>
                                 </div>
                             </li>
-
-                            <li class="social-account-item pinterest-item">
-                                <span>{{ $socialBtnPint }}</span>
-                                <div class="switch">
-                                    <label>
-                                        <i>Off</i>
-                                        {!! Form::checkbox('pinterest-chk', 1, false, ['id' => 'pinterest-chk']) !!}
-                                        <span class="lever"></span>
-                                        <i>On</i>
-                                    </label>
-                                </div>
-                            </li>
-
-                            <li class="social-account-item linkedin-item">
-                                <span>{{ $socialBtnLin }}</span>
-                                <div class="switch">
-                                    <label>
-                                        <i>Off</i>
-                                        {!! Form::checkbox('linkedin-chk', 1, false, ['id' => 'linkedin-chk']) !!}
-                                        <span class="lever"></span>
-                                        <i>On</i>
-                                    </label>
-                                </div>
-                            </li>
+                            @endforeach
                         </ul>
                     </div>
                 </div>
+                @endif
             </div>
         </div>
 
@@ -79,6 +56,25 @@
 
 @section('jslibs')
     <script>
+        $('.social-chk').change(function() {
+            if($(this).is(":checked")) {
+                window.location.href = this.value;
+            }
+            else {
+                data = new Object();
+                data['id'] = $(this).attr('id');
+                
+                var url = "{{ url('account/remove') }}";
 
+                $.ajax({
+                    type: 'POST',
+                    url: url,
+                    data: data,
+                    dataType: 'json',
+                    success: function(data) {},
+                    error : function(XMLHttpRequest, textStatus, errorThrown) {}
+                });
+            }
+        });
     </script>
 @endsection

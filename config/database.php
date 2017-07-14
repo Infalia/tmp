@@ -13,7 +13,7 @@ return [
     |
     */
 
-    'default' => env('DB_CONNECTION', 'mysql'),
+    'default' => env('DB_CONNECTION', 'pgsql'),
 
     /*
     |--------------------------------------------------------------------------
@@ -51,7 +51,7 @@ return [
             'collation' => 'utf8mb4_unicode_ci',
             'prefix' => '',
             'strict' => true,
-            //'engine' => null,
+            // 'engine' => null,
             'engine' => 'InnoDB ROW_FORMAT=DYNAMIC', // MySQL < 5.7.7
         ],
 
@@ -64,7 +64,8 @@ return [
             'password' => env('DB_PASSWORD', ''),
             'charset' => 'utf8',
             'prefix' => '',
-            'schema' => 'public',
+            // 'schema' => 'public',
+            'schema'   => env('DB_PGSQL_SCHEMA','public'),
             'sslmode' => 'prefer',
         ],
 

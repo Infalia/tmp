@@ -10,9 +10,9 @@ use App\User;
 use App\InitiativeType;
 use App\Initiative;
 use App\InitiativeImage;
+use App\Comment;
 use App\Helpers\OnToMap;
 use Carbon\Carbon;
-//use DateTime;
 
 class InitiativeController extends Controller
 {
@@ -38,6 +38,7 @@ class InitiativeController extends Controller
 
 
         $initiatives = Initiative::all();
+        
 
         return view('initiatives.initiatives')
             ->with('sidebarOption1', $sidebarOption1)
@@ -58,11 +59,60 @@ class InitiativeController extends Controller
             ->with('routeUri', $route->uri);
     }
 
-
-
     function initiative($id)
     {
-	$route = Route::current();        $initiative = Initiative::find($id);        $sidebarOption1 = __('messages.sidebar_option_1');        $sidebarOption2 = __('messages.sidebar_option_2');        $sidebarOption3 = __('messages.sidebar_option_3');        $sidebarOption4 = __('messages.sidebar_option_4');        $sidebarOption5 = __('messages.sidebar_option_5');        $sidebarOption6 = __('messages.sidebar_option_6');        $sidebarOption7 = __('messages.sidebar_option_7');        $sidebarOption8 = __('messages.sidebar_option_8');        $pageTitle = $initiative->title;        $metaDescription = '';        $commentLbl = __('messages.timeline_comment_lbl');        $supportLbl = __('messages.timeline_supporter_lbl');        $showBtn = __('messages.initiatives_btn_1');        $noRecordsMsg = __('messages.initiatives_msg_1');               return view('initiatives.initiative')            ->with('sidebarOption1', $sidebarOption1)            ->with('sidebarOption2', $sidebarOption2)            ->with('sidebarOption3', $sidebarOption3)            ->with('sidebarOption4', $sidebarOption4)            ->with('sidebarOption5', $sidebarOption5)            ->with('sidebarOption6', $sidebarOption6)            ->with('sidebarOption7', $sidebarOption7)            ->with('sidebarOption8', $sidebarOption8)            ->with('pageTitle', $pageTitle)            ->with('metaDescription', $metaDescription)            ->with('commentLbl', $commentLbl)            ->with('supportLbl', $supportLbl)            ->with('showBtn', $showBtn)            ->with('noRecordsMsg', $noRecordsMsg)            ->with('initiative', $initiative)            ->with('routeUri', $route->uri);
+        $route = Route::current();
+        $initiative = Initiative::find($id);
+
+        $sidebarOption1 = __('messages.sidebar_option_1');
+        $sidebarOption2 = __('messages.sidebar_option_2');
+        $sidebarOption3 = __('messages.sidebar_option_3');
+        $sidebarOption4 = __('messages.sidebar_option_4');
+        $sidebarOption5 = __('messages.sidebar_option_5');
+        $sidebarOption6 = __('messages.sidebar_option_6');
+        $sidebarOption7 = __('messages.sidebar_option_7');
+        $sidebarOption8 = __('messages.sidebar_option_8');
+        
+        
+        $pageTitle = $initiative->title;
+        $metaDescription = '';
+        $commentLbl = __('messages.timeline_comment_lbl');
+        $supportLbl = __('messages.timeline_supporter_lbl');
+        $showBtn = __('messages.initiatives_btn_1');
+        $supportBtn = __('messages.initiatives_btn_3');
+        $commentAddPldr = __('messages.form_comments_add_pldr');
+        $commentReplyBtn = __('messages.form_comments_reply_btn');
+        $commentViewRepliesBtn = __('messages.form_comments_view_replies_btn');
+        $commentHideRepliesBtn = __('messages.form_comments_hide_replies_btn');
+        $noCommentsMsg = __('messages.form_no_comments_msg');
+        $commentAddBtn = __('messages.form_comments_post_btn');
+        $noRecordsMsg = __('messages.initiatives_msg_1');
+
+        return view('initiatives.initiative')
+            ->with('sidebarOption1', $sidebarOption1)
+            ->with('sidebarOption2', $sidebarOption2)
+            ->with('sidebarOption3', $sidebarOption3)
+            ->with('sidebarOption4', $sidebarOption4)
+            ->with('sidebarOption5', $sidebarOption5)
+            ->with('sidebarOption6', $sidebarOption6)
+            ->with('sidebarOption7', $sidebarOption7)
+            ->with('sidebarOption8', $sidebarOption8)
+            ->with('pageTitle', $pageTitle)
+            ->with('metaDescription', $metaDescription)
+            ->with('commentLbl', $commentLbl)
+            ->with('supportLbl', $supportLbl)
+            ->with('showBtn', $showBtn)
+            ->with('supportBtn', $supportBtn)
+            ->with('commentAddPldr', $commentAddPldr)
+            ->with('commentReplyBtn', $commentReplyBtn)
+            ->with('commentViewRepliesBtn', $commentViewRepliesBtn)
+            ->with('commentHideRepliesBtn', $commentHideRepliesBtn)
+            ->with('noCommentsMsg', $noCommentsMsg)
+            ->with('commentAddBtn', $commentAddBtn)
+            ->with('noRecordsMsg', $noRecordsMsg)
+            ->with('initiative', $initiative)
+            ->with('initiativeId', $id)
+            ->with('routeUri', $route->uri);
     }
 
     function initiativeForm()
@@ -136,12 +186,22 @@ class InitiativeController extends Controller
             ->with('routeUri', $route->uri);
     }
 
+    function initiativeComments(Request $request)
+    {
+        $initiativeId = $request->input('init_id');
+        $comments = Initiative::find($initiativeId)->comments;
+
+        return response()->json($comments);
+    }
+
     function storeInitiative(Request $request)
     {
         $rules = array();
         $initiativeType = $request->input('initiative_type');
         $title = $request->input('title');
-        $date = $request->input('date');
+        //$date = $request->input('date');
+        $startDate = $request->input('start_date');
+        $endDate = $request->input('end_date');
         $description = $request->input('description');
         $latitude = $request->input('latitude');
         $longitude = $request->input('longitude');
@@ -156,7 +216,8 @@ class InitiativeController extends Controller
         
         $rules['initiative_type'] = 'required|integer';
         $rules['title'] = 'required|max:255';
-        $rules['date'] = 'required';
+        $rules['start_date'] = 'required|date|before:end_date';
+        $rules['end_date'] = 'required|date|after:start_date';
         $rules['description'] = 'required';
         $rules['latitude'] = 'required|numeric';
         $rules['longitude'] = 'required|numeric';
@@ -175,13 +236,13 @@ class InitiativeController extends Controller
         else {
             $user = new User();
 
-            // Date formatting
-            $dateArr = explode(' to ', $date);
-            $startDate = $dateArr[0];
-            $endDate = $dateArr[1];
+            // // Date formatting
+            // $dateArr = explode(' to ', $date);
+            // $startDate = $dateArr[0];
+            // $endDate = $dateArr[1];
 
-            $startDate = Carbon::createFromFormat('d/m/Y H:i:s', $startDate.':00')->format('Y-m-d H:i:s');
-            $endDate = Carbon::createFromFormat('d/m/Y H:i:s', $endDate.':00')->format('Y-m-d H:i:s');
+            $startDate = Carbon::createFromFormat('d-m-Y H:i:s', $startDate.':00')->format('Y-m-d H:i:s');
+            $endDate = Carbon::createFromFormat('d-m-Y H:i:s', $endDate.':00')->format('Y-m-d H:i:s');
 
 
             $initiative = new Initiative(
@@ -208,6 +269,76 @@ class InitiativeController extends Controller
         return response()->json([
             'initId' => $lastInsertedId,
             'message' => __('messages.initiative_form_success.stored')
+        ]);
+    }
+
+    function storeInitiativeSupporter(Request $request)
+    {
+        $initiativeId = $request->input('initiative_id');
+        $initiative = Initiative::find($initiativeId);
+        $totalSupporters = 0;
+
+        $isUserSupporting = $initiative->users->contains('id', Auth::id());
+
+        if($isUserSupporting) {
+            $initiative->users()->detach(Auth::id());
+        }
+        else {
+            $initiative->users()->attach(Auth::id(), ['created_at' => date('Y-m-d H:i:s')]);
+        }
+
+        $initiative = Initiative::find($initiativeId);
+        $totalSupporters = $initiative->users->count();
+
+
+        return response()->json([
+            'totalSupporters' => $totalSupporters
+        ]);
+    }
+
+    function storeInitiativeComment(Request $request)
+    {
+        $rules = array();
+        $commentId = $request->input('parent_id');
+        $initiativeId = $request->input('init_id');
+        $userId = Auth::id();
+        $userFullname = User::find(Auth::id())->name;
+        $body = $request->input('body');
+
+        $initiative = new Initiative();
+        $totalComments = $initiative->find($initiativeId)->comments->count();
+
+
+        $messages = [
+            'required' => __('messages.initiative_form_error.required')
+        ];
+        
+        $rules['init_id'] = 'required|integer';
+        $rules['body'] = 'required';
+        
+        $validator = Validator::make($request->all(), $rules);
+
+        if($validator->fails()) {
+            return response()->json([
+                'errors' => $validator->messages()
+            ]);
+        }
+        else {
+            $comment = new Comment([
+                'parent_id' => $commentId,
+                'user_id' => $userId,
+                'user_fullname' => $userFullname,
+                'body' => $body,
+                'created_at' => date('Y-m-d H:i:s')
+            ]);
+
+            $initiative->find($initiativeId)->comments()->save($comment);
+            $totalComments = $initiative->find($initiativeId)->comments->count();
+        }
+
+
+        return response()->json([
+            'total_comments' => $totalComments
         ]);
     }
 

@@ -36,6 +36,12 @@
         'form_end_date_pldr' => 'When your offer ends...',
         'form_init_descr_lbl' => 'Description',
         'form_init_descr_pldr' => 'Tell us about your offer/demand...',
+        'form_comments_add_pldr' => 'Add a comment',
+        'form_comments_reply_btn' => 'Reply',
+        'form_comments_view_replies_btn' => 'View all replies',
+        'form_comments_hide_replies_btn' => 'Hide replies',
+        'form_no_comments_msg' => 'No comments yet',
+        'form_comments_post_btn' => 'Post',
         'form_save_btn' => 'Save',
         'form_cancel_btn' => 'Cancel',
 
@@ -66,6 +72,11 @@
         'initiative_form_success' => [
             'stored' => 'Your initiative has been saved successfully!',
         ],
+
+
+        /*** GLOBAL TEXTS ***/
+        'switch_on' => 'On',
+        'switch_off' => 'Off',
 
 
         /*** HOME ***/
@@ -121,7 +132,7 @@
         'profile_social_accounts_page_title' => 'My social profiles - '.config('app.name'),
         'profile_social_accounts_page_meta_description' => '',
         'profile_social_accounts_heading_1' => 'LINK YOUR SOCIAL PROFILES',
-        'profile_social_accounts_btn' => 'Your :socialNetwork is :isLinked linked',
+        'profile_social_accounts_btn' => ':socialNetwork account is :isLinked linked',
 
         /* Reset data */
         'profile_reset_page_title' => 'Reset data - '.config('app.name'),
@@ -145,6 +156,8 @@
         'initiatives_page_title' => 'Offers/Demands - '.config('app.name'),
         'initiatives_page_meta_description' => '',
         'initiatives_btn_1' => 'show on map',
+        'initiatives_btn_2' => 'Comment',
+        'initiatives_btn_3' => 'Support it',
         'initiatives_msg_1' => 'There are no initiatives yet',
 
         /* Initiative form */
