@@ -32,6 +32,7 @@ Route::get('timeline', 'TimelineController@index')->middleware('uwumAuth');
 Route::get('offers', 'InitiativeController@initiatives');
 Route::get('offer/{id}/{title}', 'InitiativeController@initiative');
 Route::get('offer/new', 'InitiativeController@initiativeForm')->middleware('uwumAuth');
+Route::get('offer/edit/{id}/{title}', 'InitiativeController@initiativeEditForm')->middleware('curUserAuth');
 Route::get('offer/comments', 'InitiativeController@initiativeComments');
 Route::post('offer/save', 'InitiativeController@storeInitiative')->middleware('uwumAuth');
 Route::post('offer/image/upload', 'InitiativeController@imageUpload')->middleware('uwumAuth');

@@ -44,6 +44,7 @@
         'form_comments_post_btn' => 'Post',
         'form_save_btn' => 'Save',
         'form_cancel_btn' => 'Cancel',
+        'form_remove_btn' => 'Remove',
 
         'profile_form_company_lbl' => 'Company/Organisation',
         'profile_form_city_lbl' => 'City/Town',
@@ -140,7 +141,7 @@
         'profile_reset_heading_1' => 'RESET YOUR DATA',
         'profile_reset_add_btn_1' => 'Reset data',
 
-        /* Timeline */
+        /* TIMELINE */
         'timeline_page_title' => 'Timeline - '.config('app.name'),
         'timeline_page_meta_description' => '',
         'timeline_offer_posted_lbl' => 'You posted an offer on',
@@ -152,30 +153,31 @@
         'timeline_supporter_lbl' => 'supporter',
         'timeline_msg_1' => 'There are no events for your timeline yet.',
 
-        /* Initiatives */
+        /* INITIATIVES */
         'initiatives_page_title' => 'Offers/Demands - '.config('app.name'),
         'initiatives_page_meta_description' => '',
         'initiatives_btn_1' => 'show on map',
         'initiatives_btn_2' => 'Comment',
         'initiatives_btn_3' => 'Support it',
+        'initiatives_btn_4' => 'edit',
         'initiatives_msg_1' => 'There are no initiatives yet',
 
         /* Initiative form */
         'initiative_form_page_title' => 'New offer - '.config('app.name'),
         'initiative_form_page_meta_description' => '',
         'initiative_form_heading_1' => 'Post a new offer',
+        'initiative_form_heading_2' => 'Edit offer',
         'initiative_form_image_msg_1' => 'Image is bigger than '.(env('MAX_FILE_SIZE')/1024).'Mb',
         'initiative_form_image_msg_2' => 'Error occured',
         'initiative_form_image_msg_3' => 'This file type is not allowed',
         'initiative_form_image_msg_4' => 'Maximum file number exceeded',
-        'initiative_form_image_btn_1' => 'Remove',
 
-        /* Notifications */
+        /* NOTIFICATIONS */
         'notifications_page_title' => 'Notifications - '.config('app.name'),
         'notifications_page_meta_description' => '',
         'notifications_comment_lbl' => 'by',
 
-        /* Accessibility */
+        /* ACCESSIBILITY */
         'accessibility_page_title' => 'Accessibility wizard - '.config('app.name'),
         'accessibility_page_meta_description' => '',
         'accessibility_heading_1' => 'ACCESSIBILITY OPTIONS',

@@ -17,7 +17,10 @@
                             <div class="card-image">
                                 <a href="{{ 'offer/'.$initiative->id.'/'.str_slug($initiative->title) }}">
                                     {!! HTML::image('storage/initiatives/'.$initiative->initiativeImages->first()->name, $initiative->title, array('class' => '')) !!}
-                                    <a class="waves-effect waves-light btn">{{ $showBtn }}</a>
+                                    
+                                    @if(Auth::check() && Auth::id() == $initiative->user->id)
+                                    <a class="waves-effect waves-light btn" href="{{ 'offer/edit/'.$initiative->id.'/'.str_slug($initiative->title) }}"><i class="material-icons left">mode_edit</i> {{ $editBtn }}</a>
+                                    @endif
                                 </a>
                             </div>
                             @endif

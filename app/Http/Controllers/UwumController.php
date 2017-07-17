@@ -12,7 +12,7 @@ class UwumController extends Controller
         $uwumUserId = $request->input('user_id');
         $action = 'none';
 
-        if($isUwumUserLoggedIn == 'true' && !Auth::check()) {
+        if(($isUwumUserLoggedIn == 'true' && !Auth::check()) || ($isUwumUserLoggedIn == 'true') && Auth::id() != $uwumUserId) {
            $action = 'login';
         }
         if($isUwumUserLoggedIn == 'false' && Auth::check()) {

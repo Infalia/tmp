@@ -33,11 +33,11 @@ class InitiativeController extends Controller
         $metaDescription = __('messages.initiatives_page_meta_description');
         $commentLbl = __('messages.timeline_comment_lbl');
         $supportLbl = __('messages.timeline_supporter_lbl');
-        $showBtn = __('messages.initiatives_btn_1');
+        $editBtn = __('messages.initiatives_btn_4');
         $noRecordsMsg = __('messages.initiatives_msg_1');
 
 
-        $initiatives = Initiative::all();
+        $initiatives = Initiative::all()->sortBy('start_date');
         
 
         return view('initiatives.initiatives')
@@ -53,7 +53,7 @@ class InitiativeController extends Controller
             ->with('metaDescription', $metaDescription)
             ->with('commentLbl', $commentLbl)
             ->with('supportLbl', $supportLbl)
-            ->with('showBtn', $showBtn)
+            ->with('editBtn', $editBtn)
             ->with('noRecordsMsg', $noRecordsMsg)
             ->with('initiatives', $initiatives)
             ->with('routeUri', $route->uri);
@@ -148,7 +148,7 @@ class InitiativeController extends Controller
         $imageUploadErrorMsg = __('messages.initiative_form_image_msg_2');
         $imageUploadFileTypeMsg = __('messages.initiative_form_image_msg_3');
         $imageUploadFileNumberMsg = __('messages.initiative_form_image_msg_4');
-        $removeImageBtn = __('messages.initiative_form_image_btn_1');
+        $removeImageBtn = __('messages.form_remove_btn');
         $saveBtn = __('messages.form_save_btn');
         $cancelBtn = __('messages.form_cancel_btn');
 
@@ -186,6 +186,101 @@ class InitiativeController extends Controller
             ->with('routeUri', $route->uri);
     }
 
+    function initiativeEditForm($id)
+    {
+        $initiativeType = new InitiativeType();
+        $route = Route::current();
+
+        $initiativeTypes = $initiativeType->all();
+        $initiative = Initiative::find($id);
+
+        $initiativeTypeId = $initiative->initiative_type_id;
+        $initiativeTitle = $initiative->title;
+        $initiativeDescription = $initiative->description;
+        $initiativeLatitude = $initiative->latitude;
+        $initiativeLongitude = $initiative->longitude;
+
+        $initStartDate = Carbon::createFromFormat('Y-m-d H:i:s', $initiative->start_date);
+        $initEndDate = Carbon::createFromFormat('Y-m-d H:i:s', $initiative->end_date);
+        $initiativeStartDate = $initStartDate->year.', '.($initStartDate->month-1).', '.$initStartDate->day.', '.$initStartDate->hour.', '.$initStartDate->minute.', '.$initStartDate->second;
+        $initiativeEndDate = $initEndDate->year.', '.($initEndDate->month-1).', '.$initEndDate->day.', '.$initEndDate->hour.', '.$initEndDate->minute.', '.$initEndDate->second;
+
+
+
+        $sidebarOption1 = __('messages.sidebar_option_1');
+        $sidebarOption2 = __('messages.sidebar_option_2');
+        $sidebarOption3 = __('messages.sidebar_option_3');
+        $sidebarOption4 = __('messages.sidebar_option_4');
+        $sidebarOption5 = __('messages.sidebar_option_5');
+        $sidebarOption6 = __('messages.sidebar_option_6');
+        $sidebarOption7 = __('messages.sidebar_option_7');
+        $sidebarOption8 = __('messages.sidebar_option_8');
+
+        $pageTitle = __('messages.initiative_form_page_title');
+        $metaDescription = __('messages.initiative_form_page_meta_description');
+        $initiativeFormHeading1 = __('messages.initiative_form_heading_2');
+        $typeLbl = __('messages.form_init_type_lbl');
+        $typePldr = __('messages.form_init_type_pldr');
+        $titleLbl = __('messages.form_init_title_lbl');
+        $titlePldr = __('messages.form_init_title_pldr');
+        $startDateLbl = __('messages.form_start_date_lbl');
+        $startDatePldr = __('messages.form_start_date_pldr');
+        $endDateLbl = __('messages.form_end_date_lbl');
+        $endDatePldr = __('messages.form_end_date_pldr');
+        $descriptionLbl = __('messages.form_init_descr_lbl');
+        $descriptionPldr = __('messages.form_init_descr_pldr');
+        $imageUploadFileSizeMsg = __('messages.initiative_form_image_msg_1');
+        $imageUploadErrorMsg = __('messages.initiative_form_image_msg_2');
+        $imageUploadFileTypeMsg = __('messages.initiative_form_image_msg_3');
+        $imageUploadFileNumberMsg = __('messages.initiative_form_image_msg_4');
+        $removeImageBtn = __('messages.form_remove_btn');
+        $saveBtn = __('messages.form_save_btn');
+        $cancelBtn = __('messages.form_cancel_btn');
+
+
+        return view('initiatives.initiative-edit-form')
+            ->with('sidebarOption1', $sidebarOption1)
+            ->with('sidebarOption2', $sidebarOption2)
+            ->with('sidebarOption3', $sidebarOption3)
+            ->with('sidebarOption4', $sidebarOption4)
+            ->with('sidebarOption5', $sidebarOption5)
+            ->with('sidebarOption6', $sidebarOption6)
+            ->with('sidebarOption7', $sidebarOption7)
+            ->with('sidebarOption8', $sidebarOption8)
+            ->with('pageTitle', $pageTitle)
+            ->with('metaDescription', $metaDescription)
+            ->with('initiativeFormHeading1', $initiativeFormHeading1)
+            ->with('initiativeTypes', $initiativeTypes)
+            ->with('initiative', $initiative)
+
+            ->with('initiativeTypeId', $initiativeTypeId)
+            ->with('initiativeTitle', $initiativeTitle)
+            ->with('initiativeDescription', $initiativeDescription)
+            ->with('initiativeLatitude', $initiativeLatitude)
+            ->with('initiativeLongitude', $initiativeLongitude)
+            ->with('initiativeStartDate', $initiativeStartDate)
+            ->with('initiativeEndDate', $initiativeEndDate)
+
+            ->with('typeLbl', $typeLbl)
+            ->with('typePldr', $typePldr)
+            ->with('titleLbl', $titleLbl)
+            ->with('titlePldr', $titlePldr)
+            ->with('startDateLbl', $startDateLbl)
+            ->with('startDatePldr', $startDatePldr)
+            ->with('endDateLbl', $endDateLbl)
+            ->with('endDatePldr', $endDatePldr)
+            ->with('descriptionLbl', $descriptionLbl)
+            ->with('descriptionPldr', $descriptionPldr)
+            ->with('imageUploadFileSizeMsg', $imageUploadFileSizeMsg)
+            ->with('imageUploadErrorMsg', $imageUploadErrorMsg)
+            ->with('imageUploadFileTypeMsg', $imageUploadFileTypeMsg)
+            ->with('imageUploadFileNumberMsg', $imageUploadFileNumberMsg)
+            ->with('removeImageBtn', $removeImageBtn)
+            ->with('saveBtn', $saveBtn)
+            ->with('cancelBtn', $cancelBtn)
+            ->with('routeUri', $route->uri);
+    }
+
     function initiativeComments(Request $request)
     {
         $initiativeId = $request->input('init_id');
@@ -199,7 +294,6 @@ class InitiativeController extends Controller
         $rules = array();
         $initiativeType = $request->input('initiative_type');
         $title = $request->input('title');
-        //$date = $request->input('date');
         $startDate = $request->input('start_date');
         $endDate = $request->input('end_date');
         $description = $request->input('description');
@@ -236,11 +330,7 @@ class InitiativeController extends Controller
         else {
             $user = new User();
 
-            // // Date formatting
-            // $dateArr = explode(' to ', $date);
-            // $startDate = $dateArr[0];
-            // $endDate = $dateArr[1];
-
+            // Date formatting
             $startDate = Carbon::createFromFormat('d-m-Y H:i:s', $startDate.':00')->format('Y-m-d H:i:s');
             $endDate = Carbon::createFromFormat('d-m-Y H:i:s', $endDate.':00')->format('Y-m-d H:i:s');
 

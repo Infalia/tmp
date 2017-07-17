@@ -1,12 +1,7 @@
 @extends('layouts.app')
 
 @section('csslibs')
-    {{--  {!! HTML::style('flatpickr/themes/airbnb.css') !!}  --}}
     {!! HTML::style('dropzone/dropzone.css') !!}
-    <!--[if IE 9]>
-    {!! HTML::style('flatpickr/ie.css') !!}
-    <![endif]-->
-
     {!! HTML::style('datepicker/datepicker.min.css') !!}
 @endsection
 
@@ -42,12 +37,7 @@
                                     {!! Form::label('title', $titleLbl, ['class' => 'active']) !!}
                                 </div>
 
-                                {{--  <div class="input-field col s12">
-                                    {!! Form::text('date', '', ['id' => 'date', 'class' => 'datepicker', 'placeholder' => $startDatePldr]) !!}
-                                    {!! Form::label('date', $startDateLbl, ['class' => 'active']) !!}
-                                </div>  --}}
-
-                                 <div class="input-field col s12 l6">
+                                <div class="input-field col s12 l6">
                                     {!! Form::text('start_date', '', ['id' => 'start-date', 'class' => 'datepicker-here', 'placeholder' => $startDatePldr]) !!}
                                     {!! Form::label('start-date', $startDateLbl, ['class' => 'active']) !!}
                                 </div>
@@ -188,7 +178,6 @@
 @endsection
 
 @section('jslibs')
-    {{--  {!! HTML::script('flatpickr/flatpickr.min.js') !!}  --}}
     {!! HTML::script('datepicker/datepicker.min.js') !!}
     {!! HTML::script('datepicker/i18n/datepicker.en.js') !!}
     {!! HTML::script('dropzone/dropzone.min.js') !!}
@@ -240,15 +229,6 @@
 
 
         // Datetime pickers
-        {{--  $("#date").flatpickr({
-            minDate: "today",
-            maxDate: new Date().fp_incr(180),
-            dateFormat: 'd/m/Y H:i',
-            enableTime: true,
-            time_24hr: true,
-            mode: 'range'
-        });  --}}
-
         var $startDatepicker = $('#start-date').datepicker({
             language: "en",
             dateFormat: "dd-mm-yyyy",
@@ -326,7 +306,6 @@
 
             data['initiative_type'] = $('#initiative_type').val();
             data['title'] = $('#title').val();
-            //data['date'] = $('#date').val();
             data['start_date'] = $('#start-date').val();
             data['end_date'] = $('#end-date').val();
             data['date'] = $('#date').val();
