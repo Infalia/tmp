@@ -622,21 +622,7 @@ i.material-icons.inline-icon {
 
 
 
-/****** NEW OFFER ******/
-/* .initiative-form #date {
-    color: rgba(0,0,0,0.87);
-    border-bottom: 1px solid #9e9e9e;
-}
-.initiative-form #date:focus {
-    border-bottom: 1px solid #26a69a;
-    box-shadow: 0 1px 0 0 #26a69a;
-}
-.initiative-form #date + label {
-    color: #9e9e9e;
-}
-.initiative-form #date:focus + label {
-    color: #26a69a;
-} */
+/****** NEW/EDIT OFFER ******/
 #datepickers-container .datepicker .datepicker--nav {
     width: auto;
     color: #ffffff;
@@ -663,8 +649,7 @@ i.material-icons.inline-icon {
     color: #ffffff;
 }
 
-
-
+/* Input map */
 .init-form-map {
     width: 100%;
     height: 400px;
@@ -679,6 +664,15 @@ i.material-icons.inline-icon {
 }
 .dropzone-wrapper {
     margin-bottom: 40px;
+}
+
+.initiative-images {
+    margin-bottom: 25px;
+}
+.initiative-images .btn-floating {
+    position: absolute;
+    top: 0;
+    right: 0;
 }
 
 
