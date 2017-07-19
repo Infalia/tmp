@@ -17,6 +17,8 @@ Route::get('/', 'InitiativeController@initiatives');
 //    App::setLocale($locale);
 //});
 
+Route::get('404', 'ErrorPageController@page404');
+
 /*** User profile ***/
 Route::get('profile/basic-info', 'ProfileController@basicInfo')->middleware('uwumAuth');
 Route::get('profile/work', 'ProfileController@work')->middleware('uwumAuth');
@@ -35,7 +37,10 @@ Route::get('offer/new', 'InitiativeController@initiativeForm')->middleware('uwum
 Route::get('offer/edit/{id}/{title}', 'InitiativeController@initiativeEditForm')->middleware('curUserAuth');
 Route::get('offer/comments', 'InitiativeController@initiativeComments');
 Route::post('offer/save', 'InitiativeController@storeInitiative')->middleware('uwumAuth');
+Route::post('offer/update/{id}', 'InitiativeController@updateInitiative')->middleware('curUserAuth');
+Route::post('offer/delete/{id}', 'InitiativeController@deleteInitiative')->middleware('curUserAuth');
 Route::post('offer/image/upload', 'InitiativeController@imageUpload')->middleware('uwumAuth');
+Route::post('offer/image/remove', 'InitiativeController@imageRemove');
 Route::post('offer/post-to-ontomap', 'InitiativeController@postToOnToMap');
 Route::post('offer/save/supporter', 'InitiativeController@storeInitiativeSupporter')->middleware('uwumAuth');
 Route::post('offer/save/comment', 'InitiativeController@storeInitiativeComment')->middleware('uwumAuth');

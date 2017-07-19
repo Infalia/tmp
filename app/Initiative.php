@@ -57,7 +57,7 @@ class Initiative extends Model
      *
      * @return App\InitiativeImage|null
      */
-    public function initiativeImages()
+    public function images()
     {
         return $this->hasMany('App\InitiativeImage');
     }

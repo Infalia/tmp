@@ -1,5 +1,11 @@
 <?php
     return [
+        /*** 404 ***/
+        '404_page_title' => '404 Error',
+        '404_page_meta_description' => 'Oops! The Page you requested was not found!',
+        '404_heading_1' => '404 Error',
+        '404_text_1' => 'Oops! The Page you requested was not found!',
+
         /*** SIDEBAR ***/
         'sidebar_option_1' => 'Post an Offer/Demand',
         'sidebar_option_2' => 'Dashboard',
@@ -43,8 +49,10 @@
         'form_no_comments_msg' => 'No comments yet',
         'form_comments_post_btn' => 'Post',
         'form_save_btn' => 'Save',
+        'form_edit_btn' => 'Edit',
         'form_cancel_btn' => 'Cancel',
         'form_remove_btn' => 'Remove',
+        'form_delete_btn' => 'Delete',
 
         'profile_form_company_lbl' => 'Company/Organisation',
         'profile_form_city_lbl' => 'City/Town',
@@ -159,7 +167,6 @@
         'initiatives_btn_1' => 'show on map',
         'initiatives_btn_2' => 'Comment',
         'initiatives_btn_3' => 'Support it',
-        'initiatives_btn_4' => 'edit',
         'initiatives_msg_1' => 'There are no initiatives yet',
 
         /* Initiative form */

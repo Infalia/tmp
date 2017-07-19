@@ -13,20 +13,20 @@
                     @forelse($initiatives as $initiative)
                     <div class="col {{ Auth::check() ? 's12 m6 l6 xl3' : 's12 m4 l4 xl2' }}">
                         <div class="card">
-                            @if(!empty($initiative->initiativeImages))
+                            @if($initiative->images->isNotEmpty())
                             <div class="card-image">
-                                <a href="{{ 'offer/'.$initiative->id.'/'.str_slug($initiative->title) }}">
-                                    {!! HTML::image('storage/initiatives/'.$initiative->initiativeImages->first()->name, $initiative->title, array('class' => '')) !!}
+                                <a href="{{ url('offer/'.$initiative->id.'/'.str_slug($initiative->title)) }}">
+                                    {!! HTML::image('storage/initiatives/'.$initiative->images->first()->name, $initiative->title, array('class' => '')) !!}
                                     
                                     @if(Auth::check() && Auth::id() == $initiative->user->id)
-                                    <a class="waves-effect waves-light btn" href="{{ 'offer/edit/'.$initiative->id.'/'.str_slug($initiative->title) }}"><i class="material-icons left">mode_edit</i> {{ $editBtn }}</a>
+                                    <a class="waves-effect waves-light btn" href="{{ url('offer/edit/'.$initiative->id.'/'.str_slug($initiative->title)) }}"><i class="material-icons left">mode_edit</i> {{ $editBtn }}</a>
                                     @endif
                                 </a>
                             </div>
                             @endif
 
                             <div class="card-content">
-                                <a href="{{ 'offer/'.$initiative->id.'/'.str_slug($initiative->title) }}"><span class="card-title">{{ $initiative->title }}</span></a>
+                                <a href="{{ url('offer/'.$initiative->id.'/'.str_slug($initiative->title)) }}"><span class="card-title">{{ $initiative->title }}</span></a>
 
                                 <div class="card-post-action">
                                     <span>{{ $initiative->initiativeType->name }}</span>

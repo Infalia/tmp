@@ -18,10 +18,18 @@
 
                 <div class="row">
                     @if(!empty($initiative))
+
+                    <div class="col s12 right-align">
+                        @if(Auth::check() && Auth::id() == $initiative->user->id)
+                        <a class="waves-effect waves-light btn" href="{{ url('offer/edit/'.$initiative->id.'/'.str_slug($initiative->title)) }}">{{ $editBtn }}</a>
+                        {!! Form::button($deleteBtn, array('id' => 'delete-btn', 'class' => 'btn waves-effect waves-light red darken-1', 'onclick' => 'return confirm("Are you sure?");')) !!}
+                        @endif
+                    </div>
+
                     <div class="col s12">
-                        @if(!empty($initiative->initiativeImages))
+                        @if(!empty($initiative->images))
                         <div class="owl-carousel owl-theme">
-                            @foreach ($initiative->initiativeImages as $image)
+                            @foreach ($initiative->images as $image)
                             <div class="item carousel-item">
                                 <a href="{{ env('APP_URL') }}/storage/initiatives/{{ $image->name }}" data-caption="{{ $initiative->title }}">
                                     {!! HTML::image('storage/initiatives/'.$image->name, $initiative->title, array('class' => '')) !!}
@@ -55,7 +63,6 @@
                         <div class="divider"></div>
 
                         <div class="initiative-engagement-buttons">
-                            {{-- {!! Form::button($commentBtn, array('id' => 'comment-btn', 'class' => 'waves-effect waves-teal btn-flat initiative-engagement')) !!} --}}
                             {!! Form::button($supportBtn, array('id' => 'support-btn', 'class' => 'waves-effect waves-teal btn-flat initiative-engagement')) !!}
                         </div>
 
@@ -65,6 +72,19 @@
                         <p>{{ $noRecordsMsg }}</p>
                     @endif
 
+                </div>
+            </div>
+        </div>
+
+
+        <div class="loader-overlay">
+            <div class="loader">
+                <div class="loader-inner line-scale-pulse-out-rapid">
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
                 </div>
             </div>
         </div>
@@ -190,6 +210,32 @@
                 dataType: 'json',
                 success: function(data) {
                     $('#init-supporters').html(data.totalSupporters);
+                },
+                error : function(XMLHttpRequest, textStatus, errorThrown) {}
+            });
+        });
+
+
+        $(document).on("click", "#delete-btn", function(e) {
+            data = new Object();
+
+            data['initiative_id'] = {{ $initiativeId }};
+            
+
+            var url = "{{ url('offer/delete/'.$initiative->id) }}";
+
+            $.ajax({
+                type: 'POST',
+                url: url,
+                data: data,
+                dataType: 'json',
+                success: function(data) {
+                    console.log('Done');
+                    $('.loader-overlay').fadeIn(0);
+
+                    setTimeout(function() {
+                        window.location.href = "{{ url('offers') }}";
+                    }, 2500);
                 },
                 error : function(XMLHttpRequest, textStatus, errorThrown) {}
             });
