@@ -9,11 +9,6 @@
         <title>{{ $pageTitle }}</title>
 
         {!! HTML::style('css/app.css') !!}
-        {{-- {!! MaterializeCSS::include_css() !!} --}}
-        {{-- {!! HTML::style('materialize-css/css/materialize.min.css') !!}
-        {!! HTML::style('css/materialize-xl.css') !!}
-        {!! HTML::style('css/style.css') !!} --}}
-
         @yield('csslibs')
 
 

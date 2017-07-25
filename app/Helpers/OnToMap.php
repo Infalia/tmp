@@ -15,7 +15,7 @@ class OnToMap
      *
      * @return string, the request response.
      */
-    function getEvents($params = array())
+    public static function getEvents($params = array())
     {
         $client = new Client();
 
@@ -43,7 +43,7 @@ class OnToMap
      *
      * @return string, the request response.
      */
-    function postMapping($mapping = array())
+    public static function postMapping($mapping = array())
     {
         if(empty($mapping)) {
             return 'Your mapping is empty';
@@ -74,7 +74,7 @@ class OnToMap
      *
      * @return string, the request response.
      */
-    function postEvent($events = array())
+    public static function postEvent($events = array())
     {
         if(empty($events)) {
             return 'Your event list is empty';

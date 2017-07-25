@@ -25,23 +25,26 @@ Route::get('profile/work', 'ProfileController@work')->middleware('uwumAuth');
 Route::get('profile/interests', 'ProfileController@interests')->middleware('uwumAuth');
 Route::get('profile/social-accounts', 'ProfileController@socialAccounts')->middleware('uwumAuth');
 Route::get('profile/reset', 'ProfileController@resetData')->middleware('uwumAuth');
-Route::get('profile/social-data', 'ProfileController@socialData');
+Route::post('profile/basic-info/save', 'ProfileController@storeBasicInfo')->middleware('uwumAuth');
+Route::post('profile/basic-info/image/remove', 'ProfileController@imageRemove')->middleware('uwumAuth');
 
 /*** Timeline ***/
 Route::get('timeline', 'TimelineController@index')->middleware('uwumAuth');
 
 /*** Initiatives ***/
 Route::get('offers', 'InitiativeController@initiatives');
-Route::get('offer/{id}/{title}', 'InitiativeController@initiative');
 Route::get('offer/new', 'InitiativeController@initiativeForm')->middleware('uwumAuth');
 Route::get('offer/edit/{id}/{title}', 'InitiativeController@initiativeEditForm')->middleware('curUserAuth');
 Route::get('offer/comments', 'InitiativeController@initiativeComments');
+Route::get('offer/{id}/{title}', 'InitiativeController@initiative');
 Route::post('offer/save', 'InitiativeController@storeInitiative')->middleware('uwumAuth');
 Route::post('offer/update/{id}', 'InitiativeController@updateInitiative')->middleware('curUserAuth');
 Route::post('offer/delete/{id}', 'InitiativeController@deleteInitiative')->middleware('curUserAuth');
 Route::post('offer/image/upload', 'InitiativeController@imageUpload')->middleware('uwumAuth');
 Route::post('offer/image/remove', 'InitiativeController@imageRemove');
-Route::post('offer/post-to-ontomap', 'InitiativeController@postToOnToMap');
+Route::post('offer/save/ontomap', 'InitiativeController@storeOnToMap')->middleware('uwumAuth');
+Route::post('offer/update/ontomap/{id}', 'InitiativeController@updateOnToMap')->middleware('curUserAuth');
+Route::post('offer/delete/ontomap/{id}', 'InitiativeController@deleteOnToMap')->middleware('curUserAuth');
 Route::post('offer/save/supporter', 'InitiativeController@storeInitiativeSupporter')->middleware('uwumAuth');
 Route::post('offer/save/comment', 'InitiativeController@storeInitiativeComment')->middleware('uwumAuth');
 

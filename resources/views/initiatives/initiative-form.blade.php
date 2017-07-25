@@ -363,13 +363,13 @@
                                 imgDropzone.options.autoProcessQueue = false;
 
                                 // If there are images, post to OTM after dropzone uploading is completed
-                                $.post("{{ url('offer/post-to-ontomap') }}", { 'initId': data.initId, 'images': imagesArray }, function(response){});
+                                $.post("{{ url('offer/save/ontomap') }}", { 'initId': data.initId, 'images': imagesArray }, function(response){});
                             });
 
 
                             // If there are no images, post to OTM directly
                             if(!hasFiles) {
-                                $.post("{{ url('offer/post-to-ontomap') }}", { 'initId': data.initId, 'images': imagesArray }, function(response){});
+                                $.post("{{ url('offer/save/ontomap') }}", { 'initId': data.initId, 'images': imagesArray }, function(response){});
                             }
 
                             $('#response').text(data.message).removeClass('hide');
