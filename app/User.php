@@ -61,6 +61,46 @@ class User extends Authenticatable
     }
 
     /**
+     * The interests that belong to the user.
+     *
+     * @return App\UserInterest|null
+     */
+    public function interests()
+    {
+        return $this->hasMany('App\UserInterest');
+    }
+
+    /**
+     * The positions that belong to the user.
+     *
+     * @return App\UserPosition|null
+     */
+    public function positions()
+    {
+        return $this->hasMany('App\UserPosition');
+    }
+
+    /**
+     * The skills that belong to the user.
+     *
+     * @return App\UserSkill|null
+     */
+    public function skills()
+    {
+        return $this->hasMany('App\UserSkill');
+    }
+
+    /**
+     * The studies that belong to the user.
+     *
+     * @return App\UserStudy|null
+     */
+    public function studies()
+    {
+        return $this->hasMany('App\UserStudy');
+    }
+
+    /**
      * The accessibility options that belong to the user.
      *
      * @return App\AccessbltyOpt|null

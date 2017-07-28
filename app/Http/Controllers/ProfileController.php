@@ -176,6 +176,7 @@ class ProfileController extends Controller
         $profileAddBtn2 = __('messages.profile_work_add_btn_2');
         $profileAddBtn3 = __('messages.profile_work_add_btn_3');
         $profileFormCompanyLbl = __('messages.profile_form_company_lbl');
+        $profileFormInstituteLbl = __('messages.profile_form_institute_lbl');
         $profileFormCityLbl = __('messages.profile_form_city_lbl');
         $profileFormRoleLbl = __('messages.profile_form_role_lbl');
         $profileFormFromLbl = __('messages.profile_form_from_lbl');
@@ -216,6 +217,7 @@ class ProfileController extends Controller
             ->with('profileAddBtn2', $profileAddBtn2)
             ->with('profileAddBtn3', $profileAddBtn3)
             ->with('profileFormCompanyLbl', $profileFormCompanyLbl)
+            ->with('profileFormInstituteLbl', $profileFormInstituteLbl)
             ->with('profileFormCityLbl', $profileFormCityLbl)
             ->with('profileFormRoleLbl', $profileFormRoleLbl)
             ->with('profileFormFromLbl', $profileFormFromLbl)

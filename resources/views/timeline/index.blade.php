@@ -17,8 +17,11 @@
                                     <span class="card-post-action-component grey-text text-darken-1">{{ $postedOfferLbl }}</span> Trusted Marketplace
                                     <span class="card-post-action-time grey-text text-darken-1">{{ \Carbon\Carbon::createFromTimestamp($event->timestamp)->diffForHumans() }}</span>
                                 </div>
-
+                                
+                                @if(isset($event->activity_objects[0]->properties->hasName))
                                 <a class="card-title" href="{{ $event->activity_objects[0]->properties->external_url }}">{{ $event->activity_objects[0]->properties->hasName }}</a>
+                                @endif
+                                
                                 <span class="card-post-address">Address is not available yet</span>
                             </div>
 

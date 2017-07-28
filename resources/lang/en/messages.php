@@ -55,6 +55,7 @@
         'form_delete_btn' => 'Delete',
 
         'profile_form_company_lbl' => 'Company/Organisation',
+        'profile_form_institute_lbl' => 'Institute',
         'profile_form_city_lbl' => 'City/Town',
         'profile_form_role_lbl' => 'Role',
         'profile_form_from_lbl' => 'From',
