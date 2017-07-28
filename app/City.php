@@ -1,0 +1,33 @@
+<?php
+
+namespace App;
+
+use Illuminate\Database\Eloquent\Model;
+use Dimsav\Translatable\Translatable;
+
+class City extends Model
+{
+    use Translatable;
+
+    /**
+     * Array with the fields translated in the Translation table.
+     *
+     * @var array
+     */
+    public $translatedAttributes = [
+        'continent_name',
+        'country_name',
+        'subdivision_name',
+        'name',
+    ];
+
+    /**
+     * Get the translations for the option.
+     *
+     * @return App\CityTranslation|null
+     */
+    public function cityTranslations()
+    {
+        return $this->hasMany('App\CityTranslation');
+    }
+}
