@@ -5,12 +5,14 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
+use App\User;
 use App\Helpers\OnToMap;
 
 class TimelineController extends Controller
 {
     function index()
     {
+        $user = User::find(Auth::id());
         $route = Route::current();
 
         $sidebarOption1 = __('messages.sidebar_option_1');
@@ -59,6 +61,7 @@ class TimelineController extends Controller
             ->with('supportLbl', $supportLbl)
             ->with('noRecordsMsg', $noRecordsMsg)
             ->with('userEvents', $userEvents)
+            ->with('user', $user)
             ->with('routeUri', $route->uri);
     }
 }

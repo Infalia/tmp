@@ -143,6 +143,7 @@ class ProfileController extends Controller
 
     function work()
     {
+        $user = User::find(Auth::id());
         $route = Route::current();
 
         $sidebarOption1 = __('messages.sidebar_option_1');
@@ -205,7 +206,6 @@ class ProfileController extends Controller
             ->with('pageTitle', $pageTitle)
             ->with('metaDescription', $metaDescription)
             ->with('profileBasicHeading1', $profileBasicHeading1)
-
             ->with('profileHeading1', $profileHeading1)
             ->with('profileHeading2', $profileHeading2)
             ->with('profileHeading3', $profileHeading3)
@@ -224,7 +224,7 @@ class ProfileController extends Controller
             ->with('profileFormToLbl', $profileFormToLbl)
             ->with('profileFormStudiesLbl', $profileFormStudiesLbl)
             ->with('profileFormSkillLbl', $profileFormSkillLbl)
-
+            ->with('user', $user)
             ->with('saveBtn', $saveBtn)
             ->with('cancelBtn', $cancelBtn)
             ->with('routeUri', $route->uri);
@@ -232,6 +232,7 @@ class ProfileController extends Controller
 
     function interests()
     {
+        $user = User::find(Auth::id());
         $route = Route::current();
 
         $sidebarOption1 = __('messages.sidebar_option_1');
@@ -279,18 +280,17 @@ class ProfileController extends Controller
             ->with('profileOption3', $profileOption3)
             ->with('profileOption4', $profileOption4)
             ->with('profileOption5', $profileOption5)
-	    ->with('profileOption6', $profileOption6)	
+	        ->with('profileOption6', $profileOption6)	
             ->with('pageTitle', $pageTitle)
             ->with('metaDescription', $metaDescription)
             ->with('profileBasicHeading1', $profileBasicHeading1)
-
             ->with('profileHeading1', $profileHeading1)
             ->with('profileHeading2', $profileHeading2)
             ->with('profileAddBtn1', $profileAddBtn1)
             ->with('profileAddBtn2', $profileAddBtn2)
             ->with('profileFormInterestLbl', $profileFormInterestLbl)
             ->with('profileFormAreaLbl', $profileFormAreaLbl)
-
+            ->with('user', $user)
             ->with('saveBtn', $saveBtn)
             ->with('cancelBtn', $cancelBtn)
             ->with('routeUri', $route->uri);
@@ -298,6 +298,7 @@ class ProfileController extends Controller
 
     function socialAccounts()
     {
+        $user = User::find(Auth::id());
         $route = Route::current();
 
         $sidebarOption1 = __('messages.sidebar_option_1');
@@ -349,6 +350,7 @@ class ProfileController extends Controller
             ->with('profileHeading1', $profileHeading1)
             ->with('switchOn', $switchOn)
             ->with('switchOff', $switchOff)
+            ->with('user', $user)
             ->with('socialNetworks', $socialNetworks)
             ->with('userSocialNetworks', $userSocialNetworks)
             ->with('routeUri', $route->uri);
@@ -356,6 +358,7 @@ class ProfileController extends Controller
 
     function resetData()
     {
+        $user = User::find(Auth::id());
         $route = Route::current();
 
         $sidebarOption1 = __('messages.sidebar_option_1');
@@ -400,8 +403,8 @@ class ProfileController extends Controller
             ->with('metaDescription', $metaDescription)
             ->with('profileBasicHeading1', $profileBasicHeading1)
             ->with('profileHeading1', $profileHeading1)
-            ->with('resetBtn1', $resetBtn1)
             ->with('user', $user)
+            ->with('resetBtn1', $resetBtn1)
             ->with('routeUri', $route->uri);
     }
 
@@ -546,5 +549,14 @@ class ProfileController extends Controller
 		}
 
 		return $this->fixIntegerOverflow(filesize($filePath));
+	}
+
+    function fixIntegerOverflow($size)
+    {
+		if ($size < 0) {
+			$size += 2.0 * (PHP_INT_MAX + 1);
+		}
+        
+		return $size;
 	}
 }

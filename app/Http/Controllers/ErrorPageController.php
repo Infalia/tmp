@@ -4,11 +4,14 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
+use App\User;
 
 class ErrorPageController extends Controller
 {
     function page404()
     {
+        $user = User::find(Auth::id());
         $route = Route::current();
 
         $sidebarOption1 = __('messages.sidebar_option_1');
@@ -40,6 +43,7 @@ class ErrorPageController extends Controller
             ->with('metaDescription', $metaDescription)
             ->with('profileBasicHeading1', $profileBasicHeading1)
             ->with('pageBodyText1', $pageBodyText1)
+            ->with('user', $user)
             ->with('routeUri', $route->uri);
     }
 }

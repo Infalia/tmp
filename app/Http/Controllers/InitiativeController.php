@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Database\QueryException;
 use App\User;
 use App\InitiativeType;
 use App\Initiative;
@@ -20,6 +21,7 @@ class InitiativeController extends Controller
 {
     function initiatives()
     {
+        $user = User::find(Auth::id());
         $route = Route::current();
 
         $sidebarOption1 = __('messages.sidebar_option_1');
@@ -58,11 +60,14 @@ class InitiativeController extends Controller
             ->with('editBtn', $editBtn)
             ->with('noRecordsMsg', $noRecordsMsg)
             ->with('initiatives', $initiatives)
+            ->with('user', $user)
             ->with('routeUri', $route->uri);
     }
 
     function initiative($id)
     {
+        $user = User::find(Auth::id());
+
         try {
             $initiative = Initiative::findOrFail($id);
 
@@ -120,19 +125,22 @@ class InitiativeController extends Controller
                 ->with('noRecordsMsg', $noRecordsMsg)
                 ->with('initiative', $initiative)
                 ->with('initiativeId', $id)
+                ->with('user', $user)
                 ->with('routeUri', $route->uri);
 
         } catch(ModelNotFoundException $e) {
+            return redirect(url('404'));
+        } catch (QueryException $e) {
             return redirect(url('404'));
         }
     }
 
     function initiativeForm()
     {
-        $initiativeType = new InitiativeType();
+        $user = User::find(Auth::id());
         $route = Route::current();
 
-        $initiativeTypes = $initiativeType->all();
+        $initiativeTypes = InitiativeType::all();
 
         $sidebarOption1 = __('messages.sidebar_option_1');
         $sidebarOption2 = __('messages.sidebar_option_2');
@@ -192,6 +200,7 @@ class InitiativeController extends Controller
             ->with('imageUploadErrorMsg', $imageUploadErrorMsg)
             ->with('imageUploadFileTypeMsg', $imageUploadFileTypeMsg)
             ->with('imageUploadFileNumberMsg', $imageUploadFileNumberMsg)
+            ->with('user', $user)
             ->with('removeImageBtn', $removeImageBtn)
             ->with('saveBtn', $saveBtn)
             ->with('cancelBtn', $cancelBtn)
@@ -201,6 +210,7 @@ class InitiativeController extends Controller
     function initiativeEditForm($id)
     {
         try {
+            $user = User::find(Auth::id());
             $initiative = Initiative::findOrFail($id);
             $initiativeTypes = InitiativeType::all();
             $route = Route::current();
@@ -285,10 +295,13 @@ class InitiativeController extends Controller
                 ->with('imageUploadFileTypeMsg', $imageUploadFileTypeMsg)
                 ->with('imageUploadFileNumberMsg', $imageUploadFileNumberMsg)
                 ->with('removeImageBtn', $removeImageBtn)
+                ->with('user', $user)
                 ->with('saveBtn', $saveBtn)
                 ->with('cancelBtn', $cancelBtn)
                 ->with('routeUri', $route->uri);
         } catch(ModelNotFoundException $e) {
+            return redirect(url('404'));
+        } catch (QueryException $e) {
             return redirect(url('404'));
         }
     }
@@ -674,5 +687,14 @@ class InitiativeController extends Controller
 		}
 
 		return $this->fixIntegerOverflow(filesize($filePath));
+	}
+
+    function fixIntegerOverflow($size)
+    {
+		if ($size < 0) {
+			$size += 2.0 * (PHP_INT_MAX + 1);
+		}
+        
+		return $size;
 	}
 }

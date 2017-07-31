@@ -4,15 +4,25 @@
             {!! HTML::image('images/abstract.jpg', 'user-bg') !!}
         </div>
 
-        {!! HTML::image('images/brad.jpg', 'user', array('class' => 'circle')) !!}
-        <span class="white-text name">John Doe</span>
+        @if(isset($user) && !empty($user->userDetails->image))
+        {!! HTML::image('storage/users/'.$user->userDetails->image, 'user', array('class' => 'circle')) !!}
+        @else
+        {!! HTML::image('images/user.png', 'user', array('class' => 'circle')) !!}
+        @endif
+
+        @if(isset($user))
+        <span class="white-text name">{{ $user->name }}</span>
+        @else
+        <span class="white-text name">Unknown user</span>
+        @endif
+
         <span class="white-text email">Reputation score 70%</span>
     </div>
 
     <div class="sidebar-nav-options">
         <ul>
             <li><a href="{{ url('offer/new') }}" class="waves-effect"><i class="material-icons">toll</i>{{ $sidebarOption1 }}</a></li>
-            <li><a href="#!" class="waves-effect"><i class="material-icons">dashboard</i>{{ $sidebarOption2 }}</a></li>
+            {{--  <li><a href="#!" class="waves-effect"><i class="material-icons">dashboard</i>{{ $sidebarOption2 }}</a></li>  --}}
             <li><a href="{{ url('offers') }}" class="waves-effect @if ($routeUri == 'offers') active @endif"><i class="material-icons">list</i>{{ $sidebarOption3 }}</a></li>
             <li><a href="{{ url('timeline') }}" class="waves-effect @if ($routeUri == 'timeline') active @endif"><i class="material-icons">perm_identity</i>{{ $sidebarOption4 }}</a></li>
             <li><a href="{{ url('notifications') }}" class="waves-effect @if ($routeUri == 'notifications') active @endif"><i class="material-icons">snooze</i>{{ $sidebarOption5 }} <span class="new badge">4</span></a></li>
