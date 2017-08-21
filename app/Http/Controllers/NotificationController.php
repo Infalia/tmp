@@ -4,11 +4,14 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
+use App\User;
 
 class NotificationController extends Controller
 {
     function index()
     {
+        $user = User::find(Auth::id());
         $route = Route::current();
 
         $sidebarOption1 = __('messages.sidebar_option_1');
@@ -36,6 +39,7 @@ class NotificationController extends Controller
             ->with('pageTitle', $pageTitle)
             ->with('metaDescription', $metaDescription)
             ->with('byLbl', $byLbl)
+            ->with('user', $user)
             ->with('routeUri', $route->uri);
     }
 }

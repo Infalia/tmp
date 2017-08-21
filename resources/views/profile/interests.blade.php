@@ -1,5 +1,9 @@
 @extends('layouts.app')
 
+@section('csslibs')
+     {!! HTML::style('plugins/autocomplete/typeahead.min.css') !!}
+@endsection
+
 @section('content')
     <div class="content">
         @include('partials.sidebar')
@@ -21,11 +25,18 @@
                         <h4 class="h6">{{ $profileHeading1 }}</h4>
 
                         <ul>
-                            @for ($i = 0; $i < 5; $i++)
-                                <li class="section-item">
-                                    <span class="profile-section-interest">Some interest {{ $i+1 }}</span>
-                                </li>
-                            @endfor
+                            <li class="section-item">
+                                <span class="profile-section-interest">Traveling</span>
+                            </li>
+                            <li class="section-item">
+                                <span class="profile-section-interest">Bicycling</span>
+                            </li>
+                            <li class="section-item">
+                                <span class="profile-section-interest">Basketball</span>
+                            </li>
+                            <li class="section-item">
+                                <span class="profile-section-interest">Photography</span>
+                            </li>
                         </ul>
 
                         {!! Form::button($profileAddBtn1, array('id' => 'add-interest-btn', 'class' => 'waves-effect waves-light btn')) !!}
@@ -35,11 +46,15 @@
                         <h4 class="h6">{{ $profileHeading2 }}</h4>
 
                         <ul>
-                            @for ($i = 0; $i < 3; $i++)
-                                <li class="section-item">
-                                    <span class="profile-section-interest"><i class="tiny material-icons">room</i> Some area {{ $i+1 }}</span>
-                                </li>
-                            @endfor
+                            <li class="section-item">
+                                <span class="profile-section-interest"><i class="tiny material-icons">room</i> Thessaloniki, Greece</span>
+                            </li>
+                            <li class="section-item">
+                                <span class="profile-section-interest"><i class="tiny material-icons">room</i> Kalamaria, Thessaloniki, Greece</span>
+                            </li>
+                            <li class="section-item">
+                                <span class="profile-section-interest"><i class="tiny material-icons">room</i> Epanomi, Thessaloniki, Greece</span>
+                            </li>
                         </ul>
 
                         {!! Form::button($profileAddBtn2, array('id' => 'add-area-btn', 'class' => 'waves-effect waves-light btn')) !!}
@@ -52,13 +67,36 @@
 @endsection
 
 @section('jslibs')
+    {!! HTML::script('plugins/autocomplete/typeahead.bundle.min.js') !!}
+
     <script>
-        {{-- Add interests --}}
+        // Interests suggestions
+        var interests = new Bloodhound({
+            datumTokenizer: function(datum) {
+                return Bloodhound.tokenizers.whitespace(datum.value);
+            },
+            queryTokenizer: Bloodhound.tokenizers.whitespace,
+            remote: {
+                wildcard: '%QUERY',
+                url: '{{ url("api/interests/%QUERY") }}',
+                transform: function(response) {
+                    // Map the remote source JSON array to a JavaScript object array
+                    return $.map(response, function(interest) {
+                        return {
+                            value: interest.name
+                        };
+                    });
+                }
+            }
+        });
+
+
+        // Add interests
         $(document).on('click', '#add-interest-btn', function(e) {
             $('.interests-section > ul').after('' +
                 '<form id="interests-form">' +
                     '<div class="row">' +
-                        '<div class="input-field col s12"><input id="interest-title" type="text" class="validate" maxlength="30"><label for="interest-title" class="active">{{ $profileFormInterestLbl }}</label></div>' +
+                        '<div class="input-field col s12"><input id="interest-title" type="text" maxlength="30"><label for="interest-title" class="active">{{ $profileFormInterestLbl }}</label></div>' +
                         '<div class="col s12">' +
                             '<a id="cancel" class="waves-effect waves-light btn-flat">{{ $cancelBtn }}</a>' +
                             '<button type="button" name="save_btn" id="save-btn" class="waves-effect waves-light btn">{{ $saveBtn }}</button>' +
@@ -67,6 +105,16 @@
                 '</form>');
 
             $('#add-interest-btn').hide();
+
+
+            // Instantiate typeahead
+            $('#interest-title').typeahead(null, {
+                hint: true,
+                highlight: true,
+                minLength: 3,
+                display: 'value',
+                source: interests
+            });
         });
 
         $(document).on('click', '#interests-form #cancel', function(e) {
@@ -79,7 +127,7 @@
         });
 
 
-        {{-- Add areas --}}
+        // Add areas
         $(document).on('click', '#add-area-btn', function(e) {
             $('.areas-section > ul').after('' +
                 '<form id="areas-form">' +

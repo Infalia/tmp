@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Database\QueryException;
 use App\User;
 use App\InitiativeType;
 use App\Initiative;
@@ -20,6 +21,7 @@ class InitiativeController extends Controller
 {
     function initiatives()
     {
+        $user = User::find(Auth::id());
         $route = Route::current();
 
         $sidebarOption1 = __('messages.sidebar_option_1');
@@ -58,11 +60,14 @@ class InitiativeController extends Controller
             ->with('editBtn', $editBtn)
             ->with('noRecordsMsg', $noRecordsMsg)
             ->with('initiatives', $initiatives)
+            ->with('user', $user)
             ->with('routeUri', $route->uri);
     }
 
     function initiative($id)
     {
+        $user = User::find(Auth::id());
+
         try {
             $initiative = Initiative::findOrFail($id);
 
@@ -120,19 +125,22 @@ class InitiativeController extends Controller
                 ->with('noRecordsMsg', $noRecordsMsg)
                 ->with('initiative', $initiative)
                 ->with('initiativeId', $id)
+                ->with('user', $user)
                 ->with('routeUri', $route->uri);
 
         } catch(ModelNotFoundException $e) {
+            return redirect(url('404'));
+        } catch (QueryException $e) {
             return redirect(url('404'));
         }
     }
 
     function initiativeForm()
     {
-        $initiativeType = new InitiativeType();
+        $user = User::find(Auth::id());
         $route = Route::current();
 
-        $initiativeTypes = $initiativeType->all();
+        $initiativeTypes = InitiativeType::all();
 
         $sidebarOption1 = __('messages.sidebar_option_1');
         $sidebarOption2 = __('messages.sidebar_option_2');
@@ -192,6 +200,7 @@ class InitiativeController extends Controller
             ->with('imageUploadErrorMsg', $imageUploadErrorMsg)
             ->with('imageUploadFileTypeMsg', $imageUploadFileTypeMsg)
             ->with('imageUploadFileNumberMsg', $imageUploadFileNumberMsg)
+            ->with('user', $user)
             ->with('removeImageBtn', $removeImageBtn)
             ->with('saveBtn', $saveBtn)
             ->with('cancelBtn', $cancelBtn)
@@ -201,6 +210,7 @@ class InitiativeController extends Controller
     function initiativeEditForm($id)
     {
         try {
+            $user = User::find(Auth::id());
             $initiative = Initiative::findOrFail($id);
             $initiativeTypes = InitiativeType::all();
             $route = Route::current();
@@ -285,21 +295,15 @@ class InitiativeController extends Controller
                 ->with('imageUploadFileTypeMsg', $imageUploadFileTypeMsg)
                 ->with('imageUploadFileNumberMsg', $imageUploadFileNumberMsg)
                 ->with('removeImageBtn', $removeImageBtn)
+                ->with('user', $user)
                 ->with('saveBtn', $saveBtn)
                 ->with('cancelBtn', $cancelBtn)
                 ->with('routeUri', $route->uri);
         } catch(ModelNotFoundException $e) {
             return redirect(url('404'));
+        } catch (QueryException $e) {
+            return redirect(url('404'));
         }
-    }
-
-    function initiativeImages(Request $request)
-    {
-        $id = $request->input('init_id');
-        $initiative = Initiative::find($id);
-
-        return view('partials.initiative-images')
-            ->with('initiative', $initiative);
     }
 
     function initiativeComments(Request $request)
@@ -548,14 +552,14 @@ class InitiativeController extends Controller
 
 
         if($request->hasFile('files')) {
-            $file = $request->file('files');
+            $files = $request->file('files');
             
-            foreach($file as $files) {
-                $filename = $files->getClientOriginalName();
-                $extension = $files->getClientOriginalExtension();
+            foreach($files as $file) {
+                $filename = $file->getClientOriginalName();
+                $extension = $file->getClientOriginalExtension();
                 $picture = sha1($filename . time()) . '.' . $extension;
                 $destinationPath = storage_path() . '/app/public/initiatives/';
-                $files->move($destinationPath, $picture);
+                $file->move($destinationPath, $picture);
                 $destinationUrl = env('APP_URL').'/storage/initiatives/';
                 
                 // Add image urls to array
@@ -613,43 +617,48 @@ class InitiativeController extends Controller
         ]);
 	}
 
-    function postToOnToMap(Request $request)
+    function storeOnToMap(Request $request)
 	{
-        $initiative = new Initiative();
         $initiativeId = $request->input('initId');
         $images = $request->input('images');
 
-        $currentInitiative = $initiative->find($initiativeId);
+        $initiative = Initiative::find($initiativeId);
 
 
-        if(!empty($currentInitiative)) {
+        if(!empty($initiative)) {
+            $initiativeType = 'Offer';
+
+            if($initiative->initiative_type_id == 2) {
+                $initiativeType = 'Demand';
+            }
+
             // OnToMap request
-            $onToMap = new OnToMap();
-
             $eventList = array('event_list' => array(
                 0 => array(
-                    'actor' => $currentInitiative->user_id,
-                    'timestamp' => time(),
+                    'actor' => $initiative->user_id,
+                    'timestamp' => round(microtime(true) * 1000),
                     'activity_type' => 'object_created',
                     'activity_objects' => array(
                         0 => array(
                             'type' => 'Feature',
                             'geometry' => array(
                                 'type' => 'Point',
-                                'coordinates' => array(floatval($currentInitiative->longitude), floatval($currentInitiative->latitude))
+                                'coordinates' => array(floatval($initiative->longitude), floatval($initiative->latitude))
                             ),
                             'properties' => array(
-                                'hasType' => 'ChildCare',
-                                'external_url' => env('APP_URL').'/offer/'.$initiativeId.'/'.str_slug($currentInitiative->title),
-                                'name' => $currentInitiative->title,
+                                'hasID' => $initiative->id,
+                                'hasType' => $initiativeType,
+                                'hasName' => $initiative->title,
+                                'hasDescription' => $initiative->description,
+                                'external_url' => env('APP_URL').'/offer/'.$initiativeId.'/'.str_slug($initiative->title),
+                                'name' => $initiative->title,
                                 'additionalProperties' => array(
-                                    'initiative_type' => $currentInitiative->initiativeType->name,
-                                    'description' => $currentInitiative->description,
-                                    'input_map_data' => $currentInitiative->input_map_data,
-                                    'start_date' => $currentInitiative->start_date,
-                                    'end_date' => $currentInitiative->end_date,
-                                    'images' => $images,
-                                    'tmp_id' => $initiativeId
+                                    // 'initiative_type' => $initiative->initiativeType->name,
+                                    // 'description' => $initiative->description,
+                                    'input_map_data' => $initiative->input_map_data,
+                                    'start_date' => $initiative->start_date,
+                                    'end_date' => $initiative->end_date,
+                                    'images' => $images
                                 )
                             )
                         )
@@ -657,7 +666,7 @@ class InitiativeController extends Controller
                 )
             ));
 
-            $onToMap->postEvent($eventList);
+            OnToMap::postEvent($eventList);
         }
 
 
@@ -680,7 +689,7 @@ class InitiativeController extends Controller
 		return $this->fixIntegerOverflow(filesize($filePath));
 	}
 
-	function fixIntegerOverflow($size)
+    function fixIntegerOverflow($size)
     {
 		if ($size < 0) {
 			$size += 2.0 * (PHP_INT_MAX + 1);

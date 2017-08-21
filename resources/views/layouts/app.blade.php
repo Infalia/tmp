@@ -9,48 +9,13 @@
         <title>{{ $pageTitle }}</title>
 
         {!! HTML::style('css/app.css') !!}
-        {{-- {!! MaterializeCSS::include_css() !!} --}}
-        {{-- {!! HTML::style('materialize-css/css/materialize.min.css') !!}
-        {!! HTML::style('css/materialize-xl.css') !!}
-        {!! HTML::style('css/style.css') !!} --}}
-
         @yield('csslibs')
 
 
         @if (session()->has('user.accessibility_opts'))
 
-        {{-- Small device screen --}}
-        @if (in_array(2, session('user.accessibility_opts')))
-        <style>
-            .container {
-                max-width: none !important;
-                width: 90% !important;
-            }
-        </style>
-        @endif
-
-        {{-- Large screen --}}
-        @if (in_array(3, session('user.accessibility_opts')))
-        <style>
-            .container {
-                max-width: none !important;
-                width: 60% !important;
-            }
-        </style>
-        @endif
-
-        {{-- Small screen --}}
-        @if (in_array(4, session('user.accessibility_opts')))
-        <style>
-            .container {
-                max-width: none !important;
-                width: 80% !important;
-            }
-        </style>
-        @endif
-
         {{-- High Contrast --}}
-        @if (in_array(6, session('user.accessibility_opts')))
+        @if (in_array(2, session('user.accessibility_opts')))
         <style>
             body * {
                 color: #000000 !important;
@@ -60,7 +25,7 @@
         @endif
 
         {{-- Shades of grey --}}
-        @if (in_array(7, session('user.accessibility_opts')))
+        @if (in_array(3, session('user.accessibility_opts')))
         <style>
             body, .content {
                 background-color: #dddddd !important;
@@ -73,7 +38,7 @@
         @endif
 
         {{-- Neutrals --}}
-        @if (in_array(8, session('user.accessibility_opts')))
+        @if (in_array(4, session('user.accessibility_opts')))
         <style>
             body, .content {
                 background-color: #E7E5D2 !important;
@@ -86,7 +51,7 @@
         @endif
 
         {{-- Small font --}}
-        @if (in_array(10, session('user.accessibility_opts')))
+        @if (in_array(6, session('user.accessibility_opts')))
         <style>
             html {
                 font-size: 12px !important;
@@ -95,7 +60,7 @@
         @endif
 
         {{-- Large font --}}
-        @if (in_array(11, session('user.accessibility_opts')))
+        @if (in_array(7, session('user.accessibility_opts')))
         <style>
             html {
                 font-size: 16px !important;
@@ -104,7 +69,7 @@
         @endif
 
         {{-- Very large font --}}
-        @if (in_array(12, session('user.accessibility_opts')))
+        @if (in_array(8, session('user.accessibility_opts')))
         <style>
             html {
                 font-size: 18px !important;
@@ -113,7 +78,7 @@
         @endif
 
         {{-- Blind user --}}
-        @if (in_array(14, session('user.accessibility_opts')))
+        @if (in_array(10, session('user.accessibility_opts')))
         <style>
             html {
                 font-size: 18px !important;
@@ -129,7 +94,7 @@
         @endif
 
         {{-- Glaucoma --}}
-        @if (in_array(15, session('user.accessibility_opts')))
+        @if (in_array(11, session('user.accessibility_opts')))
         <style>
             .container {
                 max-width: 340px !important;

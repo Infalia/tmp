@@ -14,7 +14,7 @@ class AccessibilityController extends Controller
 {
     function index()
     {
-        $user = new User();
+        $user = User::find(Auth::id());
         $accessibilityCategory = new AccessbltyCat();
         $route = Route::current();
 
@@ -25,7 +25,6 @@ class AccessibilityController extends Controller
         // $translation = $greek->translate();
 
         $accessibilityCats = $accessibilityCategory->all();
-        //$user = $user->find(1);
 
         $userAccessibilityOpts = array();
 
@@ -79,8 +78,8 @@ class AccessibilityController extends Controller
             ->with('radioBtnValidationMsg', $radioBtnValidationMsg)
             ->with('routeUri', $route->uri)
             ->with('accessibilityCats', $accessibilityCats)
-            ->with('userAccessibilityOpts', $userAccessibilityOpts);
-            //->with('user', $user);
+            ->with('userAccessibilityOpts', $userAccessibilityOpts)
+            ->with('user', $user);
     }
 
     function storeUserAccessibilityOptions(Request $request) {

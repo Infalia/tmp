@@ -35,7 +35,7 @@ class Initiative extends Model
     }
 
     /**
-     * The user.
+     * The initiative user.
      *
      * @return App\User|null
      */
@@ -46,6 +46,8 @@ class Initiative extends Model
 
     /**
      * The users that belong to the initiative.
+     *
+     * @return App\User|null
      */
     public function users()
     {
@@ -64,6 +66,8 @@ class Initiative extends Model
 
     /**
      * Get initiative comments.
+     *
+     * @return App\Comment|null
      */
     public function comments()
     {

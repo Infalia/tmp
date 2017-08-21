@@ -55,6 +55,7 @@
         'form_delete_btn' => 'Delete',
 
         'profile_form_company_lbl' => 'Company/Organisation',
+        'profile_form_institute_lbl' => 'Institute',
         'profile_form_city_lbl' => 'City/Town',
         'profile_form_role_lbl' => 'Role',
         'profile_form_from_lbl' => 'From',
@@ -70,6 +71,9 @@
             'required' => 'You have to pick an option for each category!',
         ],
         'initiative_form_error' => [
+            'required' => 'One or more fields are not valid!',
+        ],
+        'form_error' => [
             'required' => 'One or more fields are not valid!',
         ],
 
@@ -114,6 +118,8 @@
         'profile_basic_page_title' => 'Basic settings - '.config('app.name'),
         'profile_basic_page_meta_description' => '',
         'profile_basic_heading_1' => 'Settings',
+        'profile_basic_btn_1' => 'New photo',
+        'profile_basic_btn_2' => 'Remove photo',
 
         /* Work - Education */
         'profile_work_page_title' => 'Work & Education - '.config('app.name'),
