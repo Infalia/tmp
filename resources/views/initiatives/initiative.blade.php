@@ -22,7 +22,7 @@
                     <div class="col s12 right-align">
                         @if(Auth::check() && Auth::id() == $initiative->user->id)
                         <a class="waves-effect waves-light btn" href="{{ url('offer/edit/'.$initiative->id.'/'.str_slug($initiative->title)) }}">{{ $editBtn }}</a>
-                        {!! Form::button($deleteBtn, array('id' => 'delete-btn', 'class' => 'btn waves-effect waves-light red darken-1', 'onclick' => 'return confirm("Are you sure?");')) !!}
+                        {!! Form::button($deleteBtn, array('id' => 'delete-btn', 'class' => 'btn waves-effect waves-light red darken-1', 'onclick' => 'confirmDelete()')) !!}
                         @endif
                     </div>
 
@@ -172,7 +172,6 @@
                 });
             },
             postComment: function(commentJSON, success, error) {
-                console.log(commentJSON);
                 $.ajax({
                     type: "post",
                     url: "{{ url('offer/save/comment') }}?init_id={{ $initiativeId }}",
@@ -180,7 +179,8 @@
                     success: function(comment) {
                         success(commentJSON)
                         $('#init-comments').html(comment.total_comments);
-                        console.log(comment);
+                        
+                        $.post("{{ url('offer/ontomap/comment') }}", { 'initId': comment.initId, 'commentId': comment.commentId }, function(response){});
                     },
                     error: error
                 });
@@ -210,13 +210,17 @@
                 dataType: 'json',
                 success: function(data) {
                     $('#init-supporters').html(data.totalSupporters);
+
+                    $.post("{{ url('offer/ontomap/supporter') }}", { 'initId': data.initId, 'userAction': data.userAction }, function(response){});
                 },
                 error : function(XMLHttpRequest, textStatus, errorThrown) {}
             });
         });
 
 
-        $(document).on("click", "#delete-btn", function(e) {
+        function confirmDelete() {
+            if(confirm('Are you sure?')) {
+
             data = new Object();
 
             data['initiative_id'] = {{ $initiativeId }};
@@ -230,8 +234,9 @@
                 data: data,
                 dataType: 'json',
                 success: function(data) {
-                    console.log('Done');
                     $('.loader-overlay').fadeIn(0);
+
+                    $.post("{{ url('offer/delete/ontomap/'.$initiative->id) }}", {}, function(response){});
 
                     setTimeout(function() {
                         window.location.href = "{{ url('offers') }}";
@@ -239,6 +244,8 @@
                 },
                 error : function(XMLHttpRequest, textStatus, errorThrown) {}
             });
-        });
+
+            }
+        }
     </script>
 @endsection

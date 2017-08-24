@@ -42,7 +42,7 @@ class InitiativeController extends Controller
 
 
         $initiatives = Initiative::all()->sortBy('start_date');
-        
+
 
         return view('initiatives.initiatives')
             ->with('sidebarOption1', $sidebarOption1)
@@ -70,7 +70,6 @@ class InitiativeController extends Controller
 
         try {
             $initiative = Initiative::findOrFail($id);
-
             $route = Route::current();
 
             $sidebarOption1 = __('messages.sidebar_option_1');
@@ -461,13 +460,14 @@ class InitiativeController extends Controller
             $initiativeImages = $initiative->images;
         }
         
-        $isDeleted = $initiative->delete();
+        // $isDeleted = $initiative->delete();
+        $initiative->delete();
 
-        if($isDeleted) {
-            foreach($initiativeImages as $image) {
-                Storage::delete('public/initiatives/'.$image->name);
-            }
-        }
+        // if($isDeleted) {
+        //     foreach($initiativeImages as $image) {
+        //         Storage::delete('public/initiatives/'.$image->name);
+        //     }
+        // }
 
         return response()->json([
             'message' => __('messages.initiative_form_success.stored')
@@ -479,14 +479,17 @@ class InitiativeController extends Controller
         $initiativeId = $request->input('initiative_id');
         $initiative = Initiative::find($initiativeId);
         $totalSupporters = 0;
+        $userAction = 'unsupport';
 
         $isUserSupporting = $initiative->users->contains('id', Auth::id());
+
 
         if($isUserSupporting) {
             $initiative->users()->detach(Auth::id());
         }
         else {
             $initiative->users()->attach(Auth::id(), ['created_at' => date('Y-m-d H:i:s')]);
+            $userAction = 'support';
         }
 
         $initiative = Initiative::find($initiativeId);
@@ -494,6 +497,8 @@ class InitiativeController extends Controller
 
 
         return response()->json([
+            'initId' => $initiative->id,
+            'userAction' => $userAction,
             'totalSupporters' => $totalSupporters
         ]);
     }
@@ -540,6 +545,8 @@ class InitiativeController extends Controller
 
 
         return response()->json([
+            'initId' => $initiativeId,
+            'commentId' => $comment->id,
             'total_comments' => $totalComments
         ]);
     }
@@ -617,7 +624,7 @@ class InitiativeController extends Controller
         ]);
 	}
 
-    function storeOnToMap(Request $request)
+    function storeInitiativeOnToMap(Request $request)
 	{
         $initiativeId = $request->input('initId');
         $images = $request->input('images');
@@ -626,10 +633,10 @@ class InitiativeController extends Controller
 
 
         if(!empty($initiative)) {
-            $initiativeType = 'Offer';
+            $concept = 'Offer';
 
             if($initiative->initiative_type_id == 2) {
-                $initiativeType = 'Demand';
+                $concept = 'Demand';
             }
 
             // OnToMap request
@@ -646,21 +653,272 @@ class InitiativeController extends Controller
                                 'coordinates' => array(floatval($initiative->longitude), floatval($initiative->latitude))
                             ),
                             'properties' => array(
-                                'hasID' => $initiative->id,
-                                'hasType' => $initiativeType,
-                                'hasName' => $initiative->title,
-                                'hasDescription' => $initiative->description,
-                                'external_url' => env('APP_URL').'/offer/'.$initiativeId.'/'.str_slug($initiative->title),
-                                'name' => $initiative->title,
+                                'id' => $initiative->id,
+                                'hasType' => $concept,
+                                'title' => $initiative->title,
+                                'description' => $initiative->description,
+                                'external_url' => env('APP_URL').'/offer/'.$initiative->id.'/'.str_slug($initiative->title),
                                 'additionalProperties' => array(
-                                    // 'initiative_type' => $initiative->initiativeType->name,
-                                    // 'description' => $initiative->description,
                                     'input_map_data' => $initiative->input_map_data,
                                     'start_date' => $initiative->start_date,
                                     'end_date' => $initiative->end_date,
                                     'images' => $images
                                 )
                             )
+                        )
+                    )
+                )
+            ));
+
+            OnToMap::postEvent($eventList);
+        }
+
+
+
+        return response()->json([
+            'message' => __('messages.initiative_form_success.stored')
+        ]);
+    }
+
+    function updateInitiativeOnToMap($id, Request $request)
+	{
+        // $initiativeId = $request->input('initId');
+        $initiativeId = $id;
+        $images = $request->input('images');
+
+        $initiative = Initiative::find($initiativeId);
+
+        // Get the initiative images and make an array with the new images
+        $initiativeImages = $initiative->images->toArray();
+        $newImages = array();
+        
+        if(!empty($initiativeImages)) {
+            foreach($initiativeImages as $initImg) {
+                $newImages[] = $initImg['url'];
+            }
+        }
+
+
+        if(!empty($initiative)) {
+            $concept = 'Offer';
+
+            if($initiative->initiative_type_id == 2) {
+                $concept = 'Demand';
+            }
+
+            // OnToMap request
+            $eventList = array('event_list' => array(
+                0 => array(
+                    'actor' => $initiative->user_id,
+                    'timestamp' => round(microtime(true) * 1000),
+                    'activity_type' => 'object_updated',
+                    'activity_objects' => array(
+                        0 => array(
+                            'type' => 'Feature',
+                            'geometry' => array(
+                                'type' => 'Point',
+                                'coordinates' => array(floatval($initiative->longitude), floatval($initiative->latitude))
+                            ),
+                            'properties' => array(
+                                'id' => $initiative->id,
+                                'hasType' => $concept,
+                                'title' => $initiative->title,
+                                'description' => $initiative->description,
+                                'external_url' => env('APP_URL').'/offer/'.$initiative->id.'/'.str_slug($initiative->title),
+                                'additionalProperties' => array(
+                                    'input_map_data' => $initiative->input_map_data,
+                                    'start_date' => $initiative->start_date,
+                                    'end_date' => $initiative->end_date,
+                                    'images' => $newImages
+                                )
+                            )
+                        )
+                    )
+                )
+            ));
+
+            OnToMap::postEvent($eventList);
+        }
+
+
+
+        return response()->json([
+            'message' => __('messages.initiative_form_success.stored')
+        ]);
+    }
+
+    function deleteInitiativeOnToMap($id)
+	{
+        $initiativeId = $id;
+        $initiative = Initiative::withTrashed()->find($initiativeId);
+        $initiativeImages = $initiative->images;
+
+
+        if(!empty($initiative)) {
+            $concept = 'Offer';
+
+            if($initiative->initiative_type_id == 2) {
+                $concept = 'Demand';
+            }
+
+            // OnToMap request
+            $eventList = array('event_list' => array(
+                0 => array(
+                    'actor' => $initiative->user_id,
+                    'timestamp' => round(microtime(true) * 1000),
+                    'activity_type' => 'object_removed',
+                    'activity_objects' => array(
+                        0 => array(
+                            'type' => 'Feature',
+                            'geometry' => array(
+                                'type' => 'Point',
+                                'coordinates' => array(floatval($initiative->longitude), floatval($initiative->latitude))
+                            ),
+                            'properties' => array(
+                                'id' => $initiative->id,
+                                'hasType' => $concept,
+                                'title' => $initiative->title,
+                                'external_url' => env('APP_URL').'/offer/'.$initiative->id.'/'.str_slug($initiative->title)
+                            )
+                        )
+                    )
+                )
+            ));
+
+            OnToMap::postEvent($eventList);
+
+
+            // Force deleting initiative
+            $isDeleted = $initiative->forceDelete();
+
+            if($isDeleted) {
+                foreach($initiativeImages as $image) {
+                    Storage::delete('public/initiatives/'.$image->name);
+                }
+            }
+        }
+
+
+
+        return response()->json([
+            'message' => __('messages.initiative_form_success.stored')
+        ]);
+    }
+
+    function storeCommentOnToMap(Request $request)
+	{
+        $initiativeId = $request->input('initId');
+        $commentId = $request->input('commentId');
+
+        $initiative = Initiative::find($initiativeId);
+        $comment = Comment::find($commentId);
+
+
+        if(!empty($initiative)) {
+            $concept = 'Comment';
+
+            // OnToMap request
+            $eventList = array('event_list' => array(
+                0 => array(
+                    'actor' => Auth::id(),
+                    'timestamp' => round(microtime(true) * 1000),
+                    'activity_type' => 'object_created',
+                    'activity_objects' => array(
+                        0 => array(
+                            'type' => 'Feature',
+                            'geometry' => array(
+                                'type' => 'Point',
+                                'coordinates' => array(floatval($initiative->longitude), floatval($initiative->latitude))
+                            ),
+                            'properties' => array(
+                                'id' => $comment->id,
+                                'hasType' => $concept,
+                                'body' => $comment->body,
+                                'external_url' => env('APP_URL').'/comment/'.$comment->id
+                                //'additionalProperties' => array()
+                            )
+                        )
+                    ),
+                    'references' => array(
+                        0 => array(
+                            'application' => env('UWUM_CLIENT_ID'),
+                            'external_url' => env('APP_URL').'/offer/'.$initiative->id.'/'.str_slug($initiative->title),
+                        )
+                    )
+                )
+            ));
+
+
+            if(!empty($comment->parent_id)) {
+                $eventList['event_list'][0]['references'][1]['application'] = env('UWUM_CLIENT_ID');
+                $eventList['event_list'][0]['references'][1]['external_url'] = env('APP_URL').'/comment/'.$comment->parent_id;
+            }
+
+
+            OnToMap::postEvent($eventList);
+        }
+
+
+
+        return response()->json([
+            'message' => __('messages.initiative_form_success.stored')
+        ]);
+    }
+    
+    function supporterOnToMap(Request $request)
+	{
+        $initiativeId = $request->input('initId');
+        $userAction = $request->input('userAction');
+        $activityType = 'support_added';
+
+        $initiative = Initiative::find($initiativeId);
+
+
+        if('unsupport' == $userAction) {
+            $activityType = 'support_removed';
+        }
+
+
+        if(!empty($initiative)) {
+            $concept = 'Offer';
+            
+            if($initiative->initiative_type_id == 2) {
+                $concept = 'Demand';
+            }
+
+
+            // OnToMap request
+            $eventList = array('event_list' => array(
+                0 => array(
+                    'actor' => Auth::id(),
+                    'timestamp' => round(microtime(true) * 1000),
+                    'activity_type' => $activityType,
+                    'activity_objects' => array(
+                        0 => array(
+                            'type' => 'Feature',
+                            'geometry' => array(
+                                'type' => 'Point',
+                                'coordinates' => array(floatval($initiative->longitude), floatval($initiative->latitude))
+                            ),
+                            'properties' => array(
+                                'id' => $initiative->id,
+                                'hasType' => $concept,
+                                'title' => $initiative->title,
+                                'description' => $initiative->description,
+                                'external_url' => env('APP_URL').'/offer/'.$initiative->id.'/'.str_slug($initiative->title),
+                                'additionalProperties' => array(
+                                    'input_map_data' => $initiative->input_map_data,
+                                    'start_date' => $initiative->start_date,
+                                    'end_date' => $initiative->end_date,
+                                    'images' => $initiative->images
+                                )
+                            )
+                        )
+                    ),
+                    'references' => array(
+                        0 => array(
+                            'application' => env('UWUM_CLIENT_ID'),
+                            'external_url' => env('APP_URL').'/offer/'.$initiative->id.'/'.str_slug($initiative->title),
                         )
                     )
                 )

@@ -388,13 +388,13 @@
                                 imgDropzone.options.autoProcessQueue = false;
 
                                 // If there are images, post to OTM after dropzone uploading is completed
-                                $.post("{{ url('offer/post-to-ontomap') }}", { 'initId': data.initId, 'images': imagesArray }, function(response){});
+                                $.post("{{ url('offer/update/ontomap/'.$initiative->id) }}", { }, function(response){});
                             });
 
 
                             // If there are no images, post to OTM directly
                             if(!hasFiles) {
-                                $.post("{{ url('offer/post-to-ontomap') }}", { 'initId': data.initId, 'images': imagesArray }, function(response){});
+                                $.post("{{ url('offer/update/ontomap/'.$initiative->id) }}", { }, function(response){});
                             }
 
                             $('#response').text(data.message).removeClass('hide');
@@ -430,14 +430,14 @@
                     }
 
                     var newItems = data.initImages;
-                    console.log(newItems);
 
                     for(i=0; i<newItems.length; i++) {
                         $('.owl-carousel').trigger('add.owl.carousel', ['<div class="item carousel-item"><img src="{{ env("APP_URL") }}/storage/initiatives/' + newItems[i]['name'] + '" alt=""> <button data-img-id="' + newItems[i]['id'] + '" class="waves-effect waves-light btn-floating remove-img" type="button"><i class="large material-icons">delete</i></button></div>']);
-                        console.log('Image: ' + newItems[i]['name']);
                     }
 
                     $('.owl-carousel').trigger('refresh.owl.carousel');
+
+                    $.post("{{ url('offer/update/ontomap/'.$initiative->id) }}", { }, function(response){});
                 },
                 error : function(XMLHttpRequest, textStatus, errorThrown) {}
             });

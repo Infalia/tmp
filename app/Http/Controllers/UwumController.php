@@ -18,6 +18,10 @@ class UwumController extends Controller
         if($isUwumUserLoggedIn == 'false' && Auth::check()) {
            $action = 'logout';
            Auth::logout();
+
+           if($request->session()->exists('uwumAccessToken')) {
+               $request->session()->forget('uwumAccessToken');
+           }
         }
         
         return response()->json([

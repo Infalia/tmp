@@ -28,6 +28,7 @@ class CreateInitiativesTable extends Migration
             $table->foreign('user_id')->references('id')->on('users');
             $table->timestamp('updated_at')->useCurrent();
             $table->timestamp('created_at')->nullable();
+            $table->timestamp('deleted_at')->nullable();
         });
     }
 

@@ -482,21 +482,36 @@ class ProfileController extends Controller
             // User details creation
             $createdAt = date('Y-m-d H:i:s');
 
-            if(!empty($userDetails) && !empty($userDetails->created_at)) {
-                $createdAt = $userDetails->created_at;
+            // if(!empty($userDetails) && !empty($userDetails->created_at)) {
+            //     $createdAt = $userDetails->created_at;
+            // }
+
+            if(!empty($userDetails)) {
+                $userDetails->user_id = Auth::id();
+                $userDetails->gender_id = $gender;
+                $userDetails->phone = $phone;
+                $userDetails->birthday = $birthday;
+                $userDetails->description = $bio;
+                $userDetails->image = $userImage;
+                //$userDetails->created_at = $createdAt;
+    
+                $user->userDetails->save();
+            }
+            else {
+                $userDetail = new UserDetail([
+                    'user_id' => Auth::id(),
+                    'gender_id' => $gender,
+                    'phone' => $phone,
+                    'birthday' => $birthday,
+                    'description' => $bio,
+                    'image' => $userImage,
+                    'created_at' => date('Y-m-d H:i:s')
+                ]);
+    
+                $user->userDetails()->save($userDetail);
             }
 
             
-
-            $userDetails->user_id = Auth::id();
-            $userDetails->gender_id = $gender;
-            $userDetails->phone = $phone;
-            $userDetails->birthday = $birthday;
-            $userDetails->description = $bio;
-            $userDetails->image = $userImage;
-            $userDetails->created_at = $createdAt;
-
-            $user->userDetails->save();
 
             // User languages
             if(!empty($languages)) {

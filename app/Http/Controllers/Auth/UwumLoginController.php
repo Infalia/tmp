@@ -59,6 +59,7 @@ class UwumLoginController extends Controller
                 // echo ($accessToken->hasExpired() ? 'expired' : 'not expired') . "\n<br />";
                 // echo 'values='; print_r($accessToken->getValues()) . "\n<br />";
                 $values = $accessToken->getValues();
+                $requestHttp->session()->put('uwumAccessToken', $accessToken);
 
 
                 // // We have an access token, which we may use in authenticated requests against the service provider's API.
@@ -135,7 +136,7 @@ class UwumLoginController extends Controller
             } catch (\League\OAuth2\Client\Provider\Exception\IdentityProviderException $e) {
                 // Failed to get the access token or user details.
                 print_r($e->getResponseBody());
-                print('<a href="grant.php">Refresh</a>');
+                //print('<a href="grant.php">Refresh</a>');
                 exit();
             }
         }

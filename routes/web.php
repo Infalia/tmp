@@ -42,11 +42,13 @@ Route::post('offer/update/{id}', 'InitiativeController@updateInitiative')->middl
 Route::post('offer/delete/{id}', 'InitiativeController@deleteInitiative')->middleware('curUserAuth');
 Route::post('offer/image/upload', 'InitiativeController@imageUpload')->middleware('uwumAuth');
 Route::post('offer/image/remove', 'InitiativeController@imageRemove');
-Route::post('offer/save/ontomap', 'InitiativeController@storeOnToMap')->middleware('uwumAuth');
-Route::post('offer/update/ontomap/{id}', 'InitiativeController@updateOnToMap')->middleware('curUserAuth');
-Route::post('offer/delete/ontomap/{id}', 'InitiativeController@deleteOnToMap')->middleware('curUserAuth');
 Route::post('offer/save/supporter', 'InitiativeController@storeInitiativeSupporter')->middleware('uwumAuth');
 Route::post('offer/save/comment', 'InitiativeController@storeInitiativeComment')->middleware('uwumAuth');
+Route::post('offer/save/ontomap', 'InitiativeController@storeInitiativeOnToMap')->middleware('uwumAuth');
+Route::post('offer/update/ontomap/{id}', 'InitiativeController@updateInitiativeOnToMap')->middleware('curUserAuth');
+Route::post('offer/delete/ontomap/{id}', 'InitiativeController@deleteInitiativeOnToMap')->middleware('uwumAuth');
+Route::post('offer/ontomap/comment', 'InitiativeController@storeCommentOnToMap')->middleware('uwumAuth');
+Route::post('offer/ontomap/supporter', 'InitiativeController@supporterOnToMap')->middleware('uwumAuth');
 
 /*** Notifications ***/
 Route::get('notifications', 'NotificationController@index')->middleware('uwumAuth');
@@ -61,6 +63,11 @@ Route::post('uwum/check-user', 'UwumController@checkUser');
 /*** UWUM authentication ***/
 Route::get('login/uwum', 'Auth\UwumLoginController@redirectToUwumProvider');
 Route::get('login/uwum/callback', 'Auth\UwumLoginController@handleUwumCallback');
+
+/*** OnToMap ***/
+Route::get('ontomap/get-events', 'OnToMapController@getUserEvents');
+Route::get('ontomap/get-mappings', 'OnToMapController@getMappings');
+Route::get('ontomap/send-mappings', 'OnToMapController@sendMappings');
 
 /*** Socialite ***/
 Route::get('login/facebook', 'Auth\SocialLoginController@redirectToFacebookProvider')->middleware('uwumAuth');
