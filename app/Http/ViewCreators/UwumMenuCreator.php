@@ -4,11 +4,12 @@ namespace App\Http\ViewCreators;
 
 use Illuminate\View\View;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use GuzzleHttp\Client;
 use GuzzleHttp\Psr7;
 use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Exception\ClientException;
-use Illuminate\Support\Facades\Auth;
+use App\Overriders\UwumOAuth2Provider;
 
 class UwumMenuCreator
 {
@@ -36,8 +37,26 @@ class UwumMenuCreator
                     $uwumAccessToken = $request->session()->get('uwumAccessToken')->getToken();
                 }
                 else {
-                    $uwumAccessToken = $request->session()->get('uwumAccessToken')->getRefreshToken();
+                    $provider = new UwumOAuth2Provider([
+                        'clientId' => env('UWUM_CLIENT_ID'), // The client ID assigned to you by UWUM Certificate Authority (actually your CN)
+                        'clientSecret' => '', // We need no clientSecret since we are using certificates for client authentication
+                        'redirectUri' => env('UWUM_CALLBACK_URL'), // Currently should be the same as declared in UWUM Certificate Authority
+                        'urlAuthorize' => env('UWUM_AUTH_URL'), // UWUM API endpoints
+                        'urlAccessToken' => env('UWUM_TOKEN_URL'),
+                        'cert' => env('CERT_PATH'), // Path to your pem (outside web directory)
+                        'urlResourceOwnerDetails' => '' // N/A
+                    ]);
+
+
+                    $newAccessToken = $provider->getAccessToken('refresh_token', [
+                        'refresh_token' => $request->session()->get('uwumAccessToken')->getRefreshToken()
+                    ]);
+                
+                    $request->session()->forget('uwumAccessToken');
+                    $request->session()->put('uwumAccessToken', $newAccessToken);
+                    $uwumAccessToken = $request->session()->get('uwumAccessToken')->getToken();
                 }
+
 
                 $paramsQuery .= '&access_token='.$uwumAccessToken;
             }

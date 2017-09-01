@@ -52,6 +52,9 @@ class UwumLoginController extends Controller
                     ]
                 );
 
+                $requestHttp->session()->put('uwumAccessToken', $accessToken);
+
+
                 // echo '<h1>--- RAW DATA received from UWUM ---</h1>';
                 // echo 'token='.$accessToken->getToken() . "\n<br />";
                 // echo 'refresh token='.$accessToken->getRefreshToken() . "\n<br />";
@@ -59,7 +62,7 @@ class UwumLoginController extends Controller
                 // echo ($accessToken->hasExpired() ? 'expired' : 'not expired') . "\n<br />";
                 // echo 'values='; print_r($accessToken->getValues()) . "\n<br />";
                 $values = $accessToken->getValues();
-                $requestHttp->session()->put('uwumAccessToken', $accessToken);
+                
 
 
                 // // We have an access token, which we may use in authenticated requests against the service provider's API.
