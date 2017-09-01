@@ -323,6 +323,7 @@ class InitiativeController extends Controller
         $description = $request->input('description');
         $latitude = $request->input('latitude');
         $longitude = $request->input('longitude');
+        $address = $request->input('address');
         $inputMapData = $request->input('input_map_data');
         $lastInsertedId = null;
 
@@ -339,6 +340,7 @@ class InitiativeController extends Controller
         $rules['description'] = 'required';
         $rules['latitude'] = 'required|numeric';
         $rules['longitude'] = 'required|numeric';
+        $rules['address'] = 'required|max:255';
         
 
         $validator = Validator::make($request->all(), $rules);
@@ -363,6 +365,7 @@ class InitiativeController extends Controller
                  'description' => $description,
                  'latitude' => $latitude,
                  'longitude' => $longitude,
+                 'address' => $address,
                  'input_map_data' => $inputMapData,
                  'start_date' => $startDate,
                  'end_date' => $endDate,
@@ -395,6 +398,7 @@ class InitiativeController extends Controller
         $description = $request->input('description');
         $latitude = $request->input('latitude');
         $longitude = $request->input('longitude');
+        $address = $request->input('address');
         $inputMapData = $request->input('input_map_data');
 
 
@@ -410,6 +414,7 @@ class InitiativeController extends Controller
         $rules['description'] = 'required';
         // $rules['latitude'] = 'required|numeric';
         // $rules['longitude'] = 'required|numeric';
+        // $rules['address'] = 'required|max:255';
         
 
         $validator = Validator::make($request->all(), $rules);
@@ -433,6 +438,7 @@ class InitiativeController extends Controller
             $initiative->description = $description;
             if(!empty($latitude)) $initiative->latitude = $latitude;
             if(!empty($longitude)) $initiative->longitude = $longitude;
+            if(!empty($address)) $initiative->address = $address;
             if(!empty($inputMapData)) $initiative->input_map_data = $inputMapData;
             $initiative->start_date = $startDate;
             $initiative->end_date = $endDate;

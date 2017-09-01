@@ -23,6 +23,7 @@ class Initiative extends Model
         'description',
         'latitude',
         'longitude',
+        'address',
         'input_map_data',
         'start_date',
         'end_date',

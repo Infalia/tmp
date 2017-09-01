@@ -50,7 +50,10 @@
 
                         <div class="initiative-info">
                             <span class="initiative-start-date">{{ \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $initiative->start_date)->format('l, j M Y H:i') }}</span>
-                            <span class="initiative-address">Not available</span>
+                            
+                            @isset($initiative->address)
+                            <span class="initiative-address">{{ $initiative->address }}</span>
+                            @endisset
                         </div>
 
                         <div class="initiative-descr">{{ $initiative->description }}</div>
