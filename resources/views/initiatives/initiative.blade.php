@@ -5,6 +5,7 @@
     {!! HTML::style('owl/assets/owl.theme.green.min.css') !!}
     {!! HTML::style('baguettebox/baguetteBox.min.css') !!}
     {!! HTML::style('jquery-comments/jquery-comments.css') !!}
+    {!! HTML::style('plugins/leaflet/leaflet.css') !!}
 @endsection
 
 @section('content')
@@ -15,10 +16,8 @@
 
         <div class="profile-container {{ Auth::check() ? '' : 'no-margin' }}">
             <div class="initiative">
-
+                @if(!empty($initiative))
                 <div class="row">
-                    @if(!empty($initiative))
-
                     <div class="col s12 right-align">
                         @if(Auth::check() && Auth::id() == $initiative->user->id)
                         <a class="waves-effect waves-light btn" href="{{ url('offer/edit/'.$initiative->id.'/'.str_slug($initiative->title)) }}">{{ $editBtn }}</a>
@@ -26,7 +25,7 @@
                         @endif
                     </div>
 
-                    <div class="col s12">
+                    <div class="col s12 l6">
                         @if(!empty($initiative->images))
                         <div class="owl-carousel owl-theme">
                             @foreach ($initiative->images as $image)
@@ -40,6 +39,7 @@
                         @endif
 
 
+                    
                         <h1 class="h5 initiative-title">{{ $initiative->title }}</h1>
 
                         <div class="initiative-info">
@@ -58,24 +58,35 @@
 
                         <div class="initiative-descr">{{ $initiative->description }}</div>
 
-                        <div class="initiative-engagements">
-                            <span class="initiative-engagement"><i class="material-icons inline-icon grey-text text-darken-3">comment</i> <b id="init-comments">{{ $comments = $initiative->comments->count() }}</b> {{ str_plural($commentLbl, $comments) }}</span>
-                            <span class="initiative-engagement"><i class="material-icons inline-icon grey-text text-darken-3">people</i> <b id="init-supporters">{{ $supporters = $initiative->users->count() }}</b> {{ str_plural($supportLbl, $supporters) }}</span>
-                        </div>
-
-                        <div class="divider"></div>
-
-                        <div class="initiative-engagement-buttons">
-                            {!! Form::button($supportBtn, array('id' => 'support-btn', 'class' => 'waves-effect waves-teal btn-flat initiative-engagement')) !!}
-                        </div>
-
-                        <div class="comments-container"></div>
+                        
                     </div>
-                    @else
-                        <p>{{ $noRecordsMsg }}</p>
-                    @endif
 
+                    <div class="col s12 l6">
+                        <div id="map" class="map-canvas" style="width: 100%; height: 400px;"></div>
+                    </div>
                 </div>
+
+
+
+
+                <div class="initiative-engagements">
+                    <span class="initiative-engagement"><i class="material-icons inline-icon grey-text text-darken-3">comment</i> <b id="init-comments">{{ $comments = $initiative->comments->count() }}</b> {{ str_plural($commentLbl, $comments) }}</span>
+                    <span class="initiative-engagement"><i class="material-icons inline-icon grey-text text-darken-3">people</i> <b id="init-supporters">{{ $supporters = $initiative->users->count() }}</b> {{ str_plural($supportLbl, $supporters) }}</span>
+                </div>
+
+                <div class="divider"></div>
+
+                <div class="initiative-engagement-buttons">
+                    {!! Form::button($supportBtn, array('id' => 'support-btn', 'class' => 'waves-effect waves-teal btn-flat initiative-engagement')) !!}
+                </div>
+
+
+                <div class="comments-container"></div>
+                
+
+                @else
+                    <p>{{ $noRecordsMsg }}</p>
+                @endif
             </div>
         </div>
 
@@ -99,7 +110,36 @@
     {!! HTML::script('owl/owl.carousel.min.js') !!}
     {!! HTML::script('baguettebox/baguetteBox.min.js') !!}
     {!! HTML::script('jquery-comments/jquery-comments.min.js') !!}
+    {!! HTML::script('plugins/leaflet/leaflet.js') !!}
     <script>
+        var lat = <?php echo $initiative->latitude;?>;
+        var lng = <?php echo $initiative->longitude;?>;
+        var title = "<?php echo $initiative->title;?>";
+        var zoom = 10;
+        markerImg = "{{ config('app.url') }}/images/marker.png";
+
+
+        var points = new Array();
+        var map = L.map('map').setView([lat, lng], zoom);
+        mapLink = '<a href="http://openstreetmap.org">OpenStreetMap</a>';
+
+        L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; ' + mapLink + ' Contributors',
+            maxZoom: 18,
+        }).addTo(map);
+
+
+        var icon = L.icon({
+            iconUrl: markerImg
+        });
+
+        marker = new L.marker([lat, lng], {
+            icon: icon
+        })
+        .bindPopup(title)
+        .addTo(map);
+
+
         $(document).ready(function() {
             $('.owl-carousel').owlCarousel({
                 margin: 5,
@@ -135,9 +175,7 @@
         });
 
 
-        baguetteBox.run('.owl-carousel', {
-
-        });
+        baguetteBox.run('.owl-carousel', {});
 
 
         $('.comments-container').comments({
