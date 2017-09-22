@@ -100,11 +100,12 @@ class DatabaseSeeder extends Seeder
 
 
         // Social networks
-        $socialNetworksArr = ['Facebook', 'Twitter', 'Google+', 'LinkedIn'];
+        $socialNetworksArr = ['Facebook', 'Twitter', 'Google', 'LinkedIn'];
 	
         for($i=0; $i<count($socialNetworksArr); $i++) {
             DB::table('social_networks')->insert([
                 'title' => $socialNetworksArr[$i],
+                'class_name' => mb_convert_case($socialNetworksArr[$i].'-item', MB_CASE_LOWER, "UTF-8"),
                 'priority' => ($i+1),
                 'created_at' => date('Y-m-d H:i:s'),
             ]);

@@ -21,6 +21,7 @@ class CreateInitiativesTable extends Migration
             $table->text('description');
             $table->decimal('latitude', 20, 18);
             $table->decimal('longitude', 21, 18);
+            $table->string('address', 255)->nullable();
             $table->text('input_map_data');
             $table->dateTime('start_date');
             $table->dateTime('end_date');

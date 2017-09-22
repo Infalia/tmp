@@ -12,7 +12,13 @@ use App\UserDetail;
 use App\Gender;
 use App\Language;
 use App\SocialNetwork;
+use App\Helpers\TwitterApi;
 use Carbon\Carbon;
+
+use GuzzleHttp\Client;
+use GuzzleHttp\Psr7;
+use GuzzleHttp\Exception\RequestException;
+use GuzzleHttp\Exception\ClientException;
 
 class ProfileController extends Controller
 {
@@ -23,6 +29,7 @@ class ProfileController extends Controller
         $userLanguages = $user->languages;
         $genders = Gender::all();
         $languages = Language::all();
+
 
         $miDate = Carbon::now()->subYears(100);
         $maDate = Carbon::now()->subYears(16);
@@ -141,10 +148,11 @@ class ProfileController extends Controller
             ->with('routeUri', $route->uri);
     }
 
-    function work()
+    function work(Request $request)
     {
         $user = User::find(Auth::id());
         $route = Route::current();
+
 
         $sidebarOption1 = __('messages.sidebar_option_1');
         $sidebarOption2 = __('messages.sidebar_option_2');

@@ -5,8 +5,15 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use GuzzleHttp\Client;
+use GuzzleHttp\Psr7;
+use GuzzleHttp\Exception\RequestException;
+use GuzzleHttp\Exception\ClientException;
 use App\User;
 use App\SocialNetwork;
+use App\Helpers\FacebookApi;
+use App\Helpers\TwitterApi;
+use Carbon\Carbon;
 use Socialite;
 
 class SocialLoginController extends Controller
@@ -28,28 +35,7 @@ class SocialLoginController extends Controller
      */
     public function redirectToFacebookProvider()
     {
-        return Socialite::driver('facebook')->fields([
-            'name',
-            'email',
-            'gender',
-            'verified',
-            'link',
-            'first_name',
-            'middle_name',
-            'last_name',
-            'picture',
-            'about',
-            'age_range',
-            'birthday',
-            'hometown',
-            'location',
-            'timezone',
-            'education',
-            'political',
-            'religion',
-            'work',
-            'events'
-        ])->scopes([
+        return Socialite::driver('facebook')->scopes([
             'public_profile',
             'user_about_me',
             'email',
@@ -87,6 +73,7 @@ class SocialLoginController extends Controller
     {
         try {
             $socUser = Socialite::driver('facebook')->fields([
+                'id',
                 'name',
                 'email',
                 'gender',
@@ -100,30 +87,109 @@ class SocialLoginController extends Controller
                 'age_range',
                 'birthday',
                 'hometown',
+                'locale',
                 'location',
                 'timezone',
                 'education',
+                'languages',
                 'political',
                 'religion',
-                'work',
-                'events'
+                'favorite_athletes',
+                'favorite_teams',
+                'inspirational_people',
+                'sports'
             ])->user();
-            // $socUser->token;
         } catch (\Exception $e) {
             return redirect('profile/social-accounts');
         }
 
-        //$request->session()->put('user.social_data.facebook', $socUser);
-
 
         if(!empty($socUser)) {
-            $socUserData = json_encode($socUser);
-            
+            // Get the user & social network id
             $user = User::find(Auth::id());
             $socialNetwork = SocialNetwork::where("title", "ILIKE", "%Facebook%")->first();
 
-            if(!empty($user) && !empty($socialNetwork)) {
-                $user->socialNetworks()->attach($socialNetwork->id, ['data' => $socUserData, 'created_at' => date('Y-m-d H:i:s')]);
+
+            // Based on Facebook docs, we have a short-lived access token,
+            // but we need a long-lived one (60 days).
+            // So, we make a request for a code from Facebook's server
+            $code = '';
+            
+            if(!$request->session()->exists('social_data.facebook.code')) {
+                $client = new Client();
+
+                try {
+                    $result = $client->request('GET', 'https://graph.facebook.com/oauth/client_code?access_token='.$socUser->token.'&client_id='.env('FACEBOOK_APP_ID').'&client_secret='.env('FACEBOOK_APP_SECRET').'&redirect_uri='.env('FACEBOOK_APP_CALLBACK_URL'));
+                    $response = json_decode($result->getBody());
+
+                    $code = $response->code;
+                    $request->session()->put('social_data.facebook.code', $code);
+                } catch (RequestException $e) {
+                    return redirect('profile/social-accounts');
+                } catch (ClientException $e) {
+                    return redirect('profile/social-accounts');
+                }
+            }
+
+            
+            // Now that we have the code, we make a request for the long-lived token
+            // and store it along with other useful data to the database.
+            if(!empty($code)) {
+                $client = new Client();
+
+                try {
+                    $result = $client->request('GET', 'https://graph.facebook.com/oauth/access_token?code='.$code.'&client_id='.env('FACEBOOK_APP_ID').'&redirect_uri='.env('FACEBOOK_APP_CALLBACK_URL'));
+                    $response = json_decode($result->getBody());
+
+                    if(!empty($user) && !empty($socialNetwork)) {
+                        $socUserData = json_encode($socUser);
+                        $userNetwork = $user->socialNetworks()->where('social_network_id', $socialNetwork->id)->get();
+                        $socialNetworkData = ['profile_info' => $socUserData, 'token' => $response->access_token, 'token_expire' => Carbon::now()->addSeconds($response->expires_in)->toDateTimeString(), 'network_user_id' => $socUser->id, 'created_at' => date('Y-m-d H:i:s')];
+
+                        // If user doesn't have a record for the given social network,
+                        // create it, otherwise update it
+                        if($userNetwork->isEmpty()) {
+                            $user->socialNetworks()->attach($socialNetwork->id, $socialNetworkData);
+                        }
+                        else {
+                            $user->socialNetworks()->updateExistingPivot($socialNetwork->id, $socialNetworkData);
+                        }
+
+
+
+
+                        if($userNetwork->isEmpty()) {
+                            // Get user edges for the first time
+                            $params = array();
+                            $facebookNetwork = SocialNetwork::where("title", "ILIKE", "%Facebook%")->first();
+
+                            $likes = FacebookApi::getUserData(env('FACEBOOK_API_URL'), $socUser->id, 'likes', $response->access_token); // likes cannot be filtered by since/until
+                            $posts = FacebookApi::getUserData(env('FACEBOOK_API_URL'), $socUser->id, 'posts', $response->access_token, $params);
+                            $events = FacebookApi::getUserData(env('FACEBOOK_API_URL'), $socUser->id, 'events', $response->access_token, $params);
+
+                            $userData = '';
+                            
+                            if(!empty($likes)) {
+                                $userData .= collect($likes)->toJson();
+                            }
+                            if(!empty($posts)) {
+                                $userData .= collect($posts)->toJson();
+                            }
+                            if(!empty($events)) {
+                                $userData .= collect($events)->toJson();
+                            }
+
+                            $userFacebookData = ['data' => $userData, 'since' => Carbon::now()->timestamp];
+                            $user->socialNetworkData()->save($facebookNetwork, $userFacebookData);
+                        }
+                    }
+                    
+                    $request->session()->forget('social_data.facebook.code');
+                } catch (RequestException $e) {
+                    return redirect('profile/social-accounts');
+                } catch (ClientException $e) {
+                    return redirect('profile/social-accounts');
+                }
             }
         }
 
@@ -155,8 +221,6 @@ class SocialLoginController extends Controller
             return redirect('profile/social-accounts');
         }
 
-        //$request->session()->put('user.social_data.google', $socUser);
-
         if(!empty($socUser)) {
             $socUserData = json_encode($socUser);
             
@@ -164,7 +228,7 @@ class SocialLoginController extends Controller
             $socialNetwork = SocialNetwork::where("title", "ILIKE", "%Google%")->first();
 
             if(!empty($user) && !empty($socialNetwork)) {
-                $user->socialNetworks()->attach($socialNetwork->id, ['data' => $socUserData, 'created_at' => date('Y-m-d H:i:s')]);
+                $user->socialNetworks()->attach($socialNetwork->id, ['profile_info' => $socUserData, 'created_at' => date('Y-m-d H:i:s')]);
             }
         }
 
@@ -205,7 +269,7 @@ class SocialLoginController extends Controller
             $socialNetwork = SocialNetwork::where("title", "ILIKE", "%LinkedIn%")->first();
 
             if(!empty($user) && !empty($socialNetwork)) {
-                $user->socialNetworks()->attach($socialNetwork->id, ['data' => $socUserData, 'created_at' => date('Y-m-d H:i:s')]);
+                $user->socialNetworks()->attach($socialNetwork->id, ['profile_info' => $socUserData, 'created_at' => date('Y-m-d H:i:s')]);
             }
         }
 
@@ -232,21 +296,78 @@ class SocialLoginController extends Controller
     {
         try {
             $socUser = Socialite::driver('twitter')->user();
-            // $socUser->token;
         } catch (\Exception $e) {
             return redirect('profile/social-accounts');
         }
 
-        //$request->session()->put('user.social_data.twitter', $socUser);
 
         if(!empty($socUser)) {
-            $socUserData = json_encode($socUser);
-            
-            $user = User::find(Auth::id());
-            $socialNetwork = SocialNetwork::where("title", "ILIKE", "%Twitter%")->first();
 
-            if(!empty($user) && !empty($socialNetwork)) {
-                $user->socialNetworks()->attach($socialNetwork->id, ['data' => $socUserData, 'created_at' => date('Y-m-d H:i:s')]);
+            // Now we can request for an OAuth2 Bearer Token
+            // for our application so we can make API requests.
+            $client = new Client();
+
+            try {
+                $result = $client->request('POST', 'https://api.twitter.com/oauth2/token?grant_type=client_credentials', [
+                    'headers' => ['Authorization' => 'Basic '.base64_encode(env('TWITTER_APP_ID').':'.env('TWITTER_APP_SECRET'))]
+                ]);
+
+                $response = json_decode($result->getBody());
+            } catch (RequestException $e) {
+                return redirect('profile/social-accounts');
+            } catch (ClientException $e) {
+                return redirect('profile/social-accounts');
+            }
+
+
+            if (!empty($response) && isset($response->token_type) && isset($response->access_token)) {
+                // Get the user & social network id
+                $user = User::find(Auth::id());
+                $socialNetwork = SocialNetwork::where("title", "ILIKE", "%Twitter%")->first();
+
+                if(!empty($user) && !empty($socialNetwork)) {
+                    $socUserData = json_encode($socUser);
+                    $userNetwork = $user->socialNetworks()->where('social_network_id', $socialNetwork->id)->get();
+                    $socialNetworkData = ['profile_info' => $socUserData, 'token' => $response->access_token, 'network_user_id' => $socUser->id, 'created_at' => date('Y-m-d H:i:s')];
+
+                    // If user doesn't have a record for the given social network,
+                    // create it, otherwise update it
+                    if($userNetwork->isEmpty()) {
+                        $user->socialNetworks()->attach($socialNetwork->id, $socialNetworkData);
+                    }
+                    else {
+                        $user->socialNetworks()->updateExistingPivot($socialNetwork->id, $socialNetworkData);
+                    }
+
+
+
+                    if($userNetwork->isEmpty()) {
+                        // Get as many as possible user
+                        // tweets for the first time
+                        $userData = '';
+                        $firstTweetId = 0;
+                        $twitterNetwork = SocialNetwork::where("title", "ILIKE", "%Twitter%")->first();
+
+                        $params = array(
+                            'user_id' => $socUser->id,
+                            'count' => 200
+                        );
+
+                        $tweets = TwitterApi::getFirstTimeUserData(env('TWITTER_API_URL').'/statuses/user_timeline.json', $response->access_token, $params);  
+
+                        if(!empty($tweets)) {
+                            $userData .= collect($tweets)->toJson();
+                            $firstTweet = array_first($tweets);
+                            $firstTweetId = $firstTweet->id;
+                        }
+
+                        $userTwitterData = ['data' => $userData, 'since' => $firstTweetId];
+
+                        if(!empty($userData)) {
+                            $user->socialNetworkData()->save($twitterNetwork, $userTwitterData);
+                        }
+                    }
+                }
             }
         }
 

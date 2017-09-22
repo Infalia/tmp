@@ -17,13 +17,15 @@
         <div class="profile-container {{ Auth::check() ? '' : 'no-margin' }}">
             <div class="initiative">
                 @if(!empty($initiative))
+
+                
                 <div class="row">
-                    <div class="col s12 right-align">
-                        @if(Auth::check() && Auth::id() == $initiative->user->id)
+                    @if(Auth::check() && Auth::id() == $initiative->user->id)
+                    <div class="col s12 right-align" style="margin-bottom: 10px;">
                         <a class="waves-effect waves-light btn" href="{{ url('offer/edit/'.$initiative->id.'/'.str_slug($initiative->title)) }}">{{ $editBtn }}</a>
                         {!! Form::button($deleteBtn, array('id' => 'delete-btn', 'class' => 'btn waves-effect waves-light red darken-1', 'onclick' => 'confirmDelete()')) !!}
-                        @endif
                     </div>
+                    @endif
 
                     <div class="col s12 l6">
                         @if(!empty($initiative->images))
@@ -62,7 +64,7 @@
                     </div>
 
                     <div class="col s12 l6">
-                        <div id="map" class="map-canvas" style="width: 100%; height: 400px;"></div>
+                        <div id="map" class="map-canvas" style="width: 100%; height: 450px;"></div>
                     </div>
                 </div>
 
@@ -123,7 +125,8 @@
         var map = L.map('map').setView([lat, lng], zoom);
         mapLink = '<a href="http://openstreetmap.org">OpenStreetMap</a>';
 
-        L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        //L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        L.tileLayer('https://api.mapbox.com/styles/v1/drp0ll0/cj0tausco00tb2rt87i5c8pi0/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoiZHJwMGxsMCIsImEiOiI4bUpPVm9JIn0.NCRmAUzSfQ_fT3A86d9RvQ', {
             attribution: '&copy; ' + mapLink + ' Contributors',
             maxZoom: 18,
         }).addTo(map);
