@@ -13,6 +13,7 @@ use App\User;
 use App\SocialNetwork;
 use App\Helpers\FacebookApi;
 use App\Helpers\TwitterApi;
+use App\Helpers\GoogleApi;
 use Carbon\Carbon;
 use Socialite;
 
@@ -204,7 +205,16 @@ class SocialLoginController extends Controller
      */
     public function redirectToGoogleProvider()
     {
-        return Socialite::driver('google')->redirect();
+        return Socialite::driver('google')->scopes([
+            'openid',
+            'profile',
+            'email',
+            //'https://www.googleapis.com/auth/plus.login',
+            //'https://www.googleapis.com/auth/plus.circles.read',
+            //'https://www.googleapis.com/auth/plus.stream.read',
+            //'https://www.googleapis.com/auth/userinfo.profile',
+            //'https://www.googleapis.com/auth/plus.me',
+        ])->redirect();
     }
 
     /**
@@ -216,20 +226,63 @@ class SocialLoginController extends Controller
     {
         try {
             $socUser = Socialite::driver('google')->user();
-            // $socUser->token;
         } catch (\Exception $e) {
             return redirect('profile/social-accounts');
         }
 
         if(!empty($socUser)) {
-            $socUserData = json_encode($socUser);
-            
+            // Get the user & social network id
             $user = User::find(Auth::id());
             $socialNetwork = SocialNetwork::where("title", "ILIKE", "%Google%")->first();
 
             if(!empty($user) && !empty($socialNetwork)) {
-                $user->socialNetworks()->attach($socialNetwork->id, ['profile_info' => $socUserData, 'created_at' => date('Y-m-d H:i:s')]);
+                $networkApiUrl = env('GOOGLE_API_URL');
+                $apiKey = env('GOOGLE_API_KEY');
+                $networkUserId = $socUser->id;
+                $userNetwork = $user->socialNetworks()->where('social_network_id', $socialNetwork->id)->get();
+                //$userNetworkData = $user->socialNetworkData()->where('social_network_id', $socialNetwork->id)->get();
+
+
+                // User info
+                $userInfo = '';
+                $info = GoogleApi::getUserInfo($networkApiUrl.'people/'.$networkUserId, $apiKey);
+
+                if(!empty($info)) {
+                    $userInfo = collect($info)->toJson();
+                }
+
+                $userGoogleInfo = ['profile_info' => $userInfo, 'network_user_id' => $socUser->id];
+
+                // If user doesn't have a record for the given social network,
+                // create it, otherwise update it
+                if($userNetwork->isEmpty()) {
+                    $user->socialNetworks()->attach($socialNetwork->id, $userGoogleInfo);
+                }
+                else {
+                    $user->socialNetworks()->updateExistingPivot($socialNetwork->id, $userGoogleInfo);
+                }
+
+
+
+
+                $params = array(
+                    'maxResults' => 100
+                );
+                
+                $userData = '';
+                $activities = GoogleApi::getUserData($networkApiUrl.'people/'.$networkUserId.'/activities/public', $apiKey, $params);
+
+                if(!empty($activities)) {
+                    $userData .= collect($activities)->toJson();
+                }
+
+                $userGoogleData = ['data' => $userData];
+
+                if(!empty($userData)) {
+                    $user->socialNetworkData()->save($socialNetwork, $userGoogleData);
+                }
             }
+
         }
 
 
@@ -346,7 +399,6 @@ class SocialLoginController extends Controller
                         // tweets for the first time
                         $userData = '';
                         $firstTweetId = 0;
-                        $twitterNetwork = SocialNetwork::where("title", "ILIKE", "%Twitter%")->first();
 
                         $params = array(
                             'user_id' => $socUser->id,
@@ -364,7 +416,7 @@ class SocialLoginController extends Controller
                         $userTwitterData = ['data' => $userData, 'since' => $firstTweetId];
 
                         if(!empty($userData)) {
-                            $user->socialNetworkData()->save($twitterNetwork, $userTwitterData);
+                            $user->socialNetworkData()->save($socialNetwork, $userTwitterData);
                         }
                     }
                 }
@@ -382,6 +434,7 @@ class SocialLoginController extends Controller
         
         if(!empty($socialNetwork)) {
             User::find(Auth::id())->socialNetworks()->detach($socialNetworkId);
+            User::find(Auth::id())->socialNetworkData()->detach($socialNetworkId);
         }
 
         return response()->json([

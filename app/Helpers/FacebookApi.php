@@ -14,7 +14,7 @@ class FacebookApi
      *
      * @return array, the request response.
      */
-    public static function getUserFields($url = '', $networkUserId = '', $fields = array(), $accessToken = '')
+    public static function getUserInfo($url = '', $networkUserId = '', $fields = array(), $accessToken = '')
     {
         $client = new Client();
  

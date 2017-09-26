@@ -64,8 +64,8 @@ class UwumMenuCreator
 
             try {
                 $result = $client->request('GET', env('UWUM_NAV_URL').$paramsQuery);
+
                 $this->navigationMenu = (string) $result->getBody();
-                //$request->session()->put('uwumNavMenu', $this->navigationMenu);
             } catch (RequestException $e) {
                 $this->getFallbackNavigationMenu();
             } catch (ClientException $e) {

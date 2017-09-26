@@ -12,7 +12,7 @@ use App\UserDetail;
 use App\Gender;
 use App\Language;
 use App\SocialNetwork;
-use App\Helpers\TwitterApi;
+use App\Helpers\GoogleApi;
 use Carbon\Carbon;
 
 use GuzzleHttp\Client;
@@ -152,6 +152,75 @@ class ProfileController extends Controller
     {
         $user = User::find(Auth::id());
         $route = Route::current();
+
+
+
+
+        // $client = new Client();
+        
+        // try {
+        //     //$result = $client->request('GET', 'https://www.googleapis.com/plus/v1/people/111256566716480431457?key=AIzaSyDuDfE3Wf7QGcXY7y3gPYjl3GoHPb1XulY');  // 112260161713493298761
+        //     $result = $client->request('GET', 'https://www.googleapis.com/plus/v1/people/111256566716480431457/activities/public?key=AIzaSyDuDfE3Wf7QGcXY7y3gPYjl3GoHPb1XulY&maxResults=100'); // 111256566716480431457
+        //     $response = json_decode($result->getBody());
+        // } catch (RequestException $e) {
+        //     echo Psr7\str($e->getResponse());
+        // } catch (ClientException $e) {
+        //     echo Psr7\str($e->getResponse());
+        // }
+
+
+
+
+
+        $googleNetwork = SocialNetwork::where("title", "ILIKE", "%Google%")->first();
+
+        $userNetwork = $user->socialNetworks()->where('social_network_id', $googleNetwork->id)->get();
+        $userNetworkData = $user->socialNetworkData()->where('social_network_id', $googleNetwork->id)->get();
+ 
+        if($userNetwork->isNotEmpty()) {
+            $networkApiUrl = env('GOOGLE_API_URL');
+            $apiKey = env('GOOGLE_API_KEY');
+            $networkUserId = $userNetwork->first()->pivot->network_user_id;
+            $userNetwork = $user->socialNetworks()->where('social_network_id', $googleNetwork->id)->get();
+            $userNetworkData = $user->socialNetworkData()->where('social_network_id', $googleNetwork->id)->get();
+
+            $params = array(
+                'maxResults' => 100
+            );
+            
+            $userInfo = '';
+            $userData = '';
+
+            $info = GoogleApi::getUserInfo($networkApiUrl.'people/'.$networkUserId, $apiKey);
+            $activities = GoogleApi::getUserData($networkApiUrl.'people/'.$networkUserId.'/activities/public', $apiKey, $params);
+            
+            if(!empty($info)) {
+                $userInfo = collect($info)->toJson();
+            }
+            if(!empty($activities)) {
+                $userData .= collect($activities)->toJson();
+            }
+
+            
+            $userGoogleInfo = ['profile_info' => $userInfo];
+            $userGoogleData = ['data' => $userData];
+
+            if(!empty($userInfo)) {
+                $user->socialNetworks()->updateExistingPivot($googleNetwork->id, $userGoogleInfo);
+            }
+            if(!empty($userData)) {
+                if($userNetworkData->isNotEmpty()) {
+                    $user->socialNetworkData()->detach($googleNetwork->id);
+                }
+
+                $user->socialNetworkData()->save($googleNetwork, $userGoogleData);
+            }
+        }
+
+
+        dump($userGoogleInfo);
+        dump($userGoogleData);
+        die();
 
 
         $sidebarOption1 = __('messages.sidebar_option_1');

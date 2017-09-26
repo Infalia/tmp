@@ -14,6 +14,7 @@ use App\User;
 use App\SocialNetwork;
 use App\Helpers\FacebookApi;
 use App\Helpers\TwitterApi;
+use App\Helpers\GoogleApi;
 use Carbon\Carbon;
 
 class Kernel extends ConsoleKernel
@@ -40,6 +41,7 @@ class Kernel extends ConsoleKernel
             $users = User::all();
             $facebookNetwork = SocialNetwork::where("title", "ILIKE", "%Facebook%")->first();
             $twitterNetwork = SocialNetwork::where("title", "ILIKE", "%Twitter%")->first();
+            $googleNetwork = SocialNetwork::where("title", "ILIKE", "%Google%")->first();
             
     
             if(!empty($users)) {
@@ -111,7 +113,7 @@ class Kernel extends ConsoleKernel
 
                             
             
-                            $fields = FacebookApi::getUserFields($networkApiUrl, $networkUserId, $requestFields, $accessToken);
+                            $info = FacebookApi::getUserInfo($networkApiUrl, $networkUserId, $requestFields, $accessToken);
                             $likes = FacebookApi::getUserData($networkApiUrl, $networkUserId, 'likes', $accessToken); // likes cannot be filtered by since/until
                             $posts = FacebookApi::getUserData($networkApiUrl, $networkUserId, 'posts', $accessToken, $params);
                             $events = FacebookApi::getUserData($networkApiUrl, $networkUserId, 'events', $accessToken, $params);
@@ -137,11 +139,11 @@ class Kernel extends ConsoleKernel
                 
             
                             
-                            $userFields = '';
+                            $userInfo = '';
                             $userData = '';
                             
-                            if(!empty($fields)) {
-                                $userFields = collect($fields)->toJson();
+                            if(!empty($info)) {
+                                $userInfo = collect($info)->toJson();
                             }
             
                             if(!empty($latestLikes)) {
@@ -156,17 +158,18 @@ class Kernel extends ConsoleKernel
             
             
             
-                            $userFacebookFields = ['profile_info' => $userFields];
+                            $userFacebookInfo = ['profile_info' => $userInfo];
                             $userFacebookData = ['data' => $userData, 'since' => $now->timestamp];
             
-            
-                            $user->socialNetworks()->updateExistingPivot($facebookNetwork->id, $userFacebookFields);
-            
+                            
+                            if(!empty($userInfo)) {
+                                $user->socialNetworks()->updateExistingPivot($facebookNetwork->id, $userFacebookInfo);
+                            }
                             if(!empty($userData)) {
                                 $user->socialNetworkData()->save($facebookNetwork, $userFacebookData);
                             }
             
-                            file_put_contents(storage_path() . '/app/public/files/schedule-facebook.txt', Carbon::now().' - Updated');
+                            //file_put_contents(storage_path() . '/app/public/files/schedule-facebook.txt', Carbon::now().' - Updated');
                         }
                     }
 
@@ -227,19 +230,69 @@ class Kernel extends ConsoleKernel
                         $userTwitterInfo = ['profile_info' => $userInfo];
                         $userTwitterData = ['data' => $userData, 'since' => $firstTweetId];
             
-            
-                        $user->socialNetworks()->updateExistingPivot($twitterNetwork->id, $userTwitterInfo);
-            
+                        
+                        if(!empty($userInfo)) {
+                            $user->socialNetworks()->updateExistingPivot($twitterNetwork->id, $userTwitterInfo);
+                        }
                         if(!empty($userData)) {
                             $user->socialNetworkData()->save($twitterNetwork, $userTwitterData);
                         }
             
-                        file_put_contents(storage_path() . '/app/public/files/schedule-twitter.txt', Carbon::now().' - Updated');
+                        //file_put_contents(storage_path() . '/app/public/files/schedule-twitter.txt', Carbon::now().' - Updated');
                     }
 
 
 
 
+
+
+                    /*******************
+                     * Google network *
+                     *******************/
+                    $userNetwork = $user->socialNetworks()->where('social_network_id', $googleNetwork->id)->get();
+                    $userNetworkData = $user->socialNetworkData()->where('social_network_id', $googleNetwork->id)->get();
+             
+                    if($userNetwork->isNotEmpty()) {
+                        $networkApiUrl = env('GOOGLE_API_URL');
+                        $apiKey = env('GOOGLE_API_KEY');
+                        $networkUserId = $userNetwork->first()->pivot->network_user_id;
+                        $userNetwork = $user->socialNetworks()->where('social_network_id', $googleNetwork->id)->get();
+                        $userNetworkData = $user->socialNetworkData()->where('social_network_id', $googleNetwork->id)->get();
+        
+                        $params = array(
+                            'maxResults' => 100
+                        );
+                        
+                        $userInfo = '';
+                        $userData = '';
+
+                        $info = GoogleApi::getUserInfo($networkApiUrl.'people/'.$networkUserId, $apiKey);
+                        $activities = GoogleApi::getUserData($networkApiUrl.'people/'.$networkUserId.'/activities/public', $apiKey, $params);
+                        
+                        if(!empty($info)) {
+                            $userInfo = collect($info)->toJson();
+                        }
+                        if(!empty($activities)) {
+                            $userData .= collect($activities)->toJson();
+                        }
+        
+                        
+                        $userGoogleInfo = ['profile_info' => $userInfo];
+                        $userGoogleData = ['data' => $userData];
+
+                        if(!empty($userInfo)) {
+                            $user->socialNetworks()->updateExistingPivot($googleNetwork->id, $userGoogleInfo);
+                        }
+                        if(!empty($userData)) {
+                            if($userNetworkData->isNotEmpty()) {
+                                $user->socialNetworkData()->detach($googleNetwork->id);
+                            }
+
+                            $user->socialNetworkData()->save($googleNetwork, $userGoogleData);
+                        }
+                    }
+
+                    file_put_contents(storage_path() . '/app/public/files/schedule-google.txt', Carbon::now().' - Updated');
                 }
             }
         })->dailyAt('04:00');
