@@ -172,55 +172,55 @@ class ProfileController extends Controller
 
 
 
-        $googleNetwork = SocialNetwork::where("title", "ILIKE", "%Google%")->first();
+        // $googleNetwork = SocialNetwork::where("title", "ILIKE", "%Google%")->first();
 
-        $userNetwork = $user->socialNetworks()->where('social_network_id', $googleNetwork->id)->get();
-        $userNetworkData = $user->socialNetworkData()->where('social_network_id', $googleNetwork->id)->get();
+        // $userNetwork = $user->socialNetworks()->where('social_network_id', $googleNetwork->id)->get();
+        // $userNetworkData = $user->socialNetworkData()->where('social_network_id', $googleNetwork->id)->get();
  
-        if($userNetwork->isNotEmpty()) {
-            $networkApiUrl = env('GOOGLE_API_URL');
-            $apiKey = env('GOOGLE_API_KEY');
-            $networkUserId = $userNetwork->first()->pivot->network_user_id;
-            $userNetwork = $user->socialNetworks()->where('social_network_id', $googleNetwork->id)->get();
-            $userNetworkData = $user->socialNetworkData()->where('social_network_id', $googleNetwork->id)->get();
+        // if($userNetwork->isNotEmpty()) {
+        //     $networkApiUrl = env('GOOGLE_API_URL');
+        //     $apiKey = env('GOOGLE_API_KEY');
+        //     $networkUserId = $userNetwork->first()->pivot->network_user_id;
+        //     $userNetwork = $user->socialNetworks()->where('social_network_id', $googleNetwork->id)->get();
+        //     $userNetworkData = $user->socialNetworkData()->where('social_network_id', $googleNetwork->id)->get();
 
-            $params = array(
-                'maxResults' => 100
-            );
+        //     $params = array(
+        //         'maxResults' => 100
+        //     );
             
-            $userInfo = '';
-            $userData = '';
+        //     $userInfo = '';
+        //     $userData = '';
 
-            $info = GoogleApi::getUserInfo($networkApiUrl.'people/'.$networkUserId, $apiKey);
-            $activities = GoogleApi::getUserData($networkApiUrl.'people/'.$networkUserId.'/activities/public', $apiKey, $params);
+        //     $info = GoogleApi::getUserInfo($networkApiUrl.'people/'.$networkUserId, $apiKey);
+        //     $activities = GoogleApi::getUserData($networkApiUrl.'people/'.$networkUserId.'/activities/public', $apiKey, $params);
             
-            if(!empty($info)) {
-                $userInfo = collect($info)->toJson();
-            }
-            if(!empty($activities)) {
-                $userData .= collect($activities)->toJson();
-            }
+        //     if(!empty($info)) {
+        //         $userInfo = collect($info)->toJson();
+        //     }
+        //     if(!empty($activities)) {
+        //         $userData .= collect($activities)->toJson();
+        //     }
 
             
-            $userGoogleInfo = ['profile_info' => $userInfo];
-            $userGoogleData = ['data' => $userData];
+        //     $userGoogleInfo = ['profile_info' => $userInfo];
+        //     $userGoogleData = ['data' => $userData];
 
-            if(!empty($userInfo)) {
-                $user->socialNetworks()->updateExistingPivot($googleNetwork->id, $userGoogleInfo);
-            }
-            if(!empty($userData)) {
-                if($userNetworkData->isNotEmpty()) {
-                    $user->socialNetworkData()->detach($googleNetwork->id);
-                }
+        //     if(!empty($userInfo)) {
+        //         $user->socialNetworks()->updateExistingPivot($googleNetwork->id, $userGoogleInfo);
+        //     }
+        //     if(!empty($userData)) {
+        //         if($userNetworkData->isNotEmpty()) {
+        //             $user->socialNetworkData()->detach($googleNetwork->id);
+        //         }
 
-                $user->socialNetworkData()->save($googleNetwork, $userGoogleData);
-            }
-        }
+        //         $user->socialNetworkData()->save($googleNetwork, $userGoogleData);
+        //     }
+        // }
 
 
-        dump($userGoogleInfo);
-        dump($userGoogleData);
-        die();
+        // dump($userGoogleInfo);
+        // dump($userGoogleData);
+        // die();
 
 
         $sidebarOption1 = __('messages.sidebar_option_1');

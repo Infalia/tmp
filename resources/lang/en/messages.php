@@ -10,7 +10,7 @@
         'sidebar_option_1' => 'Post an Offer/Demand',
         'sidebar_option_2' => 'Dashboard',
         'sidebar_option_3' => 'View Offers/Demands',
-        'sidebar_option_4' => 'Personalised timeline',
+        'sidebar_option_4' => 'Personalized timeline',
         'sidebar_option_5' => 'Notifications',
         'sidebar_option_6' => 'Sign out',
         'sidebar_option_7' => 'Settings',

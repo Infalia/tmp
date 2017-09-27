@@ -191,16 +191,6 @@
                     }
                 });
             });
-
-
-            // Mobile navigation menu
-            var mobileMenu = document.getElementById('nav-menu');
-            var mobileMenuBtn = document.getElementById('mobile-menu-btn');
-
-            mobileMenuBtn.addEventListener('click', function(e){
-                mobileMenu.classList.toggle("nav-menu-open");
-                mobileMenuBtn.classList.toggle("menu-opened");
-            });
         </script>
 
         @yield('jslibs')

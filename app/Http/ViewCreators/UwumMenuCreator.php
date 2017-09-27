@@ -30,7 +30,7 @@ class UwumMenuCreator
         // }
         // else {
             $client = new Client();
-            $paramsQuery = '?client_id='.env('UWUM_CLIENT_ID').'&login_url='.url('login/uwum');
+            $paramsQuery = '?client_id='.env('UWUM_CLIENT_ID').'&login_url='.url('login/uwum').'&format=html';
 
             if(Auth::check() && $request->session()->exists('uwumAccessToken')) {
                 if(!$request->session()->get('uwumAccessToken')->hasExpired()) {
@@ -65,7 +65,7 @@ class UwumMenuCreator
             try {
                 $result = $client->request('GET', env('UWUM_NAV_URL').$paramsQuery);
 
-                $this->navigationMenu = (string) $result->getBody();
+                $this->navigationMenu = json_decode($result->getBody());
             } catch (RequestException $e) {
                 $this->getFallbackNavigationMenu();
             } catch (ClientException $e) {
@@ -92,6 +92,6 @@ class UwumMenuCreator
      */
     public function create(View $view)
     {
-        $view->with('uwumNavigation', json_decode($this->navigationMenu, true));
+        $view->with('uwumNavigation', $this->navigationMenu);
     }
 }
