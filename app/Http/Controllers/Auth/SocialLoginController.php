@@ -308,12 +308,10 @@ class SocialLoginController extends Controller
     {
         try {
             $socUser = Socialite::driver('linkedin')->user();
-            // $socUser->token;
         } catch (\Exception $e) {
             return redirect('profile/social-accounts');
         }
 
-        //$request->session()->put('user.social_data.linkedin', $socUser);
 
         if(!empty($socUser)) {
             $socUserData = json_encode($socUser);
@@ -322,7 +320,7 @@ class SocialLoginController extends Controller
             $socialNetwork = SocialNetwork::where("title", "ILIKE", "%LinkedIn%")->first();
 
             if(!empty($user) && !empty($socialNetwork)) {
-                $user->socialNetworks()->attach($socialNetwork->id, ['profile_info' => $socUserData, 'created_at' => date('Y-m-d H:i:s')]);
+                $user->socialNetworks()->attach($socialNetwork->id, ['profile_info' => $socUserData, 'token' => $socUser->token, 'token_expire' => Carbon::now()->addSeconds($socUser->expiresIn)->toDateTimeString(), 'network_user_id' => $socUser->id, 'created_at' => date('Y-m-d H:i:s')]);
             }
         }
 

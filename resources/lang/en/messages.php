@@ -181,7 +181,7 @@
         'initiative_form_heading_1' => 'Post a new offer',
         'initiative_form_heading_2' => 'Edit offer',
         'initiative_form_image_msg_1' => 'Image is bigger than '.(env('MAX_FILE_SIZE')/1024).'Mb',
-        'initiative_form_image_msg_2' => 'Error occured',
+        'initiative_form_image_msg_2' => 'Error occurred',
         'initiative_form_image_msg_3' => 'This file type is not allowed',
         'initiative_form_image_msg_4' => 'Maximum file number exceeded',
 
