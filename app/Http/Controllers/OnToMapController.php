@@ -25,7 +25,7 @@ class OnToMapController extends Controller
 
     function sendMappings()
     {
-        $mappings = file_get_contents(storage_path() . '/app/public/files/otm-mapping.json');
+        $mappings = file_get_contents(resource_path() . '/assets/files/otm-mapping.json');
         $mappingsArray = json_decode($mappings, true);
 
         $result = OnToMap::postMapping($mappingsArray);

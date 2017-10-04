@@ -136,7 +136,7 @@ class DatabaseSeeder extends Seeder
 
 
         // Languages file
-        $languagesFileContents = file_get_contents(storage_path() . '/app/public/files/languages.json');
+        $languagesFileContents = file_get_contents(resource_path() . '/assets/files/languages.json');
         $languages = json_decode($languagesFileContents, true);
 
         foreach($languages as $key=>$value) {
@@ -150,7 +150,7 @@ class DatabaseSeeder extends Seeder
 
 
         // Cities file
-        $citiesFileContents = file_get_contents(storage_path() . '/app/public/files/cities.json');
+        $citiesFileContents = file_get_contents(resource_path() . '/assets/files/cities.json');
         $cities = json_decode($citiesFileContents, true);
         
         // Cities
@@ -179,7 +179,7 @@ class DatabaseSeeder extends Seeder
 
 
         // Universities file
-        $universitiesFileContents = file_get_contents(storage_path() . '/app/public/files/universities.json');
+        $universitiesFileContents = file_get_contents(resource_path() . '/assets/files/universities.json');
         $universities = json_decode($universitiesFileContents, true);
         
         // Universities
@@ -204,7 +204,7 @@ class DatabaseSeeder extends Seeder
 
 
         // Interests file
-        $interestsFileContents = file_get_contents(storage_path() . '/app/public/files/interests.json');
+        $interestsFileContents = file_get_contents(resource_path() . '/assets/files/interests.json');
         $interests = json_decode($interestsFileContents, true);
         
         // Interests
@@ -228,7 +228,7 @@ class DatabaseSeeder extends Seeder
 
 
         // Positions file
-        $positionsFileContents = file_get_contents(storage_path() . '/app/public/files/positions.json');
+        $positionsFileContents = file_get_contents(resource_path() . '/assets/files/positions.json');
         $positions = json_decode($positionsFileContents, true);
         
         // Positions
@@ -252,7 +252,7 @@ class DatabaseSeeder extends Seeder
 
 
         // Studies file
-        $studiesFileContents = file_get_contents(storage_path() . '/app/public/files/studies.json');
+        $studiesFileContents = file_get_contents(resource_path() . '/assets/files/studies.json');
         $studies = json_decode($studiesFileContents, true);
         
         // Studies
@@ -276,7 +276,7 @@ class DatabaseSeeder extends Seeder
 
 
         // Skills file
-        $skillsFileContents = file_get_contents(storage_path() . '/app/public/files/skills.json');
+        $skillsFileContents = file_get_contents(resource_path() . '/assets/files/skills.json');
         $skills = json_decode($skillsFileContents, true);
         
         // Skills

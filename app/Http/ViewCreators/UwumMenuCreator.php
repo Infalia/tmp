@@ -25,53 +25,49 @@ class UwumMenuCreator
      */
     public function __construct(Request $request)
     {
-        // if($request->session()->exists('uwumNavMenu')) {
-        //     $this->navigationMenu = $request->session()->get('uwumNavMenu');
-        // }
-        // else {
-            $client = new Client();
-            $paramsQuery = '?client_id='.env('UWUM_CLIENT_ID').'&login_url='.url('login/uwum').'&format=html';
+        $client = new Client();
+        $paramsQuery = '?client_id='.env('UWUM_CLIENT_ID').'&login_url='.url('login/uwum').'&format=html';
 
-            if(Auth::check() && $request->session()->exists('uwumAccessToken')) {
-                if(!$request->session()->get('uwumAccessToken')->hasExpired()) {
-                    $uwumAccessToken = $request->session()->get('uwumAccessToken')->getToken();
-                }
-                else {
-                    $provider = new UwumOAuth2Provider([
-                        'clientId' => env('UWUM_CLIENT_ID'), // The client ID assigned to you by UWUM Certificate Authority (actually your CN)
-                        'clientSecret' => '', // We need no clientSecret since we are using certificates for client authentication
-                        'redirectUri' => env('UWUM_CALLBACK_URL'), // Currently should be the same as declared in UWUM Certificate Authority
-                        'urlAuthorize' => env('UWUM_AUTH_URL'), // UWUM API endpoints
-                        'urlAccessToken' => env('UWUM_TOKEN_URL'),
-                        'cert' => env('CERT_PATH'), // Path to your pem (outside web directory)
-                        'urlResourceOwnerDetails' => '' // N/A
-                    ]);
+        if(Auth::check() && $request->session()->exists('uwumAccessToken') && $request->session()->exists('uwumRefreshToken')) {
+            if(!$request->session()->get('uwumAccessToken')->hasExpired()) {
+                $uwumAccessToken = $request->session()->get('uwumAccessToken')->getToken();
+            }
+            else {
+                $provider = new UwumOAuth2Provider([
+                    'clientId' => env('UWUM_CLIENT_ID'), // The client ID assigned to you by UWUM Certificate Authority (actually your CN)
+                    'clientSecret' => '', // We need no clientSecret since we are using certificates for client authentication
+                    //'redirectUri' => env('UWUM_CALLBACK_URL'), // Currently should be the same as declared in UWUM Certificate Authority
+                    'urlAuthorize' => env('UWUM_AUTH_URL'), // UWUM API endpoints
+                    'urlAccessToken' => env('UWUM_TOKEN_URL'),
+                    'grantType' => 'refresh_token',
+                    'cert' => env('CERT_PATH'), // Path to your pem (outside web directory)
+                    'urlResourceOwnerDetails' => '' // N/A
+                ]);
 
 
-                    $newAccessToken = $provider->getAccessToken('refresh_token', [
-                        'refresh_token' => $request->session()->get('uwumAccessToken')->getRefreshToken()
-                    ]);
-                
-                    $request->session()->forget('uwumAccessToken');
-                    $request->session()->put('uwumAccessToken', $newAccessToken);
-                    $uwumAccessToken = $request->session()->get('uwumAccessToken')->getToken();
-                }
-
-
-                $paramsQuery .= '&access_token='.$uwumAccessToken;
+                $newAccessToken = $provider->getAccessToken('refresh_token', [
+                    'refresh_token' => $request->session()->get('uwumRefreshToken')
+                ]);
+            
+                $request->session()->forget('uwumAccessToken');
+                $request->session()->put('uwumAccessToken', $newAccessToken);
+                $uwumAccessToken = $newAccessToken->getToken();
             }
 
 
-            try {
-                $result = $client->request('GET', env('UWUM_NAV_URL').$paramsQuery);
+            $paramsQuery .= '&access_token='.$uwumAccessToken;
+        }
 
-                $this->navigationMenu = json_decode($result->getBody());
-            } catch (RequestException $e) {
-                $this->getFallbackNavigationMenu();
-            } catch (ClientException $e) {
-                $this->getFallbackNavigationMenu();
-            }
-        //}
+
+        try {
+            $result = $client->request('GET', env('UWUM_NAV_URL').$paramsQuery);
+
+            $this->navigationMenu = json_decode($result->getBody());
+        } catch (RequestException $e) {
+            echo Psr7\str($e->getResponse());
+        } catch (ClientException $e) {
+            echo Psr7\str($e->getResponse());
+        }
     }
 
     /**

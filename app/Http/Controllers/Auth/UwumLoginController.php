@@ -53,6 +53,7 @@ class UwumLoginController extends Controller
                 );
 
                 $requestHttp->session()->put('uwumAccessToken', $accessToken);
+                $requestHttp->session()->put('uwumRefreshToken', $accessToken->getRefreshToken());
 
 
                 // echo '<h1>--- RAW DATA received from UWUM ---</h1>';
