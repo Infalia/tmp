@@ -131,12 +131,22 @@ class User extends Authenticatable
     }
 
     /**
-     * The roles that belong to the user.
+     * The social networks that belong to the user.
      *
      * @return App\SocialNetwork|null
      */
     public function socialNetworks()
     {
-        return $this->belongsToMany('App\SocialNetwork');
+        return $this->belongsToMany('App\SocialNetwork')->withPivot('profile_info', 'token', 'token_expire', 'network_user_id', 'updated_at');
+    }
+
+    /**
+     * The social network data that belong to the user.
+     *
+     * @return App\SocialNetworkUserData|null
+     */
+    public function socialNetworkData()
+    {
+        return $this->belongsToMany('App\SocialNetwork', 'social_network_user_data', 'user_id', 'social_network_id')->withPivot('data', 'since', 'updated_at')->using('App\SocialNetworkUserData');
     }
 }

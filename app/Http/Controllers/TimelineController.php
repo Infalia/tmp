@@ -35,10 +35,35 @@ class TimelineController extends Controller
         $supportLbl = __('messages.timeline_supporter_lbl');
         $noRecordsMsg = __('messages.timeline_msg_1');
 
+
+
         $ontomap = new OnToMap();
         $userEvents = null;
         $params = array('actor' => Auth::id());
-        $userEvents = json_decode($ontomap->getEvents($params));
+        $userEvents = json_decode($ontomap->getEvents($params), true);
+
+
+        // if(!empty($userEvents)) {
+        //     $i = 0;
+            
+        //     foreach($userEvents['event_list'] as $event) {
+        //         $totalSupporters = 0;
+
+        //         if(isset($event['references'][0]['external_url'])) {
+        //             $params = array('reference_external_url' => $event['references'][0]['external_url']);
+        //             $supporters = json_decode($ontomap->getEvents($params), true);
+        //             $totalSupporters = count($supporters);
+        //         }
+                
+        //         $userEvents['event_list'][$i]['total_suporters'] = $totalSupporters;
+        //         $i++;
+        //     }
+        // }
+
+        
+        // echo '<pre>';
+        // print_r($userEvents);
+        // echo '</pre>';
 
 
         return view('timeline.index')

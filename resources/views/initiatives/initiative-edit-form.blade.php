@@ -57,7 +57,7 @@
                         </div>
 
                         <div class="col s12 xl6">
-                            <iframe class="init-form-map" title="input a location" src="{{ config('app.url') }}/inputmap/src/index.html?domain={{ config('app.url') }}&mode=lite"></iframe>
+                            <iframe class="init-form-map" title="input a location" src="{{ config('app.url') }}/plugins/inputmap/src/index.html?domain={{ config('app.url') }}&mode=lite"></iframe>
                             
                             <div class="helper">
                                 <h2 class="h6"><u>Area Info</u></h2>
@@ -80,6 +80,12 @@
                                     <li><b>Src:</b> <span id="src"></span></li>
                                     <li><b>Tileid:</b> <span id="tileid"></span></li>
                                     <li><b>Tile:</b> <span id="tile"></span></li> 
+                                </ul>
+
+                                <h4 class="h6"><u>Address</u></h4>
+                                <ul>
+                                    <li><b>Display Name:</b> <span id="display-name"></span></li>
+                                    <li><b>Address:</b> <span id="address"></span></li>
                                 </ul>
                             </div>
                         </div>
@@ -312,6 +318,8 @@
             document.getElementById("type").innerHTML = data.type;
             document.getElementById("tile").innerHTML = JSON.stringify(data.tile);
             document.getElementById("tileid").innerHTML = data.tileid;
+            document.getElementById("display-name").innerHTML = data.display_name ? data.display_name : 'undefined';
+            document.getElementById("address").innerHTML = data.address ? JSON.stringify(data.address) : 'undefined';
         }
 
 
@@ -337,7 +345,8 @@
             data['description'] = $('#description').val();
             data['latitude'] = $('#lat').text();
             data['longitude'] = $('#lon').text();
-            data['input_map_data'] = "{'areaId':'"+$('#id').text()+"','areaName':'"+$('#name').text()+"','osmId':'"+$('#osmid').text()+"','type':'"+$('#type').text()+"','zoom':'"+$('#zoom').text()+"','src':'"+$('#src').text()+"','tileId':'"+$('#tileid').text()+"','tile':'"+$('#tile').text()+"'}";
+            data['address'] = $('#display-name').text();
+            data['input_map_data'] = "{'areaId':'"+$('#id').text()+"','areaName':'"+$('#name').text()+"','osmId':'"+$('#osmid').text()+"','type':'"+$('#type').text()+"','zoom':'"+$('#zoom').text()+"','src':'"+$('#src').text()+"','tileId':'"+$('#tileid').text()+"','tile':'"+$('#tile').text()+"','address':'"+$('#address').text()+"'}";
             
 
             var url = "{{ url('offer/update/'.$initiative->id) }}";
@@ -388,13 +397,13 @@
                                 imgDropzone.options.autoProcessQueue = false;
 
                                 // If there are images, post to OTM after dropzone uploading is completed
-                                $.post("{{ url('offer/post-to-ontomap') }}", { 'initId': data.initId, 'images': imagesArray }, function(response){});
+                                $.post("{{ url('offer/update/ontomap/'.$initiative->id) }}", { }, function(response){});
                             });
 
 
                             // If there are no images, post to OTM directly
                             if(!hasFiles) {
-                                $.post("{{ url('offer/post-to-ontomap') }}", { 'initId': data.initId, 'images': imagesArray }, function(response){});
+                                $.post("{{ url('offer/update/ontomap/'.$initiative->id) }}", { }, function(response){});
                             }
 
                             $('#response').text(data.message).removeClass('hide');
@@ -430,14 +439,14 @@
                     }
 
                     var newItems = data.initImages;
-                    console.log(newItems);
 
                     for(i=0; i<newItems.length; i++) {
                         $('.owl-carousel').trigger('add.owl.carousel', ['<div class="item carousel-item"><img src="{{ env("APP_URL") }}/storage/initiatives/' + newItems[i]['name'] + '" alt=""> <button data-img-id="' + newItems[i]['id'] + '" class="waves-effect waves-light btn-floating remove-img" type="button"><i class="large material-icons">delete</i></button></div>']);
-                        console.log('Image: ' + newItems[i]['name']);
                     }
 
                     $('.owl-carousel').trigger('refresh.owl.carousel');
+
+                    $.post("{{ url('offer/update/ontomap/'.$initiative->id) }}", { }, function(response){});
                 },
                 error : function(XMLHttpRequest, textStatus, errorThrown) {}
             });

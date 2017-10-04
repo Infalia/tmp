@@ -38,7 +38,9 @@
                                 <span class="card-post-calendar">{{ \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $initiative->start_date)->format('l, j M Y H:i') }}</span>
                                 @endisset
 
-                                <span class="card-post-address">Not available</span>
+                                @isset($initiative->address)
+                                <span class="card-post-address">{{ $initiative->address }}</span>
+                                @endisset
                             </div>
 
 

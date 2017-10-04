@@ -26,9 +26,11 @@
                             @php
                                 $exists = false;
 
-                                foreach($userSocialNetworks as $userSocialNetwork) {
-                                    if($socialNetwork->id == $userSocialNetwork->id) {
-                                        $exists = true;
+                                if(!empty($userSocialNetworks)) {
+                                    foreach($userSocialNetworks as $userSocialNetwork) {
+                                        if($socialNetwork->id == $userSocialNetwork->id) {
+                                            $exists = true;
+                                        }
                                     }
                                 }
                             @endphp

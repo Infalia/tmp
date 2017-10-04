@@ -21,13 +21,15 @@ class CreateInitiativesTable extends Migration
             $table->text('description');
             $table->decimal('latitude', 20, 18);
             $table->decimal('longitude', 21, 18);
-            $table->string('input_map_data', 255);
+            $table->string('address', 255)->nullable();
+            $table->text('input_map_data');
             $table->dateTime('start_date');
             $table->dateTime('end_date');
             $table->foreign('initiative_type_id')->references('id')->on('initiative_types');
             $table->foreign('user_id')->references('id')->on('users');
             $table->timestamp('updated_at')->useCurrent();
             $table->timestamp('created_at')->nullable();
+            $table->timestamp('deleted_at')->nullable();
         });
     }
 
