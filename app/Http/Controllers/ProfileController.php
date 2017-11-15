@@ -9,6 +9,11 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use App\User;
 use App\UserDetail;
+use App\UserPosition;
+use App\UserStudy;
+use App\UserSkill;
+use App\UserInterest;
+use App\UserArea;
 use App\Gender;
 use App\Language;
 use App\SocialNetwork;
@@ -154,75 +159,6 @@ class ProfileController extends Controller
         $route = Route::current();
 
 
-
-
-        // $client = new Client();
-        
-        // try {
-        //     //$result = $client->request('GET', 'https://www.googleapis.com/plus/v1/people/111256566716480431457?key=AIzaSyDuDfE3Wf7QGcXY7y3gPYjl3GoHPb1XulY');  // 112260161713493298761
-        //     $result = $client->request('GET', 'https://www.googleapis.com/plus/v1/people/111256566716480431457/activities/public?key=AIzaSyDuDfE3Wf7QGcXY7y3gPYjl3GoHPb1XulY&maxResults=100'); // 111256566716480431457
-        //     $response = json_decode($result->getBody());
-        // } catch (RequestException $e) {
-        //     echo Psr7\str($e->getResponse());
-        // } catch (ClientException $e) {
-        //     echo Psr7\str($e->getResponse());
-        // }
-
-
-
-
-
-        // $googleNetwork = SocialNetwork::where("title", "ILIKE", "%Google%")->first();
-
-        // $userNetwork = $user->socialNetworks()->where('social_network_id', $googleNetwork->id)->get();
-        // $userNetworkData = $user->socialNetworkData()->where('social_network_id', $googleNetwork->id)->get();
- 
-        // if($userNetwork->isNotEmpty()) {
-        //     $networkApiUrl = env('GOOGLE_API_URL');
-        //     $apiKey = env('GOOGLE_API_KEY');
-        //     $networkUserId = $userNetwork->first()->pivot->network_user_id;
-        //     $userNetwork = $user->socialNetworks()->where('social_network_id', $googleNetwork->id)->get();
-        //     $userNetworkData = $user->socialNetworkData()->where('social_network_id', $googleNetwork->id)->get();
-
-        //     $params = array(
-        //         'maxResults' => 100
-        //     );
-            
-        //     $userInfo = '';
-        //     $userData = '';
-
-        //     $info = GoogleApi::getUserInfo($networkApiUrl.'people/'.$networkUserId, $apiKey);
-        //     $activities = GoogleApi::getUserData($networkApiUrl.'people/'.$networkUserId.'/activities/public', $apiKey, $params);
-            
-        //     if(!empty($info)) {
-        //         $userInfo = collect($info)->toJson();
-        //     }
-        //     if(!empty($activities)) {
-        //         $userData .= collect($activities)->toJson();
-        //     }
-
-            
-        //     $userGoogleInfo = ['profile_info' => $userInfo];
-        //     $userGoogleData = ['data' => $userData];
-
-        //     if(!empty($userInfo)) {
-        //         $user->socialNetworks()->updateExistingPivot($googleNetwork->id, $userGoogleInfo);
-        //     }
-        //     if(!empty($userData)) {
-        //         if($userNetworkData->isNotEmpty()) {
-        //             $user->socialNetworkData()->detach($googleNetwork->id);
-        //         }
-
-        //         $user->socialNetworkData()->save($googleNetwork, $userGoogleData);
-        //     }
-        // }
-
-
-        // dump($userGoogleInfo);
-        // dump($userGoogleData);
-        // die();
-
-
         $sidebarOption1 = __('messages.sidebar_option_1');
         $sidebarOption2 = __('messages.sidebar_option_2');
         $sidebarOption3 = __('messages.sidebar_option_3');
@@ -250,18 +186,26 @@ class ProfileController extends Controller
         $profileLbl2 = __('messages.profile_work_lbl_2');
         $profileLbl3 = __('messages.profile_work_lbl_3');
         $profileText1 = __('messages.profile_work_text_1');
+        $profileText2 = __('messages.profile_work_text_2');
         $profileAddBtn1 = __('messages.profile_work_add_btn_1');
         $profileAddBtn2 = __('messages.profile_work_add_btn_2');
         $profileAddBtn3 = __('messages.profile_work_add_btn_3');
+        $profileEditBtn = __('messages.form_edit_btn');
+        $profileRemoveBtn = __('messages.form_remove_btn');
+        $profileMsg1 = __('messages.profile_work_msg_1');
+        $profileMsg2 = __('messages.profile_work_msg_2');
+        $profileMsg3 = __('messages.profile_work_msg_3');
+        $deleteConfirmMsg = __('messages.form_confirm_msg_1');
         $profileFormCompanyLbl = __('messages.profile_form_company_lbl');
         $profileFormInstituteLbl = __('messages.profile_form_institute_lbl');
         $profileFormCityLbl = __('messages.profile_form_city_lbl');
         $profileFormRoleLbl = __('messages.profile_form_role_lbl');
+        $profileFormCurrentLbl = __('messages.profile_form_is_current_lbl');
         $profileFormFromLbl = __('messages.profile_form_from_lbl');
         $profileFormToLbl = __('messages.profile_form_to_lbl');
         $profileFormStudiesLbl = __('messages.profile_form_studies_lbl');
         $profileFormSkillLbl = __('messages.profile_form_skill_lbl');
-
+        
         $saveBtn = __('messages.form_save_btn');
         $cancelBtn = __('messages.form_cancel_btn');
 
@@ -290,13 +234,21 @@ class ProfileController extends Controller
             ->with('profileLbl2', $profileLbl2)
             ->with('profileLbl3', $profileLbl3)
             ->with('profileText1', $profileText1)
+            ->with('profileText2', $profileText2)
             ->with('profileAddBtn1', $profileAddBtn1)
             ->with('profileAddBtn2', $profileAddBtn2)
             ->with('profileAddBtn3', $profileAddBtn3)
+            ->with('profileEditBtn', $profileEditBtn)
+            ->with('profileRemoveBtn', $profileRemoveBtn)
+            ->with('profileMsg1', $profileMsg1)
+            ->with('profileMsg2', $profileMsg2)
+            ->with('profileMsg3', $profileMsg3)
+            ->with('deleteConfirmMsg', $deleteConfirmMsg)
             ->with('profileFormCompanyLbl', $profileFormCompanyLbl)
             ->with('profileFormInstituteLbl', $profileFormInstituteLbl)
             ->with('profileFormCityLbl', $profileFormCityLbl)
             ->with('profileFormRoleLbl', $profileFormRoleLbl)
+            ->with('profileFormCurrentLbl', $profileFormCurrentLbl)
             ->with('profileFormFromLbl', $profileFormFromLbl)
             ->with('profileFormToLbl', $profileFormToLbl)
             ->with('profileFormStudiesLbl', $profileFormStudiesLbl)
@@ -337,6 +289,11 @@ class ProfileController extends Controller
 
         $profileAddBtn1 = __('messages.profile_interests_add_btn_1');
         $profileAddBtn2 = __('messages.profile_interests_add_btn_2');
+        $profileEditBtn = __('messages.form_edit_btn');
+        $profileRemoveBtn = __('messages.form_remove_btn');
+        $profileMsg1 = __('messages.profile_interests_msg_1');
+        $profileMsg2 = __('messages.profile_interests_msg_2');
+        $deleteConfirmMsg = __('messages.form_confirm_msg_1');
         $profileFormInterestLbl = __('messages.profile_form_interest_lbl');
         $profileFormAreaLbl = __('messages.profile_form_area_lbl');
 
@@ -365,6 +322,11 @@ class ProfileController extends Controller
             ->with('profileHeading2', $profileHeading2)
             ->with('profileAddBtn1', $profileAddBtn1)
             ->with('profileAddBtn2', $profileAddBtn2)
+            ->with('profileEditBtn', $profileEditBtn)
+            ->with('profileRemoveBtn', $profileRemoveBtn)
+            ->with('profileMsg1', $profileMsg1)
+            ->with('profileMsg2', $profileMsg2)
+            ->with('deleteConfirmMsg', $deleteConfirmMsg)
             ->with('profileFormInterestLbl', $profileFormInterestLbl)
             ->with('profileFormAreaLbl', $profileFormAreaLbl)
             ->with('user', $user)
@@ -486,7 +448,7 @@ class ProfileController extends Controller
     }
 
     function storeBasicInfo(Request $request)
-    {   
+    {
         $user = User::find(Auth::id());
         $userDetails = $user->userDetails;
         $userLanguages = $user->languages;
@@ -557,12 +519,6 @@ class ProfileController extends Controller
 
 
             // User details creation
-            $createdAt = date('Y-m-d H:i:s');
-
-            // if(!empty($userDetails) && !empty($userDetails->created_at)) {
-            //     $createdAt = $userDetails->created_at;
-            // }
-
             if(!empty($userDetails)) {
                 $userDetails->user_id = Auth::id();
                 $userDetails->gender_id = $gender;
@@ -570,7 +526,6 @@ class ProfileController extends Controller
                 $userDetails->birthday = $birthday;
                 $userDetails->description = $bio;
                 $userDetails->image = $userImage;
-                //$userDetails->created_at = $createdAt;
     
                 $user->userDetails->save();
             }
@@ -607,7 +562,627 @@ class ProfileController extends Controller
 
         return response()->json([
             'showRemoveImgBtn' => $showRemoveImgBtn,
-            'message' => __('messages.initiative_form_success.stored')
+            'message' => __('messages.profile_form_success.stored')
+        ]);
+    }
+
+    function getUserPosition(Request $request)
+    {
+        $userPositionId = $request->input('position_id');
+        $userPosition = UserPosition::find($userPositionId);
+
+        if(!empty($userPosition)) {
+            $sDate = Carbon::createFromFormat('Y-m-d H:i:s', $userPosition->start_date);
+            $startDate = $sDate->year.', '.$sDate->month;
+
+            $endDate = '';
+
+            if(0 == $userPosition->is_current) {
+                $eDate = Carbon::createFromFormat('Y-m-d H:i:s', $userPosition->end_date);
+                $endDate = $eDate->year.', '.$eDate->month;
+            }
+        }
+
+
+        return response()->json([
+            'userPosition' => $userPosition,
+            'startDate' => $startDate,
+            'endDate' => $endDate
+        ]);
+    }
+
+    function storeUserPosition(Request $request)
+    {   
+        $user = User::find(Auth::id());
+
+        $rules = array();
+        $id = null;
+        $action = $request->input('action');
+        $company = $request->input('position_company');
+        $location = $request->input('position_location');
+        $role = $request->input('position_role');
+        $isCurrent = $request->input('is_current');
+        $startDate = $request->input('start_date');
+        $endDate = $request->input('end_date');
+
+        if('update' == $action) {
+            $id = $request->input('id');
+        }
+
+
+        $messages = [
+            'required' => __('messages.form_error.required')
+        ];
+
+
+        $startDateRule = 'required|date_format:m-Y|before:end_date';
+
+        if(1 == $isCurrent) {
+            $endDate = null;
+            $startDateRule = 'required|date_format:m-Y';
+        }
+        
+        $rules['id'] = 'required_if:action,update';
+        $rules['action'] = 'required|in:insert,update';
+        $rules['position_company'] = 'required|max:150';
+        $rules['position_location'] = 'required|max:150';
+        $rules['position_role'] = 'required|max:150';
+        $rules['start_date'] = $startDateRule;
+        $rules['end_date'] = 'required_if:is_current,0|date_format:m-Y|after:start_date';
+        $rules['is_current'] = 'required|int';
+        
+
+        $validator = Validator::make($request->all(), $rules);
+
+        if($validator->fails()) {
+            return response()->json([
+                'errors' => $validator->messages()
+            ]);
+        }
+        else {
+            if(!empty($endDate)) {
+                $endDate = Carbon::createFromFormat('d-m-Y', '01-'.$endDate)->format('Y-m-d');
+            }
+
+
+            if(!empty($action) && !empty($id)) {
+                $userPosition = UserPosition::find($id);
+
+                if(!empty($userPosition)) {
+                    $userPosition->company_name = $company;
+                    $userPosition->city_name = $location;
+                    $userPosition->position_name = $role;
+                    $userPosition->start_date = Carbon::createFromFormat('d-m-Y', '01-'.$startDate)->format('Y-m-d');
+                    $userPosition->end_date = $endDate;
+                    $userPosition->is_current = $isCurrent;
+                }
+            }
+            else {
+                $userPosition = new UserPosition(
+                    ['user_id' => Auth::id(),
+                     'company_name' => $company,
+                     'position_name' => $role,
+                     'city_name' => $location,
+                     'start_date' => Carbon::createFromFormat('d-m-Y', '01-'.$startDate)->format('Y-m-d'),
+                     'end_date' => $endDate,
+                     'is_current' => $isCurrent,
+                     'created_at' => date('Y-m-d H:i:s')
+                    ]);
+            }
+            
+
+            $user->positions()->save($userPosition);
+        }
+
+
+        return response()->json([
+            'message' => __('messages.profile_form_success.stored')
+        ]);
+    }
+
+    function deleteUserPosition(Request $request)
+    {   
+        $user = User::find(Auth::id());
+        
+        $rules = array();
+        $userPositionId = $request->input('position_id');
+
+
+        $messages = [
+            'required' => __('messages.form_error.required')
+        ];
+
+
+        $rules['position_id'] = 'required|int';
+        
+
+        $validator = Validator::make($request->all(), $rules);
+
+        if($validator->fails()) {
+            return response()->json([
+                'errors' => $validator->messages()
+            ]);
+        }
+        else {
+            $position = UserPosition::find($userPositionId);
+
+            if(!empty($position)) {
+                $position->delete();
+            }
+        }
+
+
+        return response()->json([
+            'message' => __('messages.profile_form_success.stored')
+        ]);
+    }
+
+    function getUserStudies(Request $request)
+    {
+        $userStudiesId = $request->input('studies_id');
+        $userStudies = UserStudy::find($userStudiesId);
+
+        return response()->json([
+            'userStudies' => $userStudies,
+        ]);
+    }
+
+    function storeUserStudies(Request $request)
+    {   
+        $user = User::find(Auth::id());
+
+        $rules = array();
+        $id = null;
+        $action = $request->input('action');
+        $institute = $request->input('institute_name');
+        $location = $request->input('institute_location');
+        $studies = $request->input('institute_studies');
+
+        if('update' == $action) {
+            $id = $request->input('id');
+        }
+
+
+        $messages = [
+            'required' => __('messages.form_error.required')
+        ];
+
+        
+        $rules['id'] = 'required_if:action,update';
+        $rules['action'] = 'required|in:insert,update';
+        $rules['institute_name'] = 'required|max:150';
+        $rules['institute_location'] = 'required|max:150';
+        $rules['institute_studies'] = 'required|max:150';
+        
+
+        $validator = Validator::make($request->all(), $rules);
+
+        if($validator->fails()) {
+            return response()->json([
+                'errors' => $validator->messages()
+            ]);
+        }
+        else {
+            if(!empty($action) && !empty($id)) {
+                $userStudies = UserStudy::find($id);
+
+                if(!empty($userStudies)) {
+                    $userStudies->institute_name = $institute;
+                    $userStudies->city_name = $location;
+                    $userStudies->studies_name = $studies;
+                }
+            }
+            else {
+                $userStudies = new UserStudy(
+                    ['user_id' => Auth::id(),
+                     'institute_name' => $institute,
+                     'studies_name' => $studies,
+                     'city_name' => $location,
+                     'created_at' => date('Y-m-d H:i:s')
+                    ]);
+            }
+            
+
+            $user->studies()->save($userStudies);
+        }
+
+
+        return response()->json([
+            'message' => __('messages.profile_form_success.stored')
+        ]);
+    }
+
+    function deleteUserStudies(Request $request)
+    {   
+        $user = User::find(Auth::id());
+        
+        $rules = array();
+        $userStudiesId = $request->input('studies_id');
+
+
+        $messages = [
+            'required' => __('messages.form_error.required')
+        ];
+
+
+        $rules['studies_id'] = 'required|int';
+        
+
+        $validator = Validator::make($request->all(), $rules);
+
+        if($validator->fails()) {
+            return response()->json([
+                'errors' => $validator->messages()
+            ]);
+        }
+        else {
+            $studies = UserStudy::find($userStudiesId);
+
+            if(!empty($studies)) {
+                $studies->delete();
+            }
+        }
+
+
+        return response()->json([
+            'message' => __('messages.profile_form_success.stored')
+        ]);
+    }
+
+    function getUserSkill(Request $request)
+    {
+        $userSkillId = $request->input('skill_id');
+        $userSkill = UserSkill::find($userSkillId);
+
+        return response()->json([
+            'userSkill' => $userSkill,
+        ]);
+    }
+
+    function storeUserSkill(Request $request)
+    {   
+        $user = User::find(Auth::id());
+
+        $rules = array();
+        $id = null;
+        $action = $request->input('action');
+        $skill = $request->input('skill_name');
+
+        if('update' == $action) {
+            $id = $request->input('id');
+        }
+
+
+        $messages = [
+            'required' => __('messages.form_error.required')
+        ];
+
+        
+        $rules['id'] = 'required_if:action,update';
+        $rules['action'] = 'required|in:insert,update';
+        $rules['skill_name'] = 'required|max:100';
+        
+
+        $validator = Validator::make($request->all(), $rules);
+
+        if($validator->fails()) {
+            return response()->json([
+                'errors' => $validator->messages()
+            ]);
+        }
+        else {
+            if(!empty($action) && !empty($id)) {
+                $userSkill = UserSkill::find($id);
+
+                if(!empty($userSkill)) {
+                    $userSkill->skill_name = $skill;
+                }
+            }
+            else {
+                $userSkill = new UserSkill(
+                    ['user_id' => Auth::id(),
+                     'skill_name' => $skill,
+                     'created_at' => date('Y-m-d H:i:s')
+                    ]);
+            }
+            
+
+            $user->skills()->save($userSkill);
+        }
+
+
+        return response()->json([
+            'message' => __('messages.profile_form_success.stored')
+        ]);
+    }
+
+    function deleteUserSkill(Request $request)
+    {   
+        $user = User::find(Auth::id());
+        
+        $rules = array();
+        $userSkillId = $request->input('skill_id');
+
+
+        $messages = [
+            'required' => __('messages.form_error.required')
+        ];
+
+
+        $rules['skill_id'] = 'required|int';
+        
+
+        $validator = Validator::make($request->all(), $rules);
+
+        if($validator->fails()) {
+            return response()->json([
+                'errors' => $validator->messages()
+            ]);
+        }
+        else {
+            $skill = UserSkill::find($userSkillId);
+
+            if(!empty($skill)) {
+                $skill->delete();
+            }
+        }
+
+
+        return response()->json([
+            'message' => __('messages.profile_form_success.stored')
+        ]);
+    }
+
+    function getUserInterest(Request $request)
+    {
+        $userInterestId = $request->input('interest_id');
+        $userInterest = UserInterest::find($userInterestId);
+
+        return response()->json([
+            'userInterest' => $userInterest,
+        ]);
+    }
+
+    function storeUserInterest(Request $request)
+    {   
+        $user = User::find(Auth::id());
+
+        $rules = array();
+        $id = null;
+        $action = $request->input('action');
+        $interest = $request->input('interest_name');
+
+        if('update' == $action) {
+            $id = $request->input('id');
+        }
+
+
+        $messages = [
+            'required' => __('messages.form_error.required')
+        ];
+
+        
+        $rules['id'] = 'required_if:action,update';
+        $rules['action'] = 'required|in:insert,update';
+        $rules['interest_name'] = 'required|max:100';
+        
+
+        $validator = Validator::make($request->all(), $rules);
+
+        if($validator->fails()) {
+            return response()->json([
+                'errors' => $validator->messages()
+            ]);
+        }
+        else {
+            if(!empty($action) && !empty($id)) {
+                $userInterest = UserInterest::find($id);
+
+                if(!empty($userInterest)) {
+                    $userInterest->interest_name = $interest;
+                }
+            }
+            else {
+                $userInterest = new UserInterest(
+                    ['user_id' => Auth::id(),
+                     'interest_name' => $interest,
+                     'created_at' => date('Y-m-d H:i:s')
+                    ]);
+            }
+            
+
+            $user->interests()->save($userInterest);
+        }
+
+
+        return response()->json([
+            'message' => __('messages.profile_form_success.stored')
+        ]);
+    }
+
+    function deleteUserInterest(Request $request)
+    {   
+        $user = User::find(Auth::id());
+        
+        $rules = array();
+        $userInterestId = $request->input('interest_id');
+
+
+        $messages = [
+            'required' => __('messages.form_error.required')
+        ];
+
+
+        $rules['interest_id'] = 'required|int';
+        
+
+        $validator = Validator::make($request->all(), $rules);
+
+        if($validator->fails()) {
+            return response()->json([
+                'errors' => $validator->messages()
+            ]);
+        }
+        else {
+            $interest = UserInterest::find($userInterestId);
+
+            if(!empty($interest)) {
+                $interest->delete();
+            }
+        }
+
+
+        return response()->json([
+            'message' => __('messages.profile_form_success.stored')
+        ]);
+    }
+
+    function getUserArea(Request $request)
+    {
+        $userAreaId = $request->input('area_id');
+        $userArea = UserArea::find($userAreaId);
+
+        return response()->json([
+            'userArea' => $userArea,
+        ]);
+    }
+
+    function storeUserArea(Request $request)
+    {   
+        $user = User::find(Auth::id());
+
+        $rules = array();
+        $id = null;
+        $action = $request->input('action');
+        $address = $request->input('address');
+        $fullAddress = $request->input('full_address');
+        $latitude = $request->input('latitude');
+        $longitude = $request->input('longitude');
+
+        if('update' == $action) {
+            $id = $request->input('id');
+        }
+
+
+        $messages = [
+            'required' => __('messages.form_error.required')
+        ];
+
+        
+        $rules['id'] = 'required_if:action,update';
+        $rules['action'] = 'required|in:insert,update';
+        $rules['address'] = 'required|max:255';
+        $rules['full_address'] = 'required';
+        $rules['latitude'] = 'required|numeric';
+        $rules['longitude'] = 'required|numeric';
+        
+
+        $validator = Validator::make($request->all(), $rules);
+
+        if($validator->fails()) {
+            return response()->json([
+                'errors' => $validator->messages()
+            ]);
+        }
+        else {
+            $fullAddressArray = json_decode($fullAddress, true);
+            $neighbourhood = '';
+            $suburb = '';
+            $county = '';
+            $city = '';
+            $state = '';
+            $country = '';
+            $postcode = '';
+
+            if(is_array($fullAddressArray)) {
+                $neighbourhood = isset($fullAddressArray['neighbourhood']) ? $fullAddressArray['neighbourhood'] : '';
+                $suburb = isset($fullAddressArray['suburb']) ? $fullAddressArray['suburb'] : '';
+                $county = isset($fullAddressArray['county']) ? $fullAddressArray['county'] : '';
+                $city = isset($fullAddressArray['city']) ? $fullAddressArray['city'] : '';
+                $state = isset($fullAddressArray['state']) ? $fullAddressArray['state'] : '';
+                $country = isset($fullAddressArray['country']) ? $fullAddressArray['country'] : '';
+                $postcode = isset($fullAddressArray['postcode']) ? $fullAddressArray['postcode'] : '';
+            }
+
+
+
+            if(!empty($action) && !empty($id)) {
+                $userArea = UserArea::find($id);
+
+                if(!empty($userArea)) {
+                    $userArea->address = $address;
+                    $userArea->neighbourhood = $neighbourhood;
+                    $userArea->suburb = $suburb;
+                    $userArea->county = $county;
+                    $userArea->city = $city;
+                    $userArea->state = $state;
+                    $userArea->country = $country;
+                    $userArea->postcode = $postcode;
+                    $userArea->latitude = $latitude;
+                    $userArea->longitude = $longitude;
+                }
+            }
+            else {
+                $userArea = new UserArea(
+                    ['user_id' => Auth::id(),
+                     'address' => $address,
+                     'neighbourhood' => $neighbourhood,
+                     'suburb' => $suburb,
+                     'county' => $county,
+                     'city' => $city,
+                     'state' => $state,
+                     'country' => $country,
+                     'postcode' => $postcode,
+                     'latitude' => $latitude,
+                     'longitude' => $longitude,
+                     'created_at' => date('Y-m-d H:i:s')
+                    ]);
+            }
+            
+
+            $user->areas()->save($userArea);
+        }
+
+
+        return response()->json([
+            'message' => __('messages.profile_form_success.stored')
+        ]);
+    }
+
+    function deleteUserArea(Request $request)
+    {   
+        $user = User::find(Auth::id());
+        
+        $rules = array();
+        $userAreaId = $request->input('area_id');
+
+
+        $messages = [
+            'required' => __('messages.form_error.required')
+        ];
+
+
+        $rules['area_id'] = 'required|int';
+        
+
+        $validator = Validator::make($request->all(), $rules);
+
+        if($validator->fails()) {
+            return response()->json([
+                'errors' => $validator->messages()
+            ]);
+        }
+        else {
+            $area = UserArea::find($userAreaId);
+
+            if(!empty($area)) {
+                $area->delete();
+            }
+        }
+
+
+        return response()->json([
+            'message' => __('messages.profile_form_success.stored')
         ]);
     }
 

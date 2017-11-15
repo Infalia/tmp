@@ -93,6 +93,7 @@ class InitiativeController extends Controller
             $commentViewRepliesBtn = __('messages.form_comments_view_replies_btn');
             $commentHideRepliesBtn = __('messages.form_comments_hide_replies_btn');
             $noCommentsMsg = __('messages.form_no_comments_msg');
+            $deleteConfirmMsg = __('messages.form_confirm_msg_1');
             $commentAddBtn = __('messages.form_comments_post_btn');
             $editBtn = __('messages.form_edit_btn');
             $deleteBtn = __('messages.form_delete_btn');
@@ -118,6 +119,7 @@ class InitiativeController extends Controller
                 ->with('commentViewRepliesBtn', $commentViewRepliesBtn)
                 ->with('commentHideRepliesBtn', $commentHideRepliesBtn)
                 ->with('noCommentsMsg', $noCommentsMsg)
+                ->with('deleteConfirmMsg', $deleteConfirmMsg)
                 ->with('commentAddBtn', $commentAddBtn)
                 ->with('editBtn', $editBtn)
                 ->with('deleteBtn', $deleteBtn)
@@ -355,8 +357,8 @@ class InitiativeController extends Controller
         }
         else {
             // Date formatting
-            $startDate = Carbon::createFromFormat('d-m-Y H:i:s', $startDate.':00')->format('Y-m-d H:i:s');
-            $endDate = Carbon::createFromFormat('d-m-Y H:i:s', $endDate.':00')->format('Y-m-d H:i:s');
+            // $startDate = Carbon::createFromFormat('d-m-Y H:i:s', $startDate.':00')->format('Y-m-d H:i:s');
+            // $endDate = Carbon::createFromFormat('d-m-Y H:i:s', $endDate.':00')->format('Y-m-d H:i:s');
 
 
             $initiative = new Initiative(
@@ -367,8 +369,8 @@ class InitiativeController extends Controller
                  'longitude' => $longitude,
                  'address' => $address,
                  'input_map_data' => $inputMapData,
-                 'start_date' => $startDate,
-                 'end_date' => $endDate,
+                 'start_date' => Carbon::createFromFormat('d-m-Y H:i:s', $startDate.':00')->format('Y-m-d H:i:s'),
+                 'end_date' => Carbon::createFromFormat('d-m-Y H:i:s', $endDate.':00')->format('Y-m-d H:i:s'),
                  'created_at' => date('Y-m-d H:i:s')
                 ]);
 
@@ -429,8 +431,8 @@ class InitiativeController extends Controller
         }
         else {
             // Date formatting
-            $startDate = Carbon::createFromFormat('d-m-Y H:i:s', $startDate.':00')->format('Y-m-d H:i:s');
-            $endDate = Carbon::createFromFormat('d-m-Y H:i:s', $endDate.':00')->format('Y-m-d H:i:s');
+            // $startDate = Carbon::createFromFormat('d-m-Y H:i:s', $startDate.':00')->format('Y-m-d H:i:s');
+            // $endDate = Carbon::createFromFormat('d-m-Y H:i:s', $endDate.':00')->format('Y-m-d H:i:s');
 
             $initiative = Initiative::find($initiativeId);
             $initiative->initiative_type_id = $initiativeType;
@@ -440,8 +442,8 @@ class InitiativeController extends Controller
             if(!empty($longitude)) $initiative->longitude = $longitude;
             if(!empty($address)) $initiative->address = $address;
             if(!empty($inputMapData)) $initiative->input_map_data = $inputMapData;
-            $initiative->start_date = $startDate;
-            $initiative->end_date = $endDate;
+            $initiative->start_date = Carbon::createFromFormat('d-m-Y H:i:s', $startDate.':00')->format('Y-m-d H:i:s');
+            $initiative->end_date = Carbon::createFromFormat('d-m-Y H:i:s', $endDate.':00')->format('Y-m-d H:i:s');
 
 
             $isUpdated = $initiative->save();

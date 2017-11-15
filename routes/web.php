@@ -27,6 +27,86 @@ Route::get('profile/social-accounts', 'ProfileController@socialAccounts')->middl
 Route::get('profile/reset', 'ProfileController@resetData')->middleware('uwumAuth');
 Route::post('profile/basic-info/save', 'ProfileController@storeBasicInfo')->middleware('uwumAuth');
 Route::post('profile/basic-info/image/remove', 'ProfileController@imageRemove')->middleware('uwumAuth');
+Route::post('profile/position', 'ProfileController@getUserPosition')->middleware('uwumAuth');
+Route::post('profile/position/save', 'ProfileController@storeUserPosition')->middleware('uwumAuth');
+Route::post('profile/position/delete', 'ProfileController@deleteUserPosition')->middleware('uwumAuth');
+Route::post('profile/studies', 'ProfileController@getUserStudies')->middleware('uwumAuth');
+Route::post('profile/studies/save', 'ProfileController@storeUserStudies')->middleware('uwumAuth');
+Route::post('profile/studies/delete', 'ProfileController@deleteUserStudies')->middleware('uwumAuth');
+Route::post('profile/skill', 'ProfileController@getUserSkill')->middleware('uwumAuth');
+Route::post('profile/skill/save', 'ProfileController@storeUserSkill')->middleware('uwumAuth');
+Route::post('profile/skill/delete', 'ProfileController@deleteUserSkill')->middleware('uwumAuth');
+Route::post('profile/interest', 'ProfileController@getUserInterest')->middleware('uwumAuth');
+Route::post('profile/interest/save', 'ProfileController@storeUserInterest')->middleware('uwumAuth');
+Route::post('profile/interest/delete', 'ProfileController@deleteUserInterest')->middleware('uwumAuth');
+Route::post('profile/area', 'ProfileController@getUserArea')->middleware('uwumAuth');
+Route::post('profile/area/save', 'ProfileController@storeUserArea')->middleware('uwumAuth');
+Route::post('profile/area/delete', 'ProfileController@deleteUserArea')->middleware('uwumAuth');
+
+Route::get('profile/work/positions', function () {
+    return view('partials.user-positions', [
+        'profileHeading1' => __('messages.profile_work_heading_1'),
+        'profileLbl1' => __('messages.profile_work_lbl_1'),
+        'profileLbl2' => __('messages.profile_work_lbl_2'),
+        'profileText1' => __('messages.profile_work_text_1'),
+        'profileText2' => __('messages.profile_work_text_2'),
+        'profileAddBtn1' => __('messages.profile_work_add_btn_1'),
+        'profileEditBtn' => __('messages.form_edit_btn'),
+        'profileRemoveBtn' => __('messages.form_remove_btn'),
+        'profileMsg2' => __('messages.profile_work_msg_2'),
+        'user' => App\User::find(Auth::id())
+    ]);
+});
+
+Route::get('profile/work/studies', function () {
+    return view('partials.user-studies', [
+        'profileHeading2' => __('messages.profile_work_heading_2'),
+        'profileLbl1' => __('messages.profile_work_lbl_1'),
+        'profileLbl3' => __('messages.profile_work_lbl_3'),
+        'profileAddBtn2' => __('messages.profile_work_add_btn_2'),
+        'profileEditBtn' => __('messages.form_edit_btn'),
+        'profileRemoveBtn' => __('messages.form_remove_btn'),
+        'profileMsg2' => __('messages.profile_work_msg_2'),
+        'user' => App\User::find(Auth::id())
+    ]);
+});
+
+Route::get('profile/work/skill', function () {
+    return view('partials.user-skills', [
+        'profileHeading3' => __('messages.profile_work_heading_3'),
+        'profileFormSkillLbl' => __('messages.profile_form_skill_lbl'),
+        'profileAddBtn3' => __('messages.profile_work_add_btn_3'),
+        'profileEditBtn' => __('messages.form_edit_btn'),
+        'profileRemoveBtn' => __('messages.form_remove_btn'),
+        'profileMsg2' => __('messages.profile_work_msg_2'),
+        'user' => App\User::find(Auth::id())
+    ]);
+});
+
+Route::get('profile/interests/interest', function () {
+    return view('partials.user-interests', [
+        'profileHeading1' => __('messages.profile_interests_heading_1'),
+        'profileFormInterestLbl' => __('messages.profile_form_interest_lbl'),
+        'profileAddBtn1' => __('messages.profile_interests_add_btn_1'),
+        'profileEditBtn' => __('messages.form_edit_btn'),
+        'profileRemoveBtn' => __('messages.form_remove_btn'),
+        'profileMsg1' => __('messages.profile_interests_msg_1'),
+        'user' => App\User::find(Auth::id())
+    ]);
+});
+
+Route::get('profile/interests/area', function () {
+    return view('partials.user-areas', [
+        'profileHeading2' => __('messages.profile_interests_heading_2'),
+        'profileFormAreaLbl' => __('messages.profile_form_area_lbl'),
+        'profileAddBtn2' => __('messages.profile_interests_add_btn_2'),
+        'profileEditBtn' => __('messages.form_edit_btn'),
+        'profileRemoveBtn' => __('messages.form_remove_btn'),
+        'profileMsg2' => __('messages.profile_interests_msg_2'),
+        'user' => App\User::find(Auth::id())
+    ]);
+});
+
 
 /*** Timeline ***/
 Route::get('timeline', 'TimelineController@index')->middleware('uwumAuth');
