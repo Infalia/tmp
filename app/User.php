@@ -71,6 +71,16 @@ class User extends Authenticatable
     }
 
     /**
+     * The areas of interest that belong to the user.
+     *
+     * @return App\UserArea|null
+     */
+    public function areas()
+    {
+        return $this->hasMany('App\UserArea');
+    }
+
+    /**
      * The positions that belong to the user.
      *
      * @return App\UserPosition|null

@@ -53,11 +53,13 @@
         'form_cancel_btn' => 'Cancel',
         'form_remove_btn' => 'Remove',
         'form_delete_btn' => 'Delete',
+        'form_confirm_msg_1' => 'Are you sure?',
 
         'profile_form_company_lbl' => 'Company/Organisation',
         'profile_form_institute_lbl' => 'Institute',
         'profile_form_city_lbl' => 'City/Town',
         'profile_form_role_lbl' => 'Role',
+        'profile_form_is_current_lbl' => 'Is my current position',
         'profile_form_from_lbl' => 'From',
         'profile_form_to_lbl' => 'To',
         'profile_form_studies_lbl' => 'Studies',
@@ -84,6 +86,9 @@
         ],
         'initiative_form_success' => [
             'stored' => 'Your initiative has been saved successfully!',
+        ],
+        'profile_form_success' => [
+            'stored' => 'Your data have been saved successfully!',
         ],
 
 
@@ -131,10 +136,14 @@
         'profile_work_lbl_2' => 'Role',
         'profile_work_lbl_3' => 'Studies',
         'profile_work_text_1' => 'Current',
+        'profile_work_text_2' => 'Ongoing',
         'profile_work_add_btn_1' => 'Add position',
         'profile_work_add_btn_2' => 'Add studies',
         'profile_work_add_btn_3' => 'Add skill',
-
+        'profile_work_msg_1' => 'You haven\'t added any job position yet.',
+        'profile_work_msg_2' => 'You haven\'t added any studies yet.',
+        'profile_work_msg_3' => 'You haven\'t added any skill yet.',
+        
         /* Interests */
         'profile_interests_page_title' => 'Interests - '.config('app.name'),
         'profile_interests_page_meta_description' => '',
@@ -142,6 +151,8 @@
         'profile_interests_heading_2' => 'AREAS OF INTEREST',
         'profile_interests_add_btn_1' => 'Add interest',
         'profile_interests_add_btn_2' => 'Add area',
+        'profile_interests_msg_1' => 'You haven\'t added any interest yet.',
+        'profile_interests_msg_2' => 'You haven\'t added any area yet.',
 
         /* Social accounts */
         'profile_social_accounts_page_title' => 'My social profiles - '.config('app.name'),

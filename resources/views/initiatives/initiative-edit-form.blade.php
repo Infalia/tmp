@@ -262,6 +262,7 @@
             timeFormat: "h:ii",
             minutesStep: 5,
             minDate: new Date(),
+            startDate: new Date({{ $initiativeStartDate }}),
             onSelect: function(formattedDate, date, inst) {
                 $endDatepicker.data('datepicker').update('minDate', date);
             }
@@ -273,6 +274,7 @@
             timepicker: true,
             timeFormat: "h:ii",
             minutesStep: 5,
+            startDate: new Date({{ $initiativeEndDate }}),
             onSelect: function(formattedDate, date, inst) {
                 $startDatepicker.data('datepicker').update('maxDate', date);
             }
@@ -280,8 +282,8 @@
 
         $startDatepicker.data('datepicker').selectDate(new Date({{ $initiativeStartDate }}));
         $endDatepicker.data('datepicker').selectDate(new Date({{ $initiativeEndDate }}));
-        $startDatepicker.data('datepicker').update('maxDate', {{ $initiativeEndDate }});
-        $endDatepicker.data('datepicker').update('minDate', {{ $initiativeStartDate }});
+        //$startDatepicker.data('datepicker').update('maxDate', {{ $initiativeEndDate }});
+        //$endDatepicker.data('datepicker').update('minDate', {{ $initiativeStartDate }});
 
 
         $(document).ready(function() {

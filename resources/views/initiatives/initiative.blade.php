@@ -263,32 +263,30 @@
 
 
         function confirmDelete() {
-            if(confirm('Are you sure?')) {
+            if(confirm('{{ $deleteConfirmMsg }}')) {
+                data = new Object();
 
-            data = new Object();
+                data['initiative_id'] = {{ $initiativeId }};
+                
 
-            data['initiative_id'] = {{ $initiativeId }};
-            
+                var url = "{{ url('offer/delete/'.$initiative->id) }}";
 
-            var url = "{{ url('offer/delete/'.$initiative->id) }}";
+                $.ajax({
+                    type: 'POST',
+                    url: url,
+                    data: data,
+                    dataType: 'json',
+                    success: function(data) {
+                        $('.loader-overlay').fadeIn(0);
 
-            $.ajax({
-                type: 'POST',
-                url: url,
-                data: data,
-                dataType: 'json',
-                success: function(data) {
-                    $('.loader-overlay').fadeIn(0);
+                        $.post("{{ url('offer/delete/ontomap/'.$initiative->id) }}", {}, function(response){});
 
-                    $.post("{{ url('offer/delete/ontomap/'.$initiative->id) }}", {}, function(response){});
-
-                    setTimeout(function() {
-                        window.location.href = "{{ url('offers') }}";
-                    }, 2500);
-                },
-                error : function(XMLHttpRequest, textStatus, errorThrown) {}
-            });
-
+                        setTimeout(function() {
+                            window.location.href = "{{ url('offers') }}";
+                        }, 2500);
+                    },
+                    error : function(XMLHttpRequest, textStatus, errorThrown) {}
+                });
             }
         }
     </script>
